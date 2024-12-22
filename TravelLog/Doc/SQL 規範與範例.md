@@ -6,5 +6,8 @@
   - 如：SerialBase-流水號_Table
 - Stored Procedure名稱-中文名稱_類別
   - 如：get_SerialNumber-取流水號_SP
+	
+- Table名稱-中文名稱_類別(站存)
+  - 如：SerialBase-流水號_Table(Temp)
 
 
