@@ -25,7 +25,7 @@ Git 在每次 Commit 時，需要寫下 Git Commit Message（提交說明），�
 <footer>
 ```
 
-### Message Header: `<type>(<scope>): <subject>`
+### Message Header: `[<type>](<scope>) <subject>`
 - type（必要）：commit 的類別
   - 如：feat, fix, docs, style, refactor, test, chore
 - scope（可選）：commit 影響的範圍
@@ -67,26 +67,27 @@ type 代表提交 Commit 的類別，以下為使用慣例：
 以下舉幾個範例：
 
 ```
-feat(優惠券):
+[feat](優惠券)
 1. 加入搜尋按鈕，調整畫面
 ---
-fix:
+[fix]
 1. 意見反應，信件看不到圖片問題
 2. 圓餅圖圖例跑版
 issue #1229
 ---
-style:
+[style]
 1. 統一換行符號 CRLF to LF
 ---
-docs:
+[docs]
 1. 更新 README 相關資訊
 2. 修正型別註解
 ---
-chore(submoudle): 變更 git url
-chore: 調整單元測試環境
+[chore](submoudle) 變更 git url
+
+[chore] 調整單元測試環境
 issue #1335
 ---
-refactor(每日通知信件): 重構程式結構
+[refactor](每日通知信件) 重構程式結構
 ```
 ---
 參考資料:
