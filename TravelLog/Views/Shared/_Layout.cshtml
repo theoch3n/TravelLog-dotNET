@@ -185,31 +185,22 @@
                             <li><a href="./PackageHtml/app-calender.html">Calendar</a></li>
                         </ul>
                     </li>
-          <li class="nav-label">訂單管理</li>
-          <li>
-            <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-              <i class="icon icon-app-store"></i><span class="nav-text">訂單管理</span>
-            </a>
-            <ul aria-expanded="false">
-              <li><a href="./PackageHtml/app-profile.html">Profile</a></li>
-              <li>
-                <a class="has-arrow" href="javascript:void()" aria-expanded="false">Email</a>
-                <ul aria-expanded="false">
-                  <li><a href="./PackageHtml/email-compose.html">Compose</a></li>
-                  <li><a href="./PackageHtml/email-inbox.html">Inbox</a></li>
-                  <li><a href="./PackageHtml/email-read.html">Read</a></li>
-                </ul>
-              </li>
-              <li><a href="./PackageHtml/app-calender.html">Calendar</a></li>
-            </ul>
-          </li>
-          <li class="nav-label">報表分析</li>
+                    <li class="nav-label">訂單管理</li>
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon icon-app-store"></i><span class="nav-text">訂單管理</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a asp-controller="Home" asp-action="OrderManage">所有訂單</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-label">報表分析</li>
                     <li>
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                             <i class="icon icon-chart-bar-33"></i><span class="nav-text">Charts</span>
                         </a>
                         <ul aria-expanded="false">
-              <li><a asp-controller="Chart" asp-action="Index">遊客數分析</a></li>
+                            <li><a asp-controller="Chart" asp-action="Index">遊客數分析</a></li>
                         </ul>
                     </li>
                     <li class="nav-label">Components</li>
