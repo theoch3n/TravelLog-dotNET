@@ -1,10 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace TravelLog.Partials {
-    public partial class TravelLogContext : DbContext {
+namespace TravelLog.Models
+{
+    public partial class TravelLogContext : DbContext
+    {
+        public TravelLogContext()
+        {
+        }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            if (!optionsBuilder.IsConfigured) {
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
                 IConfiguration Config = new ConfigurationBuilder()
                     .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                     .AddJsonFile("appsettings.json")
@@ -12,6 +19,5 @@ namespace TravelLog.Partials {
                 optionsBuilder.UseSqlServer(Config.GetConnectionString("TravelLog"));
             }
         }
-        public DbSet<Models.Order> Order { get; set; } = default!;
     }
 }
