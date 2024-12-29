@@ -32,7 +32,7 @@
     <div id="main-wrapper">
         <!-- Nav header start -->
         <div class="nav-header">
-            <a href="index.html" class="brand-logo">
+            <a asp-controller="Home" asp-action="Index" class="brand-logo">
                 <img class="logo-abbr" src="../images/logo.png" alt="">
                 <img class="logo-compact" src="../images/logo-text.png" alt="">
                 <img class="brand-title" src="../images/logo-text.png" alt="">
@@ -191,7 +191,7 @@
                             <i class="icon icon-app-store"></i><span class="nav-text">訂單管理</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a asp-controller="Home" asp-action="OrderManage">所有訂單</a></li>
+                            <li><a asp-controller="Order" asp-action="OrderManage">訂單管理</a></li>
                         </ul>
                     </li>
                     <li class="nav-label">報表分析</li>
@@ -317,7 +317,14 @@
 
     </div>
     <!-- Main wrapper end -->
+
     <!-- Scripts -->
+    @* 尋找並渲染在子頁面中使用 @section Scripts { ... } 定義的腳本內容 *@
+    @{
+        // required: false 表示這個區塊是可選的，如果子頁面沒有定義對應的 Scripts 區塊也不會報錯
+        await RenderSectionAsync("Scripts", required: false);
+    }
+
     <!-- Required vendors -->
     <script src="../vendor/global/global.min.js"></script>
     <script src="../js/quixnav-init.js"></script>

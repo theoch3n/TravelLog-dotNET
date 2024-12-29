@@ -25,10 +25,5 @@ namespace TravelLog.Controllers {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult OrderManage() {
-            var orders = _context.Orders.ToList(); // 確保這裡獲取的資料不為 null
-            return View(orders);
-        }
-
     }
 }

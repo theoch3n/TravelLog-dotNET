@@ -18,16 +18,20 @@
 </head>
 <body>
     <!-- Content body start -->
-    <div class="content-body">
-        <div class="container-fluid">
-            <h1>所有訂單</h1>
+    <div>
+        <h1>所有訂單</h1>
 
-            <p>
-                <a asp-action="Create">Create New</a>
-            </p>
+        @{
+            int serialNum = 0;
             <table class="table">
                 <thead>
-                    <tr class="font-weight-bold text-black">
+                    <tr class="font-weight-bold">
+                        <th>
+                            訂單序號
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.UserId)
+                        </th>
                         <th>
                             @Html.DisplayNameFor(model => model.OrderTime)
                         </th>
@@ -35,49 +39,53 @@
                             @Html.DisplayNameFor(model => model.OrderTotalAmount)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.DeleteAt)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.UserId)
-                        </th>
-                        <th>
                             @Html.DisplayNameFor(model => model.OrderStatus)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DeleteAt)
                         </th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model)
-                    {
+                    @foreach (var item in Model) {
+                        serialNum++;
                         <tr>
+                            <td>
+                                @serialNum
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UserId)
+                            </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.OrderTime)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.OrderTotalAmount)
                             </td>
-                            <td>
+                            <td id="order-status-@item.OrderId">
+                                @Html.DisplayFor(modelItem => item.OrderStatus)
+                            </td>
+                            <td id="delete-at-@item.OrderId">
                                 @Html.DisplayFor(modelItem => item.DeleteAt)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.UserId)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.OrderStatus)
-                            </td>
-                            <td>
-                                <a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
-                                <a asp-action="Details" asp-route-id="@item.OrderId">Details</a> |
-                                <a asp-action="Delete" asp-route-id="@item.OrderId">Delete</a>
+                                <a asp-action="Details" asp-route-id="@item.OrderId" class="btn btn-outline-info">訂單詳情</a>
+                                <a href="@Url.Action("OrderEdit", "Order", new{orderId = item.OrderId})" class="btn btn-outline-warning">修改訂單</a>
+                                <button type="button" onclick="cancelOrder(@item.OrderId)" class="btn btn-outline-danger">取消訂單</button>
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
-        </div>
+            <div id="editFormContainer"></div>
+        }
     </div>
     <!-- Content body end -->
+
     <!-- Scripts -->
+    <script src="../js/Order/OrderManage.js"></script>
+
     <!-- Required vendors -->
     <script src="../vendor/global/global.min.js"></script>
     <script src="../js/quixnav-init.js"></script>
