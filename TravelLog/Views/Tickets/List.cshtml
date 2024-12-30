@@ -56,7 +56,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Price)
                 </td>
-                
+
                 <td>
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
@@ -67,7 +67,7 @@
                     @Html.DisplayFor(modelItem => item.CreatedAt)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.TicketsId">修改</a> |
+                    <a href="@Url.Action("Edit", "Tickets", new{ticketId = item.TicketsId})">修改</a> |
                     <a asp-action="Delete" asp-route-id="@item.TicketsId">刪除</a>
                 </td>
             </tr>
@@ -76,5 +76,5 @@
 </table>
 
 @section Scripts{
-     
+
 }

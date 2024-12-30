@@ -21,6 +21,10 @@
       {
          "Name": "[dbo].[Payment]",
          "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Tickets]",
+         "ObjectType": 0
       }
    ],
    "UiHint": null,
