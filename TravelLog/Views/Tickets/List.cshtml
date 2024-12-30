@@ -1,0 +1,80 @@
+﻿@model IEnumerable<TravelLog.Models.Ticket>
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<h1>票務管理</h1>
+
+<p>
+    <a asp-action="Create">新增票種</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TicketsName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TicketsType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsAvailable)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RefundPolicy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedAt)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input toggle-status"
+                               data-id="@item.TicketsId"
+                        @(item.IsAvailable ? "checked" : "") />
+                    </div>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TicketsName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TicketsType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RefundPolicy)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedAt)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.TicketsId">修改</a> |
+                    <a asp-action="Delete" asp-route-id="@item.TicketsId">刪除</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+     
+}
