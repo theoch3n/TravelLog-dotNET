@@ -12,12 +12,18 @@ namespace TravelLog.Controllers {
 
         // GET: Tickets
         public async Task<IActionResult> List() {
-            return View(await _context.Tickets.ToListAsync());
+            var data = await _context.Tickets.ToListAsync();
+            List<TicketWrap> list = new List<TicketWrap>();
+            foreach (var t in data) {
+                list.Add(new TicketWrap { ticket = t });
+            }
+            return View(list);
         }
 
         // GET: Tickets/Create
         public IActionResult Create() {
-            return View();
+            var ticketWrap = new TicketWrap { IsAvailable = true };
+            return View(ticketWrap);
         }
 
         // POST: Tickets/Create
@@ -25,55 +31,51 @@ namespace TravelLog.Controllers {
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TicketsId,TicketsName,TicketsType,Price,IsAvailable,Description,RefundPolicy,CreatedAt")] Ticket ticket) {
+        public async Task<IActionResult> Create([Bind("TicketsId,TicketsName,TicketsType,Price,IsAvailable,Description,RefundPolicy,CreatedAt")] TicketWrap ticketWrap) {
             if (ModelState.IsValid) {
-                _context.Add(ticket);
+                _context.Add(ticketWrap.ticket);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(List));
             }
-            return View(ticket);
+            return View(ticketWrap);
         }
 
-        // GET: Tickets/Edit
-        public async Task<IActionResult> Edit(int ticketId) {
-            //if (ticketId == null)
-            //{
-            //    return RedirectToAction("List");
-            //}
-
-            var ticket = await _context.Tickets.FindAsync(ticketId);
-            if (ticket == null) {
-                return NotFound();
+        // GET: Tickets/Edit/5
+        public async Task<IActionResult> Edit(int? id) {
+            if (id == null) {
+                return RedirectToAction("List");
             }
-            return View(ticket);
+
+            var data = await _context.Tickets.FindAsync(id);
+            if (data == null) {
+                return RedirectToAction("List");
+            }
+            var ticketWrap = new TicketWrap() { ticket = data, IsAvailable = data.IsAvailable };
+            return View(ticketWrap);
         }
 
-        // POST: Tickets/Edit
+        // POST: Tickets/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Ticket ticket) {
-            //if (id != ticket.TicketsId) {
-            //    return NotFound();
-            //}
-
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit([Bind("TicketsId,TicketsName,TicketsType,Price,IsAvailable,Description,RefundPolicy,CreatedAt")] TicketWrap ticketWrap) {
             if (ModelState.IsValid) {
                 try {
-                    _context.Update(ticket);
+                    _context.Update(ticketWrap.ticket);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction("List");
                 }
                 catch (DbUpdateConcurrencyException) {
-                    if (!TicketExists(ticket.TicketsId)) {
+                    if (!TicketExists(ticketWrap.TicketsId)) {
                         return NotFound();
                     }
                     else {
                         throw;
                     }
                 }
+                return RedirectToAction(nameof(List));
             }
-            return View("Edit", ticket);
+            return View(ticketWrap);
         }
 
         // GET: Tickets/Delete/5

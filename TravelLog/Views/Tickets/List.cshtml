@@ -1,7 +1,8 @@
-﻿@model IEnumerable<TravelLog.Models.Ticket>
+﻿@model IEnumerable<TravelLog.Models.TicketWrap>
 
 @{
     ViewData["Title"] = "List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>票務管理</h1>
@@ -11,7 +12,15 @@
 </p>
 <table class="table">
     <thead>
+
         <tr>
+            <th>
+                序
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.IsAvailable)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.TicketsName)
             </th>
@@ -21,9 +30,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Price)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsAvailable)
-            </th>
+
             <th>
                 @Html.DisplayNameFor(model => model.Description)
             </th>
@@ -37,44 +44,74 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input toggle-status"
-                               data-id="@item.TicketsId"
-                        @(item.IsAvailable ? "checked" : "") />
-                    </div>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TicketsName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TicketsType)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RefundPolicy)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreatedAt)
-                </td>
-                <td>
-                    <a href="@Url.Action("Edit", "Tickets", new{ticketId = item.TicketsId})">修改</a> |
-                    <a asp-action="Delete" asp-route-id="@item.TicketsId">刪除</a>
-                </td>
-            </tr>
+        @{
+            int count = 0;
+            foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <td>
+                        @count
+                    </td>
+                    <td class="checkbox-cell">
+                        <div class="form-check checkbox-wrapper">
+                            <input type="checkbox" class="form-check-input"
+                                   disabled
+                            @(item.IsAvailable ? "checked" : "") />
+                        </div>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TicketsName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TicketsType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RefundPolicy)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedAt)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.TicketsId">修改</a> |
+                        <a asp-action="Delete"
+                           asp-route-id="@item.TicketsId"
+                           onclick="return confirm('確定要刪除這個票種嗎?');">刪除</a>
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 </table>
 
-@section Scripts{
+@section Scripts {
+    <style>
+        .checkbox-cell {
+            text-align: center;
+            vertical-align: middle;
+            width: 50px;
+        }
 
+        .checkbox-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        .form-check-input {
+            margin: 0;
+            position: relative;
+            float: none;
+            margin-top: -2px;
+        }
+    </style>
 }

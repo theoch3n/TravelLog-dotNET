@@ -1,7 +1,8 @@
-﻿@model IEnumerable<TravelLog.Models.Order>
+﻿@model IEnumerable<TravelLog.Models.OrderWrap>
 
 @{
     ViewData["Title"] = "OrderManage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <head>
@@ -21,34 +22,35 @@
     <div>
         <h1>所有訂單</h1>
 
-        @{
-            int serialNum = 0;
-            <table class="table">
-                <thead>
-                    <tr class="font-weight-bold">
-                        <th>
-                            訂單序號
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.UserId)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.OrderTime)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.OrderTotalAmount)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.OrderStatus)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.DeleteAt)
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model) {
+        <table class="table">
+            <thead>
+                <tr class="font-weight-bold">
+                    <th>
+                        訂單序號
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.UserId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.OrderTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.OrderTotalAmount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.OrderStatus)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DeleteAt)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int serialNum = 0;
+                    foreach (var item in Model)
+                    {
                         serialNum++;
                         <tr>
                             <td>
@@ -66,23 +68,21 @@
                             <td id="order-status-@item.OrderId">
                                 @Html.DisplayFor(modelItem => item.OrderStatus)
                             </td>
-                            <td id="delete-at-@item.OrderId">
+                            <td id="cancel-at-@item.OrderId">
                                 @Html.DisplayFor(modelItem => item.DeleteAt)
                             </td>
                             <td>
                                 <a asp-action="Details" asp-route-id="@item.OrderId" class="btn btn-outline-info">訂單詳情</a>
-                                <a href="@Url.Action("OrderEdit", "Order", new{orderId = item.OrderId})" class="btn btn-outline-warning">修改訂單</a>
-                                <button type="button" onclick="cancelOrder(@item.OrderId)" class="btn btn-outline-danger">取消訂單</button>
+                                <a asp-controller="Order" asp-action="OrderEdit" asp-route-id="@item.OrderId" class="btn btn-outline-warning">修改訂單</a>
+                                <button type="button" id="btnCancel" data-order-id="@item.OrderId" onclick="cancelOrder(this)" class="btn btn-outline-danger">取消訂單</button>
                             </td>
                         </tr>
                     }
-                </tbody>
-            </table>
-            <div id="editFormContainer"></div>
-        }
+                }
+            </tbody>
+        </table>
     </div>
     <!-- Content body end -->
-
     <!-- Scripts -->
     <script src="../js/Order/OrderManage.js"></script>
 

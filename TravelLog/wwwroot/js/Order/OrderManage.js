@@ -1,6 +1,7 @@
-﻿async function cancelOrder(orderId) {
+﻿async function cancelOrder(btnCancel) {
+	const orderId = btnCancel.dataset.orderId; // 從取消按鈕的 data-orderId 屬性獲取 orderId
 	try {
-		const response = await fetch(Url.Action("Cancel", "Order"), {
+		const response = await fetch(Url.Action('Cancel', 'Order'), {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json"
@@ -24,6 +25,6 @@
 			alert("訂單取消失敗");
 		}
 	} catch (error) {
-		console.error("取消訂單失敗:", error);
+		console.error("訂單取消失敗:", error);
 	}
 }
