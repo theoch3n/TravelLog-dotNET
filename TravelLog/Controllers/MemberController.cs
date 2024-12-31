@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
+
 namespace TravelLog.Controllers
 {
     public class MemberController : Controller
@@ -27,34 +28,50 @@ namespace TravelLog.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Register(MemberInformation member, string confirmPassword)
         {
-            // 確認密碼是否匹配
             if (member.MiPasswordHash != confirmPassword)
             {
                 ModelState.AddModelError("PasswordMismatch", "Password and Confirm Password do not match.");
+                return View(member);
             }
 
             // 驗證 Email 是否唯一
             if (_context.MemberInformations.Any(m => m.MiEmail == member.MiEmail))
             {
                 ModelState.AddModelError("EmailExists", "This email is already registered.");
+                return View(member);
             }
 
             if (ModelState.IsValid)
             {
-                // 將密碼加密
-                member.MiPasswordHash = HashPassword(member.MiPasswordHash);
+                try
+                {
+                    // 設置默認值
+                    member.MiPasswordHash = HashPassword(member.MiPasswordHash); // 密碼加密
+                    member.MiRegistrationDate = DateTime.Now; // 註冊日期
+                    member.MiIsActive = true; // 默認啟用
 
-                // 新增會員
-                _context.MemberInformations.Add(member);
-                _context.SaveChanges();
+                    // 新增會員
+                    _context.MemberInformations.Add(member);
+                    _context.SaveChanges();
 
-                TempData["SuccessMessage"] = "Registration successful!";
-                return RedirectToAction("Login");
+                    // 註冊成功提示
+                    TempData["SuccessMessage"] = "Registration successful! You can now log in.";
+                    return RedirectToAction("Login");
+                }
+                catch (Exception ex)
+                {
+                    // 處理異常
+                    ModelState.AddModelError("DatabaseError", "An error occurred while processing your request.");
+                    Console.WriteLine(ex.Message); // 日誌記錄
+                }
             }
 
+            // 返回包含錯誤的表單
             return View(member);
         }
-        [HttpGet]
+
+            // 顯示登入頁面
+            [HttpGet]
         public IActionResult Login()
         {
             return View();
@@ -71,9 +88,10 @@ namespace TravelLog.Controllers
                 return View();
             }
 
+            // 驗證用戶憑據
             var hashedPassword = HashPassword(password);
             var member = _context.MemberInformations
-                .FirstOrDefault(m => m.MiEmail == email && m.MiPasswordHash == hashedPassword);
+                .FirstOrDefault(m => m.MiEmail == email && m.MiPasswordHash == hashedPassword && m.MiIsActive == true);
 
             if (member == null)
             {
@@ -88,12 +106,32 @@ namespace TravelLog.Controllers
             return RedirectToAction("Profile");
         }
 
+        // 顯示用戶資料頁面
+        [HttpGet]
+        public IActionResult Profile()
+        {
+            if (!HttpContext.Session.TryGetValue("UserId", out var userIdBytes))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var userId = int.Parse(Encoding.UTF8.GetString(userIdBytes));
+            var member = _context.MemberInformations.FirstOrDefault(m => m.MiMemberId == userId);
+
+            if (member == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            return View(member);
+        }
+
         // 密碼加密方法
         private string HashPassword(string password)
         {
-            using (var sha256 = System.Security.Cryptography.SHA256.Create())
+            using (var sha256 = SHA256.Create())
             {
-                var bytes = System.Text.Encoding.UTF8.GetBytes(password);
+                var bytes = Encoding.UTF8.GetBytes(password);
                 var hash = sha256.ComputeHash(bytes);
                 return BitConverter.ToString(hash).Replace("-", "").ToLower();
             }
