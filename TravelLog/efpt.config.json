@@ -15,11 +15,19 @@
    "T4TemplatePath": null,
    "Tables": [
       {
+         "Name": "[dbo].[MemberInformation]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Order]",
          "ObjectType": 0
       },
       {
          "Name": "[dbo].[Payment]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Tickets]",
          "ObjectType": 0
       }
    ],

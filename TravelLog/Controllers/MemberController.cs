@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TravelLog.Models;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace TravelLog.Controllers
 {
@@ -25,13 +28,13 @@ namespace TravelLog.Controllers
         public IActionResult Register(MemberInformation member, string confirmPassword)
         {
             // 確認密碼是否匹配
-            if (member.PasswordHash != confirmPassword)
+            if (member.MiPasswordHash != confirmPassword)
             {
                 ModelState.AddModelError("PasswordMismatch", "Password and Confirm Password do not match.");
             }
 
             // 驗證 Email 是否唯一
-            if (_context.MemberInformations.Any(m => m.Email == member.Email))
+            if (_context.MemberInformations.Any(m => m.MiEmail == member.MiEmail))
             {
                 ModelState.AddModelError("EmailExists", "This email is already registered.");
             }
@@ -39,7 +42,7 @@ namespace TravelLog.Controllers
             if (ModelState.IsValid)
             {
                 // 將密碼加密
-                member.PasswordHash = HashPassword(member.PasswordHash);
+                member.MiPasswordHash = HashPassword(member.MiPasswordHash);
 
                 // 新增會員
                 _context.MemberInformations.Add(member);
@@ -70,7 +73,7 @@ namespace TravelLog.Controllers
 
             var hashedPassword = HashPassword(password);
             var member = _context.MemberInformations
-                .FirstOrDefault(m => m.Email == email && m.PasswordHash == hashedPassword);
+                .FirstOrDefault(m => m.MiEmail == email && m.MiPasswordHash == hashedPassword);
 
             if (member == null)
             {
@@ -79,8 +82,8 @@ namespace TravelLog.Controllers
             }
 
             // 登入成功，設定 Session
-            HttpContext.Session.SetString("UserId", member.MemberId.ToString());
-            HttpContext.Session.SetString("UserName", member.AccountName);
+            HttpContext.Session.SetString("UserId", member.MiMemberId.ToString());
+            HttpContext.Session.SetString("UserName", member.MiAccountName);
 
             return RedirectToAction("Profile");
         }
