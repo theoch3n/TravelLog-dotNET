@@ -11,6 +11,8 @@ public partial class TravelLogContext : DbContext
     {
     }
 
+
+    public virtual DbSet<MemberInformation> MemberInformations { get; set; }
     public virtual DbSet<Member> Members { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
