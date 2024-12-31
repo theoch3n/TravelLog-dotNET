@@ -144,7 +144,9 @@
                             <div class="col-xl-12">
                                 <div class="auth-form">
                                     <h4 class="text-center mb-4 fs-2"><strong>帳號登入</strong></h4>
-                                    <form action="insert_member.php">
+                                    @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
                                         <div class="form-group">
                                             <label><strong>帳號名稱/Email</strong></label>
                                             <input type="email" class="form-control" value="">
@@ -175,9 +177,9 @@
                                                 <button type="submit" class="btn btn-primary btn-block">登入</button>
                                             </div>
                                             </div>
-                                    </form>
+                                    }
                                     <div class="new-account mt-3">
-                                        <p>還沒有帳號嗎? <a class="text-primary" href="./page-register.html">註冊</a></p>
+                                        <a asp-controller="Member" asp-action="Register" class="text-primary">註冊</a>
                                     </div>
                                 </div>
                             </div>
