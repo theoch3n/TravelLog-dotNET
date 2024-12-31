@@ -14,6 +14,44 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
+        .btn-primary {
+            color: #fff;
+            background-color: #593bdb;
+            border-color: #593bdb;
+        }
+
+            .btn-primary:hover {
+                color: #fff;
+                background-color: #4425cb;
+                border-color: #4123c0;
+            }
+
+            .btn-primary:focus,
+            .btn-primary.focus {
+                box-shadow: 0 0 0 0.2rem rgba(114, 88, 224, 0.5);
+            }
+
+            .btn-primary.disabled,
+            .btn-primary:disabled {
+                color: #fff;
+                background-color: #593bdb;
+                border-color: #593bdb;
+            }
+
+            .btn-primary:not(:disabled):not(.disabled):active,
+            .btn-primary:not(:disabled):not(.disabled).active,
+            .show > .btn-primary.dropdown-toggle {
+                color: #fff;
+                background-color: #4123c0;
+                border-color: #3d21b5;
+            }
+
+                .btn-primary:not(:disabled):not(.disabled):active:focus,
+                .btn-primary:not(:disabled):not(.disabled).active:focus,
+                .show > .btn-primary.dropdown-toggle:focus {
+                    box-shadow: 0 0 0 0.2rem rgba(114, 88, 224, 0.5);
+                }
+
         /* 輸入框樣式 */
         .input-group .form-control {
             border: 1px solid #eaeaea;
@@ -136,6 +174,7 @@
                                             <div class="text-center">
                                                 <button type="submit" class="btn btn-primary btn-block">登入</button>
                                             </div>
+                                            </div>
                                     </form>
                                     <div class="new-account mt-3">
                                         <p>還沒有帳號嗎? <a class="text-primary" href="./page-register.html">註冊</a></p>
@@ -173,5 +212,3 @@
     </script>
 
 </body>
-
-</html>
