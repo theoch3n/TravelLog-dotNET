@@ -15,6 +15,7 @@ public partial class TravelLogContext : DbContext
     {
     }
 
+    public virtual DbSet<MemberInformation> MemberInformations { get; set; }
     public virtual DbSet<Itinerary> Itineraries { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
@@ -34,18 +35,42 @@ public partial class TravelLogContext : DbContext
   
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<MemberInformation>(entity =>
         modelBuilder.Entity<Itinerary>(entity =>
         {
+            entity.HasKey(e => e.MiMemberId).HasName("PK__MemberIn__C80AA2629BDFC664");
             entity.HasKey(e => e.Id).HasName("PK__itinerar__3213E83FE6F0B3CA");
 
+            entity.ToTable("MemberInformation");
             entity.ToTable("itineraries");
 
+            entity.HasIndex(e => e.MiEmail, "UQ__MemberIn__67B108C02DE16A73").IsUnique();
+
+            entity.Property(e => e.MiMemberId).HasColumnName("MI_MemberID");
+            entity.Property(e => e.MiAccountName)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasColumnName("MI_AccountName");
+            entity.Property(e => e.MiEmail)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnName("MI_Email");
+            entity.Property(e => e.MiIsActive)
+                .HasDefaultValue(true)
+                .HasColumnName("MI_IsActive");
+            entity.Property(e => e.MiPasswordHash)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasColumnName("MI_PasswordHash");
+            entity.Property(e => e.MiRegistrationDate)
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Address)
                 .HasColumnType("text")
                 .HasColumnName("address");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("MI_RegistrationDate");
                 .HasColumnType("datetime")
                 .HasColumnName("created_at");
             entity.Property(e => e.Latitude).HasColumnName("latitude");
@@ -58,6 +83,7 @@ public partial class TravelLogContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
+            entity.HasKey(e => e.OrderId).HasName("PK__Order__464666018EBA7FF5");
             entity.HasKey(e => e.OrderId).HasName("PK__Order__4646660134F098FE");
 
             entity.ToTable("Order");
@@ -99,6 +125,7 @@ public partial class TravelLogContext : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
+            entity.HasKey(e => e.PaymentId).HasName("PK__Payment__ED10C46242785960");
             entity.HasKey(e => e.PaymentId).HasName("PK__Payment__ED10C46203F2A115");
 
             entity.ToTable("Payment");
@@ -116,6 +143,7 @@ public partial class TravelLogContext : DbContext
 
             entity.HasOne(d => d.Order).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.OrderId)
+                .HasConstraintName("FK__Payment__order_i__5629CD9C");
                 .HasConstraintName("FK__Payment__order_i__412EB0B6");
 
             entity.HasOne(d => d.PaymentMethodNavigation).WithMany(p => p.Payments)
@@ -216,6 +244,7 @@ public partial class TravelLogContext : DbContext
 
         modelBuilder.Entity<Ticket>(entity =>
         {
+            entity.HasKey(e => e.TicketsId).HasName("PK__Tickets__EE5BBABBE488C303");
             entity.HasKey(e => e.TicketsId).HasName("PK__Tickets__EE5BBABBF725873A");
 
             entity.Property(e => e.CreatedAt)
