@@ -11,17 +11,20 @@ namespace TravelLog.Controllers {
         }
 
         // GET: Tickets
-        public async Task<IActionResult> List() {
+        public async Task<IActionResult> List()
+        {
             var data = await _context.Tickets.ToListAsync();
             List<TicketWrap> list = new List<TicketWrap>();
-            foreach (var t in data) {
+            foreach (var t in data)
+            {
                 list.Add(new TicketWrap { ticket = t });
             }
             return View(list);
         }
 
         // GET: Tickets/Create
-        public IActionResult Create() {
+        public IActionResult Create()
+        {
             var ticketWrap = new TicketWrap { IsAvailable = true };
             return View(ticketWrap);
         }
@@ -31,8 +34,10 @@ namespace TravelLog.Controllers {
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TicketsId,TicketsName,TicketsType,Price,IsAvailable,Description,RefundPolicy,CreatedAt")] TicketWrap ticketWrap) {
-            if (ModelState.IsValid) {
+        public async Task<IActionResult> Create([Bind("TicketsId,TicketsName,TicketsType,Price,IsAvailable,Description,RefundPolicy,CreatedAt")] TicketWrap ticketWrap)
+        {
+            if (ModelState.IsValid)
+            {
                 _context.Add(ticketWrap.ticket);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(List));
@@ -47,10 +52,11 @@ namespace TravelLog.Controllers {
             }
 
             var data = await _context.Tickets.FindAsync(id);
-            if (data == null) {
+            if (data == null)
+            {
                 return RedirectToAction("List");
             }
-            var ticketWrap = new TicketWrap() { ticket = data, IsAvailable = data.IsAvailable };
+            var ticketWrap = new TicketWrap() { ticket = data ,IsAvailable = data.IsAvailable};
             return View(ticketWrap);
         }
 
@@ -59,14 +65,19 @@ namespace TravelLog.Controllers {
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("TicketsId,TicketsName,TicketsType,Price,IsAvailable,Description,RefundPolicy,CreatedAt")] TicketWrap ticketWrap) {
-            if (ModelState.IsValid) {
-                try {
+        public async Task<IActionResult> Edit([Bind("TicketsId,TicketsName,TicketsType,Price,IsAvailable,Description,RefundPolicy,CreatedAt")] TicketWrap ticketWrap)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
                     _context.Update(ticketWrap.ticket);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException) {
-                    if (!TicketExists(ticketWrap.TicketsId)) {
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TicketExists(ticketWrap.TicketsId))
+                    {
                         return NotFound();
                     }
                     else {
