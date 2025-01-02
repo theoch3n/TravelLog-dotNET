@@ -29,8 +29,6 @@ public partial class TravelLogContext : DbContext
 
     public virtual DbSet<ProductTicket> ProductTickets { get; set; }
 
-    public virtual DbSet<SerialBase> SerialBases { get; set; }
-
     public virtual DbSet<Ticket> Tickets { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -95,15 +93,22 @@ public partial class TravelLogContext : DbContext
 
             entity.ToTable("Order");
 
-            entity.Property(e => e.OrderId).HasColumnName("order_Id");
+            entity.Property(e => e.OrderId)
+                .HasComment("訂單 ID")
+                .HasColumnName("order_Id");
             entity.Property(e => e.DeleteAt)
+                .HasComment("取消訂單時間")
                 .HasColumnType("datetime")
                 .HasColumnName("delete_at");
-            entity.Property(e => e.OrderStatus).HasColumnName("order_Status");
+            entity.Property(e => e.OrderStatus)
+                .HasComment("連接訂單狀態 ID")
+                .HasColumnName("order_Status");
             entity.Property(e => e.OrderTime)
+                .HasComment("下訂時間")
                 .HasColumnType("datetime")
                 .HasColumnName("order_Time");
             entity.Property(e => e.OrderTotalAmount)
+                .HasComment("訂單總金額")
                 .HasColumnType("decimal(18, 0)")
                 .HasColumnName("order_TotalAmount");
             entity.Property(e => e.UserId).HasColumnName("user_Id");
@@ -132,14 +137,24 @@ public partial class TravelLogContext : DbContext
 
             entity.ToTable("Payment");
 
-            entity.Property(e => e.PaymentId).HasColumnName("payment_Id");
-            entity.Property(e => e.OrderId).HasColumnName("order_id");
+            entity.Property(e => e.PaymentId)
+                .HasComment("付款 ID")
+                .HasColumnName("payment_Id");
+            entity.Property(e => e.OrderId)
+                .HasComment("連接訂單 ID")
+                .HasColumnName("order_id");
             entity.Property(e => e.PaymentDeadline)
+                .HasComment("付款期限")
                 .HasColumnType("datetime")
                 .HasColumnName("payment_Deadline");
-            entity.Property(e => e.PaymentMethod).HasColumnName("payment_Method");
-            entity.Property(e => e.PaymentStatusId).HasColumnName("paymentStatus_Id");
+            entity.Property(e => e.PaymentMethod)
+                .HasComment("連接付款方式 ID")
+                .HasColumnName("payment_Method");
+            entity.Property(e => e.PaymentStatusId)
+                .HasComment("連接付款狀態 ID")
+                .HasColumnName("paymentStatus_Id");
             entity.Property(e => e.PaymentTime)
+                .HasComment("付款時間")
                 .HasColumnType("datetime")
                 .HasColumnName("payment_Time");
 
@@ -149,7 +164,7 @@ public partial class TravelLogContext : DbContext
 
             entity.HasOne(d => d.PaymentMethodNavigation).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.PaymentMethod)
-                .HasConstraintName("FK__Payment__payment__4222D4EF");
+                .HasConstraintName("FK__Payment__payment__3F466844");
 
             entity.HasOne(d => d.PaymentStatus).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.PaymentStatusId)

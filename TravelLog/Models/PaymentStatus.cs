@@ -9,6 +9,9 @@ public partial class PaymentStatus
 {
     public int PsId { get; set; }
 
+    /// <summary>
+    /// 付款狀態
+    /// </summary>
     public string PaymentStatus1 { get; set; }
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
