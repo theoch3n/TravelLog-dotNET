@@ -19,5 +19,7 @@ public partial class Order
 
     public int? OrderStatus { get; set; }
 
+    public virtual OrderStatus OrderStatusNavigation { get; set; }
+
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 }

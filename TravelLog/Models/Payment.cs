@@ -20,4 +20,8 @@ public partial class Payment
     public int? PaymentStatusId { get; set; }
 
     public virtual Order Order { get; set; }
+
+    public virtual PaymentMethod PaymentMethodNavigation { get; set; }
+
+    public virtual PaymentStatus PaymentStatus { get; set; }
 }

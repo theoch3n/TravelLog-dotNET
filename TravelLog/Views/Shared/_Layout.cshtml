@@ -167,32 +167,20 @@
                             <li><a asp-controller="Template" asp-action="Index2">Dashboard 2</a></li>
                         </ul>
                     </li>
-                    <li class="nav-label">Apps</li>
                     <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon icon-app-store"></i><span class="nav-text">Apps</span>
+                        <a asp-controller="Tickets" asp-action="List">
+                            <i class="icon icon-app-store"></i><span class="nav-text">票務管理</span>
                         </a>
-                        <ul aria-expanded="false">
-                            <li><a href="./PackageHtml/app-profile.html">Profile</a></li>
-                            <li>
-                                <a class="has-arrow" href="javascript:void()" aria-expanded="false">Email</a>
-                                <ul aria-expanded="false">
-                                    <li><a href="./PackageHtml/email-compose.html">Compose</a></li>
-                                    <li><a href="./PackageHtml/email-inbox.html">Inbox</a></li>
-                                    <li><a href="./PackageHtml/email-read.html">Read</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="./PackageHtml/app-calender.html">Calendar</a></li>
-                        </ul>
                     </li>
-                    <li class="nav-label">訂單管理</li>
                     <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon icon-app-store"></i><span class="nav-text">訂單管理</span>
+                        <a asp-controller="Order" asp-action="OrderManage">
+                            <i class="icon icon-world-2"></i><span class="nav-text">訂單管理</span>
                         </a>
-                        <ul aria-expanded="false">
-                            <li><a asp-controller="Order" asp-action="OrderManage">訂單管理</a></li>
-                        </ul>
+                    </li>
+                    <li>
+                        <a asp-controller="Itinerary" asp-action="Index">
+                            <i class="icon icon-app-store"></i><span class="nav-text">行程</span>
+                        </a>
                     </li>
                     <li class="nav-label">報表分析</li>
                     <li>
@@ -203,97 +191,6 @@
                             <li><a asp-controller="Chart" asp-action="Index">遊客數分析</a></li>
                         </ul>
                     </li>
-                    <li class="nav-label">Components</li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon icon-world-2"></i><span class="nav-text">Bootstrap</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a asp-controller="Itinerary" asp-action="Index">行程</a></li>
-                            <li><a href="./PackageHtml/ui-alert.html">Alert</a></li>
-                            <li><a href="./PackageHtml/ui-badge.html">Badge</a></li>
-                            <li><a href="./PackageHtml/ui-button.html">Button</a></li>
-                            <li><a href="./PackageHtml/ui-modal.html">Modal</a></li>
-                            <li><a href="./PackageHtml/ui-button-group.html">Button Group</a></li>
-                            <li><a href="./PackageHtml/ui-list-group.html">List Group</a></li>
-                            <li><a href="./PackageHtml/ui-media-object.html">Media Object</a></li>
-                            <li><a href="./PackageHtml/ui-card.html">Cards</a></li>
-                            <li><a href="./PackageHtml/ui-carousel.html">Carousel</a></li>
-                            <li><a href="./PackageHtml/ui-dropdown.html">Dropdown</a></li>
-                            <li><a href="./PackageHtml/ui-popover.html">Popover</a></li>
-                            <li><a href="./PackageHtml/ui-progressbar.html">Progressbar</a></li>
-                            <li><a href="./PackageHtml/ui-tab.html">Tab</a></li>
-                            <li><a href="./PackageHtml/ui-typography.html">Typography</a></li>
-                            <li><a href="./PackageHtml/ui-pagination.html">Pagination</a></li>
-                            <li><a href="./PackageHtml/ui-grid.html">Grid</a></li>
-
-                        </ul>
-                    </li>
-
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon icon-plug"></i><span class="nav-text">Plugins</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a href="./PackageHtml/uc-select2.html">Select 2</a></li>
-                            <li><a href="./PackageHtml/uc-nestable.html">Nestedable</a></li>
-                            <li><a href="./PackageHtml/uc-noui-slider.html">Noui Slider</a></li>
-                            <li><a href="./PackageHtml/uc-sweetalert.html">Sweet Alert</a></li>
-                            <li><a href="./PackageHtml/uc-toastr.html">Toastr</a></li>
-                            <li><a href="./PackageHtml/map-jqvmap.html">Jqv Map</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="widget-basic.html" aria-expanded="false">
-                            <i class="icon icon-globe-2"></i><span class="nav-text">Widget</span>
-                        </a>
-                    </li>
-                    <li class="nav-label">Forms</li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon icon-form"></i><span class="nav-text">Forms</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a href="./PackageHtml/form-element.html">Form Elements</a></li>
-                            <li><a href="./PackageHtml/form-wizard.html">Wizard</a></li>
-                            <li><a href="./PackageHtml/form-editor-summernote.html">Summernote</a></li>
-                            <li><a href="form-pickers.html">Pickers</a></li>
-                            <li><a href="form-validation-jquery.html">Jquery Validate</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-label">Table</li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon icon-layout-25"></i><span class="nav-text">Table</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a href="table-bootstrap-basic.html">Bootstrap</a></li>
-                            <li><a href="table-datatable-basic.html">Datatable</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="nav-label">Extra</li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon icon-single-copy-06"></i><span class="nav-text">Pages</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a href="./PackageHtml/page-register.html">Register</a></li>
-                            <li><a href="./PackageHtml/page-login.html">Login</a></li>
-                            <li>
-                                <a class="has-arrow" href="javascript:void()" aria-expanded="false">Error</a>
-                                <ul aria-expanded="false">
-                                    <li><a href="./PackageHtml/page-error-400.html">Error 400</a></li>
-                                    <li><a href="./PackageHtml/page-error-403.html">Error 403</a></li>
-                                    <li><a href="./PackageHtml/page-error-404.html">Error 404</a></li>
-                                    <li><a href="./PackageHtml/page-error-500.html">Error 500</a></li>
-                                    <li><a href="./PackageHtml/page-error-503.html">Error 503</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="./PackageHtml/page-lock-screen.html">Lock Screen</a></li>
-                        </ul>
-                    </li>
-                </ul>
             </div>
         </div>
         <!-- Sidebar end -->
