@@ -167,33 +167,29 @@
                             <li><a asp-controller="Template" asp-action="Index2">Dashboard 2</a></li>
                         </ul>
                     </li>
-                    <li class="nav-label">Apps</li>
+                    <li class="nav-label">票務管理</li>
                     <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon icon-app-store"></i><span class="nav-text">Apps</span>
+                        <a asp-controller="Tickets" asp-action="List">
+                            <i class="icon icon-app-store"></i><span class="nav-text">票務管理</span>
                         </a>
-                        <ul aria-expanded="false">
-                            <li><a href="./PackageHtml/app-profile.html">Profile</a></li>
-                            <li>
-                                <a class="has-arrow" href="javascript:void()" aria-expanded="false">Email</a>
-                                <ul aria-expanded="false">
-                                    <li><a href="./PackageHtml/email-compose.html">Compose</a></li>
-                                    <li><a href="./PackageHtml/email-inbox.html">Inbox</a></li>
-                                    <li><a href="./PackageHtml/email-read.html">Read</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="./PackageHtml/app-calender.html">Calendar</a></li>
-                        </ul>
                     </li>
+                    @* <li class="nav-label">訂單管理</li> *@
+                    @* <li> *@
+                    @*     <a class="has-arrow" href="javascript:void()" aria-expanded="false"> *@
+                    @*         <i class="icon icon-app-store"></i><span class="nav-text">訂單管理</span> *@
+                    @*     </a> *@
+                    @*     <ul aria-expanded="false"> *@
+                    @*         <li><a asp-controller="Order" asp-action="OrderManage">訂單管理</a></li> *@
+                    @*     </ul> *@
+                    @* </li> *@
+
                     <li class="nav-label">訂單管理</li>
                     <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                        <a asp-controller="Order" asp-action="OrderManage">
                             <i class="icon icon-app-store"></i><span class="nav-text">訂單管理</span>
                         </a>
-                        <ul aria-expanded="false">
-                            <li><a asp-controller="Order" asp-action="OrderManage">訂單管理</a></li>
-                        </ul>
                     </li>
+
                     <li class="nav-label">報表分析</li>
                     <li>
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
@@ -317,7 +313,6 @@
 
     </div>
     <!-- Main wrapper end -->
-
     <!-- Scripts -->
     @* 尋找並渲染在子頁面中使用 @section Scripts { ... } 定義的腳本內容 *@
     @{

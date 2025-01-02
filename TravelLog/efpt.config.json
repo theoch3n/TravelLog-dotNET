@@ -15,6 +15,10 @@
    "T4TemplatePath": null,
    "Tables": [
       {
+         "Name": "[dbo].[itineraries]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[MemberInformation]",
          "ObjectType": 0
       },
@@ -23,7 +27,23 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Order_Status]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Payment]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Payment_Method]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Payment_Status]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Product_Ticket]",
          "ObjectType": 0
       },
       {
