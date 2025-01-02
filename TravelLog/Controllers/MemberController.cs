@@ -80,18 +80,19 @@ namespace TravelLog.Controllers
         // 處理登入請求
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(string email, string password)
+        public IActionResult Login(string MiEmail, string MiPassword)
         {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            // 檢查輸入字段
+            if (string.IsNullOrEmpty(MiEmail) || string.IsNullOrEmpty(MiPassword))
             {
                 ModelState.AddModelError("EmptyFields", "Email and Password are required.");
                 return View();
             }
 
             // 驗證用戶憑據
-            var hashedPassword = HashPassword(password);
+            var hashedPassword = HashPassword(MiPassword);
             var member = _context.MemberInformations
-                .FirstOrDefault(m => m.MiEmail == email && m.MiPasswordHash == hashedPassword && m.MiIsActive == true);
+                .FirstOrDefault(m => m.MiEmail == MiEmail && m.MiPasswordHash == hashedPassword && m.MiIsActive == true);
 
             if (member == null)
             {
@@ -99,10 +100,11 @@ namespace TravelLog.Controllers
                 return View();
             }
 
-            // 登入成功，設定 Session
+            // 登入成功，設置 Session
             HttpContext.Session.SetString("UserId", member.MiMemberId.ToString());
             HttpContext.Session.SetString("UserName", member.MiAccountName);
 
+            // 重定向至 Profile 頁面
             return RedirectToAction("Profile");
         }
 
