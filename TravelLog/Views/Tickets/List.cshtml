@@ -7,7 +7,7 @@
 <h1>票務管理</h1>
 
 <p>
-    <a asp-action="Create">新增票種</a>
+    <a asp-action="Create" class="btn btn-outline-primary">新增票種</a>
 </p>
 <table class="table">
     <thead>
@@ -78,9 +78,9 @@
                         @Html.DisplayFor(modelItem => item.CreatedAt)
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.TicketsId">修改</a> |
+                        <a asp-action="Edit" asp-route-id="@item.TicketsId" class="btn btn-outline-info text-info">修改</a>
                         <a asp-action="Delete"
-                           asp-route-id="@item.TicketsId"
+                           asp-route-id="@item.TicketsId" class="btn btn-outline-danger text-danger"
                            onclick="return confirm('確定要刪除這個票種嗎?');">刪除</a>
                     </td>
                 </tr>
@@ -111,6 +111,11 @@
             position: relative;
             float: none;
             margin-top: -2px;
+        }
+
+        table td .btn-outline-info:hover,
+        table td .btn-outline-danger:hover {
+            color: white !important;
         }
     </style>
 }

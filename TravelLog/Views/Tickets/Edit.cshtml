@@ -6,7 +6,7 @@
 
 <h1>票務資訊修改</h1>
 
-<h4>不知道寫什麼先這樣</h4>
+<h4>票務管理</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -43,20 +43,15 @@
                 <input asp-for="RefundPolicy" class="form-control" />
                 <span asp-validation-for="RefundPolicy" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
+            <div>
+                <input type="hidden" name="CreatedAt" value="@Model.CreatedAt" />
             </div>
             <div class="form-group">
-                <input type="submit" value="送出修改" class="btn btn-primary" />
+                <input type="submit" value="送出修改" class="btn btn-outline-primary" />
+                <a asp-action="List" class="btn btn-outline-danger">取消</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="List">取消</a>
 </div>
 
 @section Scripts {
