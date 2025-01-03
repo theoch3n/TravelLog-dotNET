@@ -54,11 +54,11 @@
                             </td>
                             <td id="cancel-at-@item.OrderId">
                                 @Html.DisplayFor(modelItem => item.DeleteAt)
-                            </td>
+                        </td>
                             <td>
                                 <a asp-controller="Order" asp-action="OrderDetail" asp-route-id="@item.OrderId" class="btn btn-outline-info">訂單詳情</a>
                                 <a asp-controller="Order" asp-action="OrderEdit" asp-route-id="@item.OrderId" class="btn btn-outline-warning">修改訂單</a>
-                                <button type="button" id="btnCancel" data-order-id="@item.OrderId" onclick="cancelOrder(this)" class="btn btn-outline-danger">取消訂單</button>
+                            <button type="button" id="btnCancel" data-order-id="@item.OrderId" onclick="cancelOrder(this)" class="btn btn-outline-danger">取消訂單</button>
                             </td>
                         </tr>
                     }

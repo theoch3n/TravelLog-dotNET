@@ -1,4 +1,9 @@
 ﻿async function cancelOrder(btnCancel) {
+
+	if (!confirm('確定要取消這筆訂單嗎?'))
+		return
+
+
 	const orderId = btnCancel.dataset.orderId; // 從取消按鈕的 data-orderId 屬性獲取 orderId
 	console.log("取消訂單 ID:", orderId); // 調試用
 	const baseAddress = "https://localhost:7206";
