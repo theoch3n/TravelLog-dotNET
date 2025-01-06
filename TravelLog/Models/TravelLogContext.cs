@@ -13,7 +13,7 @@ public partial class TravelLogContext : DbContext
     {
     }
 
-    public virtual DbSet<Itinerary> Itineraries { get; set; }
+   
 
     public virtual DbSet<MemberInformation> MemberInformations { get; set; }
 
@@ -33,29 +33,7 @@ public partial class TravelLogContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Itinerary>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__itinerar__3213E83F5D1B7128");
-
-            entity.ToTable("itineraries");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Address)
-                .IsRequired()
-                .HasColumnType("text")
-                .HasColumnName("address");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
-            entity.Property(e => e.Latitude).HasColumnName("latitude");
-            entity.Property(e => e.Longitude).HasColumnName("longitude");
-            entity.Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("name");
-        });
+       
 
         modelBuilder.Entity<MemberInformation>(entity =>
         {
