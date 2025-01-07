@@ -34,7 +34,11 @@ function initMap() {
                 placeId: place.place_id,
                 name: place.name,
                 address: place.formatted_address,
+
+
             };
+             console.log(selectRestaurant);
+
             //設定marker要設定在地圖上
             const marker = new google.maps.Marker({
                 position: selectRestaurant.location,
@@ -72,12 +76,19 @@ function renderItinerary() {
     });
 }
 
+
+
+
+
+
+
+
 // 新增行程
 document.getElementById('add').addEventListener('click', function () {
     if (selectRestaurant) {
         itinerary.push(selectRestaurant);
         localStorage.setItem('itinerary', JSON.stringify(itinerary));
-        renderItinerary();
+        renderItinerary();//重新渲染行程列表
         document.getElementById('search-input').value = '';//清空搜尋欄位
 
     }
