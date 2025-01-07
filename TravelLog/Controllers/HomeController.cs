@@ -16,6 +16,16 @@ namespace TravelLog.Controllers
             _logger = logger;
             _context = context;
         }
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        /// <author>濟恩</author>
+        /// <summary>
+        /// 使用預存程序取得流水號
+        /// </summary>
+        /// <returns></returns>
         //public IActionResult Index()
         //{
         //    SerialBase_SP serialBaseSP = new SerialBase_SP("UR");
