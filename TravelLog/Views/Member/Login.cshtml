@@ -154,7 +154,7 @@
                                         <!-- Email -->
                                         <div class="mb-3">
                                             <label for="loginEmail" class="form-label"><strong>Email</strong></label>
-                                            <input type="email" class="form-control" id="loginEmail" name="MiEmail" required />
+                                            <input type="email" class="form-control" id="loginEmail" name="MiEmail"  value="Test@gmail.com" required />
                                             @Html.ValidationMessage("MiEmail", "", new { @class = "text-danger" })
                                         </div>
 
@@ -162,7 +162,7 @@
                                         <div class="mb-3">
                                             <label for="loginPassword" class="form-label"><strong>密碼</strong></label>
                                             <div class="input-group">
-                                                <input type="password" class="form-control" id="loginPassword" name="MiPassword" required />
+                                                <input type="password" class="form-control" id="loginPassword" name="MiPassword" value="T123456" required />
                                                 <button type="button" class="btn-merge-input" id="togglePassword">
                                                     <i class="bi bi-eye-slash" id="passwordIcon"></i>
                                                 </button>
