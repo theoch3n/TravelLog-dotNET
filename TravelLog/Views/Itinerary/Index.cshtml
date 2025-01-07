@@ -38,16 +38,39 @@
         </div>
     </div>
 
+    @section Scripts
+    {
+        <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0mSwZn2Mgu42RjWRxivjrSC3s84nINa0&libraries=places&callback=initMap&region=TW&language=zh-TW"></script>
+        <script src="/js/google_map_api.js"></script>
+       
+        <script>
+            var baseAddress = "https://localhost:7030";
 
+            insertPlaces();
 
-    <script src="/js/google_map_api.js"></script>
+                async function insertPlaces() {
 
-    < !--Google Maps API-- >
+                 var response = await fetch(`${baseAddress}/api/Places`,{
+                    method:"POST",
+                    body: JSON.stringify({
 
-    <script async
-          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0mSwZn2Mgu42RjWRxivjrSC3s84nINa0&libraries=places&callback=initMap&region=TW&language=zh-TW"
+                      id: 0,
+                      date: 0,
+                      scheduleId: 0,
+                      name: "Test",
+                      address: "Test",
+                      latitude: 0,
+                      longitude: 0
 
-    </script>
+                    }),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+            }
+
+        </script>
+    }
 </body>
 
 </html>
