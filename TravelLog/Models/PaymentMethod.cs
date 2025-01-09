@@ -7,6 +7,9 @@ namespace TravelLog.Models;
 
 public partial class PaymentMethod
 {
+    /// <summary>
+    /// 付款方式 ID
+    /// </summary>
     public int PmId { get; set; }
 
     /// <summary>

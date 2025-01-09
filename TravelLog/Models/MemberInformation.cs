@@ -18,4 +18,6 @@ public partial class MemberInformation
     public DateTime? MiRegistrationDate { get; set; }
 
     public bool? MiIsActive { get; set; }
+
+    public string MiEmailConfirmationToken { get; set; }
 }

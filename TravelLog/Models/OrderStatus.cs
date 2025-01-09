@@ -7,6 +7,9 @@ namespace TravelLog.Models;
 
 public partial class OrderStatus
 {
+    /// <summary>
+    /// 訂單狀態 ID
+    /// </summary>
     public int OsId { get; set; }
 
     /// <summary>

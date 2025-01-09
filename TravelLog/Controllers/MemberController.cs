@@ -138,5 +138,100 @@ namespace TravelLog.Controllers
                 return BitConverter.ToString(hash).Replace("-", "").ToLower();
             }
         }
+        // 顯示重設密碼請求頁面
+        [HttpGet]
+        public IActionResult ResetPasswordRequest()
+        {
+            return View();
+        }
+
+        // 處理重設密碼請求
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ResetPasswordRequest(string email)
+        {
+            // 檢查 Email 是否存在
+            var member = _context.MemberInformations.FirstOrDefault(m => m.MiEmail == email);
+            if (member == null)
+            {
+                TempData["ErrorMessage"] = "No account is associated with this email.";
+                return View();
+            }
+
+            // 生成唯一的 Token，並保存到模型中
+            var resetToken = Guid.NewGuid().ToString();
+            member.MiEmailConfirmationToken = resetToken;
+            _context.SaveChanges();
+
+            // 將 Email 和 Token 存入 Session
+            HttpContext.Session.SetString("Email", email);
+            HttpContext.Session.SetString("Token", resetToken);
+
+            TempData["SuccessMessage"] = "A password reset link has been sent to your email.";
+            return RedirectToAction("ResetPassword");
+        }
+
+        // 顯示重設密碼頁面
+        [HttpGet]
+        public IActionResult ResetPassword()
+        {
+            // 從 Session 中檢索 Email 和 Token
+            string email = HttpContext.Session.GetString("Email");
+            string token = HttpContext.Session.GetString("Token");
+
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+            {
+                TempData["ErrorMessage"] = "Reset password link is invalid or expired.";
+                return RedirectToAction("ResetPasswordRequest");
+            }
+
+            // 驗證 Email 和 Token 是否有效
+            var member = _context.MemberInformations
+                .FirstOrDefault(m => m.MiEmail == email && m.MiEmailConfirmationToken == token);
+
+            if (member == null)
+            {
+                TempData["ErrorMessage"] = "Invalid or expired password reset link.";
+                return RedirectToAction("ResetPasswordRequest");
+            }
+
+            return View(member);
+        }
+
+        // 處理重設密碼提交
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ResetPassword(MemberInformation member, string newPassword, string confirmPassword)
+        {
+            if (string.IsNullOrEmpty(newPassword) || newPassword.Length < 6)
+            {
+                ModelState.AddModelError("InvalidPassword", "Password must be at least 6 characters long.");
+                return View(member);
+            }
+
+            if (newPassword != confirmPassword)
+            {
+                ModelState.AddModelError("PasswordMismatch", "New Password and Confirm Password do not match.");
+                return View(member);
+            }
+
+            var existingMember = _context.MemberInformations
+                .FirstOrDefault(m => m.MiEmail == member.MiEmail && m.MiEmailConfirmationToken == member.MiEmailConfirmationToken);
+
+            if (existingMember == null)
+            {
+                TempData["ErrorMessage"] = "Invalid or expired password reset link.";
+                return RedirectToAction("ResetPasswordRequest");
+            }
+
+            // 更新密碼並清除 Token
+            existingMember.MiPasswordHash = HashPassword(newPassword);
+            existingMember.MiEmailConfirmationToken = null;
+            _context.SaveChanges();
+
+            // 設置成功消息並重導向
+            TempData["SuccessMessage"] = "Your password has been reset successfully.";
+            return RedirectToAction("Login");
+        }
     }
 }
