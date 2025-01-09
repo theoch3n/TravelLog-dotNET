@@ -1,7 +1,7 @@
 USE [TravelLog]
 GO
 
-/****** Object:  Table [dbo].[MemberInformation]    Script Date: 2024/12/30 ¤W¤È 09:10:33 ******/
+/****** Object:  Table [dbo].[MemberInformation]    Script Date: 2025/1/9 ¤W¤È 09:23:52 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -15,6 +15,7 @@ CREATE TABLE [dbo].[MemberInformation](
 	[MI_PasswordHash] [nvarchar](255) NOT NULL,
 	[MI_RegistrationDate] [datetime] NULL,
 	[MI_IsActive] [bit] NULL,
+	[MiEmailConfirmationToken] [nvarchar](255) NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[MI_MemberID] ASC

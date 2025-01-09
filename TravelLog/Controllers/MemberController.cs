@@ -48,7 +48,7 @@ namespace TravelLog.Controllers
                     // 設置默認值
                     member.MiPasswordHash = HashPassword(member.MiPasswordHash); // 密碼加密
                     member.MiRegistrationDate = DateTime.Now; // 註冊日期
-                    member.MiIsActive = true; // 默認啟用
+                    member.MiIsActive = false; // 默認"不"啟用
 
                     // 新增會員
                     _context.MemberInformations.Add(member);
