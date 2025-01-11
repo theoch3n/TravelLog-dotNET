@@ -13,8 +13,6 @@ public partial class TravelLogContext : DbContext
     {
     }
 
-    public virtual DbSet<Itinerary> Itineraries { get; set; }
-
     public virtual DbSet<MemberInformation> MemberInformations { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
@@ -35,37 +33,13 @@ public partial class TravelLogContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Itinerary>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__itinerar__3213E83F4D313D53");
-
-            entity.ToTable("itineraries");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Address)
-                .IsRequired()
-                .HasColumnType("text")
-                .HasColumnName("address");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
-            entity.Property(e => e.Latitude).HasColumnName("latitude");
-            entity.Property(e => e.Longitude).HasColumnName("longitude");
-            entity.Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("name");
-        });
-
         modelBuilder.Entity<MemberInformation>(entity =>
         {
-            entity.HasKey(e => e.MiMemberId).HasName("PK__MemberIn__C80AA262AE76BDFB");
+            entity.HasKey(e => e.MiMemberId).HasName("PK__MemberIn__C80AA2628C2D1CAD");
 
             entity.ToTable("MemberInformation");
 
-            entity.HasIndex(e => e.MiEmail, "UQ__MemberIn__67B108C0B9DE9B2C").IsUnique();
+            entity.HasIndex(e => e.MiEmail, "UQ__MemberIn__67B108C0A12EF9CE").IsUnique();
 
             entity.Property(e => e.MiMemberId).HasColumnName("MI_MemberID");
             entity.Property(e => e.MiAccountName)
@@ -92,7 +66,7 @@ public partial class TravelLogContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Order__464666018EBA7FF5");
+            entity.HasKey(e => e.OrderId).HasName("PK__Order__4646660106396819");
 
             entity.ToTable("Order");
 
@@ -120,12 +94,12 @@ public partial class TravelLogContext : DbContext
 
             entity.HasOne(d => d.OrderStatusNavigation).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.OrderStatus)
-                .HasConstraintName("FK__Order__order_Sta__5165187F");
+                .HasConstraintName("FK__Order__order_Sta__412EB0B6");
         });
 
         modelBuilder.Entity<OrderStatus>(entity =>
         {
-            entity.HasKey(e => e.OsId).HasName("PK__Order_St__85A5060DBFCFF9F6");
+            entity.HasKey(e => e.OsId).HasName("PK__Order_St__85A5060DBFA107C2");
 
             entity.ToTable("Order_Status");
 
@@ -141,7 +115,7 @@ public partial class TravelLogContext : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.PaymentId).HasName("PK__Payment__ED10C46242785960");
+            entity.HasKey(e => e.PaymentId).HasName("PK__Payment__ED10C4624D340B56");
 
             entity.ToTable("Payment");
 
@@ -168,20 +142,20 @@ public partial class TravelLogContext : DbContext
 
             entity.HasOne(d => d.Order).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.OrderId)
-                .HasConstraintName("FK__Payment__order_i__5629CD9C");
+                .HasConstraintName("FK__Payment__order_i__49C3F6B7");
 
             entity.HasOne(d => d.PaymentMethodNavigation).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.PaymentMethod)
-                .HasConstraintName("FK__Payment__payment__47DBAE45");
+                .HasConstraintName("FK__Payment__payment__4AB81AF0");
 
             entity.HasOne(d => d.PaymentStatus).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.PaymentStatusId)
-                .HasConstraintName("FK__Payment__payment__48CFD27E");
+                .HasConstraintName("FK__Payment__payment__4BAC3F29");
         });
 
         modelBuilder.Entity<PaymentMethod>(entity =>
         {
-            entity.HasKey(e => e.PmId).HasName("PK__Payment___8E8EC76BEB527480");
+            entity.HasKey(e => e.PmId).HasName("PK__Payment___8E8EC76B2C849626");
 
             entity.ToTable("Payment_Method");
 
@@ -197,7 +171,7 @@ public partial class TravelLogContext : DbContext
 
         modelBuilder.Entity<PaymentStatus>(entity =>
         {
-            entity.HasKey(e => e.PsId).HasName("PK__Payment___011947AC54DD4722");
+            entity.HasKey(e => e.PsId).HasName("PK__Payment___011947ACB0E32256");
 
             entity.ToTable("Payment_Status");
 
@@ -229,7 +203,7 @@ public partial class TravelLogContext : DbContext
 
             entity.HasOne(d => d.Order).WithMany()
                 .HasForeignKey(d => d.OrderId)
-                .HasConstraintName("FK__Product_T__order__5441852A");
+                .HasConstraintName("FK__Product_T__order__46E78A0C");
         });
 
         modelBuilder.Entity<SerialBase>(entity =>
@@ -272,7 +246,7 @@ public partial class TravelLogContext : DbContext
 
         modelBuilder.Entity<Ticket>(entity =>
         {
-            entity.HasKey(e => e.TicketsId).HasName("PK__Tickets__EE5BBABBE488C303");
+            entity.HasKey(e => e.TicketsId).HasName("PK__Tickets__EE5BBABB47CC47CF");
 
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")

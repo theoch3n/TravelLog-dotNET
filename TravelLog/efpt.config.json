@@ -15,10 +15,6 @@
    "T4TemplatePath": null,
    "Tables": [
       {
-         "Name": "[dbo].[itineraries]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[MemberInformation]",
          "ObjectType": 0
       },

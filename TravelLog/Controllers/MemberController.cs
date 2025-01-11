@@ -7,7 +7,7 @@ using System.Text;
 
 namespace TravelLog.Controllers
 {
-    public class MemberController : Controller
+    public class MemberController : LockController
     {
         private readonly TravelLogContext _context;
 
@@ -101,10 +101,12 @@ namespace TravelLog.Controllers
             }
 
             // 登入成功，設置 Session
-            HttpContext.Session.SetString("UserId", member.MiMemberId.ToString());
-            HttpContext.Session.SetString("UserName", member.MiAccountName);
+            HttpContext.Session.SetString(CDictionary.SK_LOINGED_USER, member.MiMemberId.ToString()); // ID
+            HttpContext.Session.SetString("UserName", member.MiAccountName); // 使用者名稱（可選）
+            HttpContext.Session.SetString("UserId", member.MiMemberId.ToString());// 這行不可以刪
 
             // 重定向至 Profile 頁面
+            TempData["SuccessMessage"] = "Welcome back, " + member.MiAccountName + "!";
             return RedirectToAction("Profile");
         }
 
