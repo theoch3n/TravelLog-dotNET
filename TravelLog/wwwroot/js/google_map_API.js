@@ -6,6 +6,7 @@ let markers = [];
 let directionsService;
 let directionsRenderers = [];
 let itinerary = JSON.parse(localStorage.getItem('itinerary')) || [];
+let infoWindow;
 
 // 初始化地圖
 function initMap() {
@@ -34,21 +35,49 @@ function initMap() {
                 placeId: place.place_id,
                 name: place.name,
                 address: place.formatted_address,
-
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng()
 
             };
-             console.log(selectRestaurant);
+            //console.log(selectRestaurant);
+            //console.log(place.geometry.location.lat());
+            //console.log(place.geometry.location.lng());
+            //console.log(selectRestaurant.lat);
+            //console.log(selectRestaurant.lng);
 
+           
+
+            //將選取經緯度存成變數
+            var selectposition = {
+                lat: selectRestaurant.lat,
+                lng: selectRestaurant.lng,
+            };
             //設定marker要設定在地圖上
             const marker = new google.maps.Marker({
-                position: selectRestaurant.location,
+                position: selectposition,
                 map: map,//設定marker位置
             });
             markers.push(marker);
-            map.setCenter(selectRestaurant.location);
-        });
+            map.setCenter(selectposition);
 
-        renderItinerary();
+            //設定資訊框
+            if (!infoWindow) {//將對話匡初始化
+                infoWindow = new google.maps.InfoWindow();
+            }
+
+            infoWindow.setContent(//設定infoWindow裡的內容
+                `
+                                <h3>${selectRestaurant.name}</h3>
+                                <div>地址：${selectRestaurant.address}</div>
+                                <div>電話：${selectRestaurant.phoneNumber}</div>
+                                <div>評分：${selectRestaurant.rating}</div>
+                          
+                                `
+            );
+            infoWindow.open(map, marker)//打開資訊筐指定要畫在哪個地圖跟哪個點
+            renderItinerary();
+        });
+       
     });
 }
 

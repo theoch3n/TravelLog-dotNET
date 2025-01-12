@@ -84,8 +84,8 @@
                             scheduleId: 1,
                             name: selectRestaurant.name,    // 使用 selectRestaurant 的資料
                             address: selectRestaurant.address,
-                            latitude: selectRestaurant.location.latitude,  //來自 selectRestaurant 的緯度
-                            longitude: 0 //來自 selectRestaurant 的經度
+                            latitude: selectRestaurant.lat,  //來自 selectRestaurant 的緯度
+                            longitude: selectRestaurant.lng//來自 selectRestaurant 的經度
                         }),
                     })
                         .then(response => {
@@ -96,6 +96,7 @@
                         })
                         .then(data => {
                             console.log('地點已成功儲存：', data);
+                            
                             itinerary.push(selectRestaurant); // 更新前端行程陣列
                             renderItinerary();
                             document.getElementById('search-input').value = ''; // 清空搜尋欄位
