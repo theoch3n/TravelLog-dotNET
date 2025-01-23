@@ -22,8 +22,9 @@
 
 <body style="margin: 0;">
     <div style="display:flex;">
-        <div id="map" style="width: 50%;height: 100vh;"></div>
-        <div style="padding: 16px; width: 50%;">
+        <div id="map" style="width: 40%;height: 100vh;"></div>
+        <div style="padding: 16px; width: 40%;">
+            <input id="textsearch-input" class="form-control">
             <input id="search-input" class="form-control">
             <button class="btn btn-primary mt-2" id="add">加入行程</button> 
             <h4 class="mt-4">今日行程</h4>
@@ -34,6 +35,9 @@
             <ul class="list-group list-group-flush" id="list"></ul>
 
 
+        </div>
+        <div style="padding: 7px; width: 20%;">
+            <button class="btn btn-primary mt-2" id="textsearch-btn">搜尋</button>
         </div>
     </div>
 
