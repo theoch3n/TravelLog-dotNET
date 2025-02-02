@@ -10,7 +10,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowVueApp",
         builder => builder
-            .WithOrigins("http://localhost:5174") // Vue project url
+            .WithOrigins("http://localhost:5173") // Vue project url
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials()
