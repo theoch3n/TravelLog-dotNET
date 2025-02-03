@@ -43,7 +43,6 @@
 
     @section Scripts
     {
-        <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0mSwZn2Mgu42RjWRxivjrSC3s84nINa0&libraries=places&callback=initMap&region=TW&language=zh-TW"></script>
         <script src="/js/google_map_api.js"></script>
 
         <script>
@@ -75,80 +74,6 @@
 
           
 
-<<<<<<< Updated upstream
-
-          
-=======
-                    fetch(`${baseAddress}/api/Places`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                           
-                            date: 1,
-                            scheduleId: 1,
-                            name: selectRestaurant.name,    // 使用 selectRestaurant 的資料
-                            address: selectRestaurant.address,
-                            latitude: selectRestaurant.location.latitude,  //來自 selectRestaurant 的緯度
-                            longitude: 0 //來自 selectRestaurant 的經度
-                        }),
-                    })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error(`HTTP error! status: ${response.status}`);
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            alert('地點已成功儲存：', data);
-                            itinerary.push(selectRestaurant); // 更新前端行程陣列
-                            renderItinerary();
-                            document.getElementById('search-input').value = ''; // 清空搜尋欄位
-                        })
-                        .catch(error => {
-                            console.error('儲存地點時發生錯誤：', error);
-                            alert('儲存地點時發生錯誤，請稍後再試。'); // 顯示錯誤提示
-                        });
-                } else {
-                    alert('請選擇一個地點！'); // 如果沒有選擇地點，提示用戶
-                }
-            });
-            // DELETE: api/Places/5
-
-                        document.getElementById('remove').addEventListener('click', function () {
-                const placeId = 5; // 動態獲取地點 ID
-
-                fetch(`${baseAddress}/api/Places/${placeId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('地點已成功刪除：', data);
-                        alert('地點已成功刪除：', data);
-
-                        // 從行程陣列移除刪除的地點
-                        const index = itinerary.findIndex(item => item.id === placeId);
-                        if (index !== -1) {
-                            itinerary.splice(index, 1);
-                        }
-
-                        renderItinerary(); // 更新前端行程列表
-                    })
-                    .catch(error => {
-                        console.error('刪除地點時發生錯誤：', error);
-                        alert('刪除地點時發生錯誤，請稍後再試。');
-                    });
-            });
->>>>>>> Stashed changes
 
 
 
