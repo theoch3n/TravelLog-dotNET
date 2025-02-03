@@ -1,6 +1,19 @@
+using Microsoft.EntityFrameworkCore;
+using TravelLogAPI.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the DI container.
+builder.Services.AddDbContext<TravelLogContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("TravelLog")));
+
+//CORS
+string PolicyName = "VueSinglePage";
+builder.Services.AddCors(options => {
+    options.AddPolicy(
+        name: PolicyName,
+        policy => policy.WithOrigins("*").WithMethods("*").WithHeaders("*"));
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -21,5 +34,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.UseCors();
 app.Run();
