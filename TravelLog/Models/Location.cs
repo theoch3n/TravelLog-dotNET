@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace TravelLog.Models;
 
-public partial class Place
+public partial class Location
 {
     /// <summary>
     /// 地點ID
@@ -13,32 +13,22 @@ public partial class Place
     public int Id { get; set; }
 
     /// <summary>
-    /// 第幾天的行程
+    /// 會員 ID
     /// </summary>
-    public int Date { get; set; }
+    public int UserId { get; set; }
 
     /// <summary>
-    /// 連接行程id
+    /// 行程 ID
     /// </summary>
     public int ScheduleId { get; set; }
 
     /// <summary>
-    /// 景點名稱
+    /// 景點
     /// </summary>
-    public string Name { get; set; }
+    public string Attraction { get; set; }
 
     /// <summary>
-    /// 地址
+    /// 日期
     /// </summary>
-    public string Address { get; set; }
-
-    /// <summary>
-    /// 經度
-    /// </summary>
-    public double Latitude { get; set; }
-
-    /// <summary>
-    /// 緯度
-    /// </summary>
-    public double Longitude { get; set; }
+    public DateOnly Date { get; set; }
 }
