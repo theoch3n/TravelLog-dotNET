@@ -1,13 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Dynamic;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Web;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 
 namespace TravelLogAPI.Controllers {
     [ApiController]
@@ -18,7 +13,8 @@ namespace TravelLogAPI.Controllers {
         private readonly string HashKey = "5294y06JbISpM5x9";
         private readonly string HashIV = "v77hoKGq4kWxNNIS";
         private readonly string MerchantID = "2000132";
-        private readonly string Website = "https://localhost:7092"; // API server url
+        private readonly string ApiAddress = "https://localhost:7092"; // API server url
+        private readonly string VueAddress = "https://localhost:5173"; // Vue url
 
         [HttpPost("CreateOrder")]
         public IActionResult CreateOrder([FromBody] OrderRequest request) {
@@ -35,9 +31,9 @@ namespace TravelLogAPI.Controllers {
             { "PaymentType", "aio" }, // 一站式付款
             { "ChoosePayment", "ALL" }, // 允許所有支付方式
             { "EncryptType", "1" }, // 加密類型
-            { "ReturnURL", "https://localhost:7092/Ecpay/PaymentResult" },
-            { "ClientBackURL", "https://localhost:5173/payment" }, // 返回商店的網址
-            { "OrderResultURL", "https://localhost:5173/payment" }, // 交易結果返回網址
+            { "ReturnURL", $"{ApiAddress}/Ecpay/PaymentResult" },
+            { "ClientBackURL", $"{VueAddress}/payment" }, // 返回商店的網址
+            { "OrderResultURL", $"{VueAddress}/payment" }, // 交易結果返回網址
         };
 
                 order["CheckMacValue"] = GetCheckMacValue(order);
@@ -53,19 +49,6 @@ namespace TravelLogAPI.Controllers {
             catch (Exception ex) {
                 return BadRequest(new { message = ex.Message });
             }
-        }
-
-
-        private string GenerateEcpayForm(Dictionary<string, string> order) {
-            var formBuilder = new StringBuilder();
-            formBuilder.Append("<form id='ecpay-form' action='https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5' method='post'>");
-
-            foreach (var item in order) {
-                formBuilder.Append($"<input type='hidden' name='{item.Key}' value='{item.Value}' />");
-            }
-
-            formBuilder.Append("</form>");
-            return formBuilder.ToString();
         }
 
         private string GetCheckMacValue(Dictionary<string, string> order) {
@@ -137,7 +120,6 @@ namespace TravelLogAPI.Controllers {
             // 比較是否相同
             return calculatedCheckMacValue == receivedCheckMacValue;
         }
-
     }
 
     public class OrderRequest {
