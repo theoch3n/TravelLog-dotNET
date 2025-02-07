@@ -1,0 +1,99 @@
+﻿@model IEnumerable<TravelLog.Models.TourBundleWrap>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>商品列表</h1>
+
+<p>
+    <a asp-action="Create">新增套票</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                序
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EventName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartingPoint)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Destination)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Duration)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EventDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ratings)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactInfo)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int count = 0;
+            foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <td>
+                        @count
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EventName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartingPoint)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Destination)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Duration)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EventDescription)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Ratings)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ContactInfo)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-info text-info">編輯</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger text-danger">刪除</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

@@ -5,10 +5,10 @@ using System.Collections.Generic;
 
 namespace TravelLog.Models;
 
-public partial class Schedule
+public partial class Location
 {
     /// <summary>
-    /// ScheduleID
+    /// 地點ID
     /// </summary>
     public int Id { get; set; }
 
@@ -18,22 +18,17 @@ public partial class Schedule
     public int UserId { get; set; }
 
     /// <summary>
-    /// 行程名稱
+    /// 行程 ID
     /// </summary>
-    public string Name { get; set; }
+    public int ScheduleId { get; set; }
 
     /// <summary>
-    /// 目的地
+    /// 景點
     /// </summary>
-    public string Destination { get; set; }
+    public string Attraction { get; set; }
 
     /// <summary>
-    /// 開始日期
+    /// 日期
     /// </summary>
-    public DateOnly StartDate { get; set; }
-
-    /// <summary>
-    /// 結束日期
-    /// </summary>
-    public DateOnly EndDate { get; set; }
+    public DateOnly Date { get; set; }
 }

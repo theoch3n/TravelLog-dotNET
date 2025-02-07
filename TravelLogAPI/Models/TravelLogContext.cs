@@ -13,33 +13,46 @@ public partial class TravelLogContext : DbContext
     {
     }
 
-    public virtual DbSet<Place> Places { get; set; }
+    public virtual DbSet<TourBundle> TourBundles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Place>(entity =>
+        modelBuilder.Entity<TourBundle>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Place__3214EC0746F0C02B");
+            entity.HasKey(e => e.Id).HasName("PK__Tour_Bun__3213E83F516B86CA");
 
-            entity.ToTable("Place");
+            entity.ToTable("Tour_Bundles");
 
-            entity.Property(e => e.Id).HasComment("地點ID");
-            entity.Property(e => e.Address)
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.ContactInfo)
                 .IsRequired()
-                .HasMaxLength(255)
-                .HasComment("地址");
-            entity.Property(e => e.Date)
-                .HasComment("第幾天的行程")
-                .HasColumnName("date");
-            entity.Property(e => e.Latitude).HasComment("經度");
-            entity.Property(e => e.Longitude).HasComment("緯度");
-            entity.Property(e => e.Name)
+                .HasMaxLength(20)
+                .HasColumnName("contactInfo");
+            entity.Property(e => e.Destination)
                 .IsRequired()
-                .HasMaxLength(255)
-                .HasComment("景點名稱");
-            entity.Property(e => e.ScheduleId)
-                .HasComment("連接行程id")
-                .HasColumnName("scheduleId");
+                .HasMaxLength(40)
+                .HasColumnName("destination");
+            entity.Property(e => e.Duration).HasColumnName("duration");
+            entity.Property(e => e.EventDescription)
+                .IsRequired()
+                .HasMaxLength(500)
+                .HasColumnName("eventDescription");
+            entity.Property(e => e.EventName)
+                .IsRequired()
+                .HasMaxLength(40)
+                .HasColumnName("eventName");
+            entity.Property(e => e.FirstDate)
+                .HasColumnType("datetime")
+                .HasColumnName("firstDate");
+            entity.Property(e => e.LastDate)
+                .HasColumnType("datetime")
+                .HasColumnName("lastDate");
+            entity.Property(e => e.Price).HasColumnName("price");
+            entity.Property(e => e.Ratings).HasColumnName("ratings");
+            entity.Property(e => e.StartingPoint)
+                .IsRequired()
+                .HasMaxLength(40)
+                .HasColumnName("startingPoint");
         });
 
         OnModelCreatingPartial(modelBuilder);

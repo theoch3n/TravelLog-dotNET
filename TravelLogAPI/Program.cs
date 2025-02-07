@@ -3,7 +3,17 @@ using TravelLogAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the DI container.
+builder.Services.AddDbContext<TravelLogContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("TravelLog")));
+
+//CORS
+string PolicyName = "VueSinglePage";
+builder.Services.AddCors(options => {
+    options.AddPolicy(
+        name: PolicyName,
+        policy => policy.WithOrigins("*").WithMethods("*").WithHeaders("*"));
+});
 
 //¥²»Ý
 string PolicyName = "Room145";
@@ -54,5 +64,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.UseCors();
 app.Run();
