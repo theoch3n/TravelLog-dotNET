@@ -8,54 +8,14 @@
    "OutputContextPath": null,
    "OutputPath": "Models",
    "PreserveCasingWithRegex": true,
-   "ProjectRootNamespace": "TravelLog",
+   "ProjectRootNamespace": "TravelLogAPI",
    "Schemas": null,
    "SelectedHandlebarsLanguage": 2,
    "SelectedToBeGenerated": 0,
    "T4TemplatePath": null,
    "Tables": [
       {
-         "Name": "[dbo].[MemberInformation]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Order]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Order_Status]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Payment]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Payment_Method]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Payment_Status]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[Place]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Product_Ticket]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[schedule]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[SerialBase]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Tickets]",
          "ObjectType": 0
       }
    ],

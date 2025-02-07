@@ -22,28 +22,31 @@
 
 <body style="margin: 0;">
     <div style="display:flex;">
-        <div id="map" style="width: 50%;height: 100vh;"></div>
-        <div style="padding: 16px; width: 50%;">
+        <div id="map" style="width: 40%;height: 100vh;"></div>
+        <div style="padding: 16px; width: 40%;">
+            <input id="textsearch-input" class="form-control">
             <input id="search-input" class="form-control">
-            <button class="btn btn-primary mt-2" id="add">加入行程</button>
+            @* <button class="btn btn-primary mt-2" id="add">加入行程</button>  *@
             <h4 class="mt-4">今日行程</h4>
             <ul class="list-group list-group-flush" id="itinerary-list"></ul>
             <button class="btn btn-success mt-4" id="draw-route">規劃路線</button>
-            <h4 class="mt-4">我的行程</h4>
-            <button class="btn btn-primary mt-2" id="add_2">儲存行程</button>
+            @* <h4 class="mt-4">我的行程</h4> *@
+            @* <button class="btn btn-primary mt-2" id="add_2">儲存行程</button> *@
             <ul class="list-group list-group-flush" id="list"></ul>
 
 
+        </div>
+        <div style="padding: 7px; width: 20%;">
+            @* <button class="btn btn-primary mt-2" id="textsearch-btn">搜尋</button> *@
         </div>
     </div>
 
     @section Scripts
     {
-        <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0mSwZn2Mgu42RjWRxivjrSC3s84nINa0&libraries=places&callback=initMap&region=TW&language=zh-TW"></script>
         <script src="/js/google_map_api.js"></script>
 
         <script>
-                var baseAddress = "https://localhost:7030";
+                
 
                 // insertPlaces();
 
@@ -69,51 +72,7 @@
                 // }
 
 
-            //存入資料庫
-            document.getElementById('add').addEventListener('click', function () {
-                if (selectRestaurant) {
-
-                    fetch(`${baseAddress}/api/Places`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                           
-                            date: 1,
-                            scheduleId: 1,
-                            name: selectRestaurant.name,    // 使用 selectRestaurant 的資料
-                            address: selectRestaurant.address,
-                            latitude: selectRestaurant.lat,  //來自 selectRestaurant 的緯度
-                            longitude: selectRestaurant.lng//來自 selectRestaurant 的經度
-                        }),
-                    })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error(`HTTP error! status: ${response.status}`);
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            console.log('地點已成功儲存：', data);
-                            
-                            itinerary.push(selectRestaurant); // 更新前端行程陣列
-                            renderItinerary();
-                            document.getElementById('search-input').value = ''; // 清空搜尋欄位
-                        })
-                        .catch(error => {
-                            console.error('儲存地點時發生錯誤：', error);
-                            alert('儲存地點時發生錯誤，請稍後再試。'); // 顯示錯誤提示
-                        });
-                } else {
-                    alert('請選擇一個地點！'); // 如果沒有選擇地點，提示用戶
-                }
-            });
-
-
-
-
-
+          
 
 
 

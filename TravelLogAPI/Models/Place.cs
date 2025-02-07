@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace TravelLog.Models;
+namespace TravelLogAPI.Models;
 
 public partial class Place
 {
