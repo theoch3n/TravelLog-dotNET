@@ -16,12 +16,12 @@ builder.Services.AddCors(options => {
 });
 
 //¥²»Ý
-string PolicyName = "Room145";
+string PolicyNames = "Room145";
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(
-        name: PolicyName,
+        name: PolicyNames,
        policy => policy.WithOrigins("*").WithMethods("*").WithHeaders("*"));
 });
 

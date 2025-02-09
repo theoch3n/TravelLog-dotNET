@@ -13,13 +13,38 @@ public partial class TravelLogContext : DbContext
     {
     }
 
+    public virtual DbSet<Place> Places { get; set; }
+
     public virtual DbSet<TourBundle> TourBundles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Place>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Place__3214EC078C6F8D14");
+
+            entity.Property(e => e.Id).HasComment("地點ID");
+            entity.Property(e => e.Address)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasComment("地址");
+            entity.Property(e => e.Date)
+                .HasComment("第幾天的行程")
+                .HasColumnName("date");
+            entity.Property(e => e.Latitude).HasComment("經度");
+            entity.Property(e => e.Longitude).HasComment("緯度");
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasComment("景點名稱");
+            entity.Property(e => e.ScheduleId)
+                .HasComment("連接行程id")
+                .HasColumnName("scheduleId");
+        });
+
         modelBuilder.Entity<TourBundle>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tour_Bun__3213E83F516B86CA");
+            entity.HasKey(e => e.Id).HasName("PK__Tour_Bun__3213E83F20289FDA");
 
             entity.ToTable("Tour_Bundles");
 
