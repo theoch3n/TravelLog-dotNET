@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace TravelLog.Models {
     public class OrderWrap {
@@ -8,11 +10,12 @@ namespace TravelLog.Models {
             get { return _order; }
             set { _order = value; }
         }
+
         public OrderWrap() {
             _order = new Order();
         }
 
-        [DisplayName("編號")]
+        [DisplayName("訂單 ID")]
         public int OrderId {
             get { return _order.OrderId; }
             set { _order.OrderId = value; }
@@ -36,19 +39,24 @@ namespace TravelLog.Models {
             set { _order.DeleteAt = value; }
         }
 
-        [DisplayName("用戶ID")]
+        [DisplayName("用戶 ID")]
         public int UserId {
             get { return _order.UserId; }
             set { _order.UserId = value; }
         }
 
-        [DisplayName("訂單狀態")]
-        public int? OrderStatus {
+        [DisplayName("訂單狀態 ID")]
+        public int OrderStatus {
             get { return _order.OrderStatus; }
             set { _order.OrderStatus = value; }
         }
 
-        public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+        [DisplayName("訂單狀態名稱")]
+        public string StatusName { get; set; }
 
+        [DisplayName("付款狀態名稱")]
+        public string PaymentStatusName { get; set; }
+
+        public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
     }
 }

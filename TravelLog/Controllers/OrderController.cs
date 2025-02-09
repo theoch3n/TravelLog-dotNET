@@ -1,31 +1,85 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TravelLog.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TravelLog.Controllers {
     public class OrderController : Controller {
-
         private readonly TravelLogContext _context;
 
         public OrderController(TravelLogContext context) {
             _context = context;
         }
 
-        TravelLogContext cont = new TravelLogContext();
-
-        //TODO: 加入其他資料表並顯示對應Value
-
         // 訂單管理頁面
         // GET: Order/OrderManage
         [HttpGet]
-        public async Task<IActionResult> OrderManage() {
-            var orders = await _context.Orders.ToListAsync(); // 確保這裡獲取的資料不為 null
-            List<OrderWrap> list = new List<OrderWrap>();
-            foreach (var item in orders) {
-                list.Add(new OrderWrap { order = item });
+        public async Task<IActionResult> OrderManage(
+            int? status = null,
+            int? paymentStatus = null,
+            DateTime? startDate = null,
+            DateTime? endDate = null,
+            string sortBy = "OrderTime",
+            bool descending = true,
+            int page = 1,
+            int pageSize = 10)
+        {
+            var orderManageWrap = new OrderManageWrap {
+                FilterStatus = status,
+                FilterPaymentStatus = paymentStatus,
+                FilterStartDate = startDate,
+                FilterEndDate = endDate,
+                SortBy = sortBy,
+                SortDescending = descending,
+                CurrentPage = page,
+                PageSize = pageSize
+            };
+            // 查詢訂單
+            var query = _context.Orders
+                .Include(o => o.OrderStatusNavigation)
+                .Include(o => o.OrderPaymentStatusNavigation)
+                .Include(o => o.Payments)
+                .AsQueryable();
+            // 篩選條件
+            if (status.HasValue) {
+                query = query.Where(o => o.OrderStatus == status.Value);
             }
-            return View(list);
+            if (paymentStatus.HasValue) {
+                query = query.Where(o => o.OrderPaymentStatus == paymentStatus.Value);
+            }
+            if (startDate.HasValue) {
+                query = query.Where(o => o.OrderTime >= startDate.Value);
+            }
+            if (endDate.HasValue) {
+                query = query.Where(o => o.OrderTime <= endDate.Value);
+            }
+            // 訂單排序
+            query = sortBy switch {
+                "OrderTotalAmount" => descending
+                    ? query.OrderByDescending(o => o.OrderTotalAmount)
+                    : query.OrderBy(o => o.OrderTotalAmount),
+                _ => descending
+                    ? query.OrderByDescending(o => o.OrderTime)
+                    : query.OrderBy(o => o.OrderTime)
+            };
+            // 分頁
+            orderManageWrap.TotalOrders = await query.CountAsync();
+            orderManageWrap.TotalPages = (int)Math.Ceiling((double)orderManageWrap.TotalOrders / orderManageWrap.PageSize);
+            var orders = await query
+                // Skip() 跳過前面 pageSize * (page - 1) 筆資料
+                .Skip((orderManageWrap.CurrentPage - 1) * orderManageWrap.PageSize)
+                // Take() 只取 pageSize 筆資料
+                .Take(orderManageWrap.PageSize)
+                .ToListAsync();
+            orderManageWrap.Orders = orders.Select(o => new OrderWrap {
+                order = o,
+                StatusName = o.OrderStatusNavigation?.OsOrderStatus,
+                PaymentStatusName = o.OrderPaymentStatusNavigation?.PsPaymentStatus
+            }).ToList();
+
+            return View(orderManageWrap);
         }
 
         // 訂單詳細資料
@@ -35,15 +89,36 @@ namespace TravelLog.Controllers {
             if (id == null) {
                 return RedirectToAction("OrderManage");
             }
-            var data = await _context.Orders.FindAsync(id);
-            if (data == null) {
-                return RedirectToAction("OrderManage");
+
+            try {
+                var data = await _context.Orders
+                    .Include(o => o.OrderStatusNavigation)
+                    .Include(o => o.OrderPaymentStatusNavigation)
+                    .Include(o => o.Payments)
+                    .FirstOrDefaultAsync(o => o.OrderId == id);
+
+                if (data == null) {
+                    return RedirectToAction("OrderManage");
+                }
+
+                var orderWrap = new OrderWrap {
+                    order = data,
+                    StatusName = data.OrderStatusNavigation?.OsOrderStatus,
+                    PaymentStatusName = data.OrderPaymentStatusNavigation?.PsPaymentStatus,
+                    Payments = data.Payments.ToList()
+                };
+
+                return View(orderWrap);
             }
-            var orderWrap = new OrderWrap { order = data };
-            return View(orderWrap);
+            catch (Exception ex) {
+                return View("Error", new ErrorViewModel {
+                    RequestId = HttpContext.TraceIdentifier
+                });
+            }
         }
 
-        // 訂單修改頁面
+
+        // 訂單編輯頁面
         // GET: Order/OrderEdit
         [HttpGet]
         public async Task<IActionResult> OrderEdit(int? id) {
@@ -51,53 +126,72 @@ namespace TravelLog.Controllers {
                 return RedirectToAction("OrderManage");
             }
 
-            var data = await _context.Orders.FindAsync(id);
-            if (data == null) {
-                return RedirectToAction("OrderManage");
+            try {
+                var data = await _context.Orders.FindAsync(id);
+                if (data == null) {
+                    return RedirectToAction("OrderManage");
+                }
+                var orderWrap = new OrderWrap {
+                    order = data
+                };
+                return View(orderWrap);
             }
-            var orderWrap = new OrderWrap() { order = data };
-            return View(orderWrap);
+            catch (Exception ex) {
+                return View("Error", new ErrorViewModel {
+                    RequestId = HttpContext.TraceIdentifier
+                });
+            }
         }
 
-        // 儲存修改的訂單資料
+        // 儲存編輯的訂單
         // POST: Order/SaveEdit
         [HttpPost]
         public async Task<IActionResult> SaveEdit(OrderWrap orderWrap) {
-            if (ModelState.IsValid) {
-                _context.Update(orderWrap.order);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("OrderManage");
+            try {
+                if (ModelState.IsValid) {
+                    _context.Update(orderWrap.order);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("OrderManage");
+                }
+                return View(orderWrap);
             }
-            return View(orderWrap);
+            catch (Exception ex) {
+                return View("Error", new ErrorViewModel {
+                    RequestId = HttpContext.TraceIdentifier
+                });
+            }
         }
 
-        // 取消訂單 (更改訂單狀態為已取消並新增取消時間)
-        // POST: Order/SaveEdit
+        // 取消訂單
+        // POST: Order/Cancel
         [HttpPost]
         public async Task<IActionResult> Cancel([FromBody] int? id) {
             if (id == null) {
                 return Json(new { success = false, message = "無效的訂單 ID" });
             }
 
-            Console.WriteLine("取消訂單 ID: " + id); // 日誌輸出
-
-            var data = await _context.Orders.FindAsync(id);
-            if (data == null) {
-                return Json(new { success = false, message = "找不到訂單" });
-            }
-
-            // 更新訂單狀態與取消時間
-            data.OrderStatus = 4; // 訂單取消
-            data.DeleteAt = DateTime.Now;
-
             try {
-                // 保存更改
+                var data = await _context.Orders
+                    .Include(o => o.OrderStatusNavigation)
+                    .FirstOrDefaultAsync(o => o.OrderId == id);
+
+                if (data == null) {
+                    return Json(new { success = false, message = "找不到訂單" });
+                }
+
+                if (data.OrderStatus == 3) {
+                    return Json(new { success = false, message = "訂單已取消" });
+                }
+
+                data.OrderStatus = 3;
+                data.DeleteAt = DateTime.Now;
+
                 _context.Update(data);
                 await _context.SaveChangesAsync();
+
                 return Json(new { success = true, message = "訂單已取消" });
             }
             catch (Exception ex) {
-                Console.WriteLine("取消訂單時出錯: " + ex.Message);
                 return Json(new { success = false, message = "取消訂單失敗，請稍後再試" });
             }
         }
