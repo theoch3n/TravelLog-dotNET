@@ -16,6 +16,4 @@ public partial class OrderStatus
     /// 訂單狀態
     /// </summary>
     public string OsOrderStatus { get; set; }
-
-    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

@@ -1,7 +1,7 @@
 USE [TravelLog]
 GO
 
-/****** Object:  Table [dbo].[Itinerary]    Script Date: 2025/2/8 ¤U¤È 06:44:14 ******/
+/****** Object:  Table [dbo].[Itinerary]    Script Date: 2025/2/10 ¤U¤È 04:17:21 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -12,7 +12,7 @@ CREATE TABLE [dbo].[Itinerary](
 	[Itinerary_ID] [int] IDENTITY(1,1) NOT NULL,
 	[Itinerary_Title] [nvarchar](50) NOT NULL,
 	[Itinerary_Image] [varchar](200) NOT NULL,
-	[Itinerary_CreateDate] [datetime] NOT NULL,
+	[Itinerary_CreateDate] [datetime] NULL,
  CONSTRAINT [PK_Itinerary] PRIMARY KEY CLUSTERED 
 (
 	[Itinerary_ID] ASC

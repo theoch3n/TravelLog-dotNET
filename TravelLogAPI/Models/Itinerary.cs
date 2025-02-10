@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace TravelLog.Models;
+namespace TravelLogAPI.Models;
 
 public partial class Itinerary
 {
@@ -25,5 +25,5 @@ public partial class Itinerary
     /// <summary>
     /// 創建時間
     /// </summary>
-    public DateTime ItineraryCreateDate { get; set; }
+    public DateTime? ItineraryCreateDate { get; set; }
 }

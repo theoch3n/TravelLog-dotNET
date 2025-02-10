@@ -17,9 +17,6 @@ public partial class Map
     /// </summary>
     public string MapPlaceName { get; set; }
 
-    /// <summary>
-    /// 地址
-    /// </summary>
     public string MapAddress { get; set; }
 
     /// <summary>

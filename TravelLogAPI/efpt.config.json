@@ -15,7 +15,15 @@
    "T4TemplatePath": null,
    "Tables": [
       {
-         "Name": "[dbo].[Places]",
+         "Name": "[dbo].[Itinerary]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Itinerary_Detail]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Place]",
          "ObjectType": 0
       },
       {

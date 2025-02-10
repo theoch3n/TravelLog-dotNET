@@ -15,15 +15,6 @@ builder.Services.AddCors(options => {
         policy => policy.WithOrigins("*").WithMethods("*").WithHeaders("*"));
 });
 
-//¥²»Ý
-string PolicyNames = "Room145";
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(
-        name: PolicyNames,
-       policy => policy.WithOrigins("*").WithMethods("*").WithHeaders("*"));
-});
 
 builder.Services.AddDbContext<TravelLogContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TravelLog")));

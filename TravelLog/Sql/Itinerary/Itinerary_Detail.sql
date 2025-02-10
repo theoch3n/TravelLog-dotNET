@@ -1,7 +1,7 @@
 USE [TravelLog]
 GO
 
-/****** Object:  Table [dbo].[Itinerary_Detail]    Script Date: 2025/2/8 ¤U¤È 05:48:23 ******/
+/****** Object:  Table [dbo].[Itinerary_Detail]    Script Date: 2025/2/10 ¤U¤È 04:17:29 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -19,7 +19,7 @@ CREATE TABLE [dbo].[Itinerary_Detail](
 	[ItineraryDetail_StartDate] [datetime] NOT NULL,
 	[ItineraryDetail_EndDate] [datetime] NOT NULL,
 	[ItineraryDetail_Memo] [nvarchar](500) NOT NULL,
-	[ItineraryDetail_CreateDate] [datetime] NOT NULL,
+	[ItineraryDetail_CreateDate] [datetime] NULL,
  CONSTRAINT [PK_Itinerary_Detail] PRIMARY KEY CLUSTERED 
 (
 	[ItineraryDetail_ID] ASC
@@ -52,13 +52,6 @@ ALTER TABLE [dbo].[Itinerary_Detail] ADD  CONSTRAINT [DF_Itinerary_Detail_Itiner
 GO
 
 ALTER TABLE [dbo].[Itinerary_Detail] ADD  CONSTRAINT [DF_Itinerary_Detail_ItineraryDetail_CreateDate]  DEFAULT (getdate()) FOR [ItineraryDetail_CreateDate]
-GO
-
-ALTER TABLE [dbo].[Itinerary_Detail]  WITH CHECK ADD  CONSTRAINT [FK_Itinerary_ID] FOREIGN KEY([Itinerary_ID])
-REFERENCES [dbo].[Itinerary] ([Itinerary_ID])
-GO
-
-ALTER TABLE [dbo].[Itinerary_Detail] CHECK CONSTRAINT [FK_Itinerary_ID]
 GO
 
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'ID' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Itinerary_Detail', @level2type=N'COLUMN',@level2name=N'ItineraryDetail_ID'
