@@ -1,18 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using TravelLog.Models;
+﻿using TravelLog.Models;
 
-namespace TravelLog.Models {
+namespace TravelLog.ViewModels {
     public class OrderManageWrap {
+
+        public OrderManageWrap() {
+            OrderStatuses = new List<OrderStatus>();
+            PaymentStatuses = new List<PaymentStatus>();
+        }
+
+        /// <summary>
+        /// 訂單狀態列表
+        /// </summary>
+        public List<OrderStatus> OrderStatuses { get; set; }
+        /// <summary>
+        /// 付款狀態列表
+        /// </summary>
+        public List<PaymentStatus> PaymentStatuses { get; set; }
+
         /// <summary>
         /// 訂單列表
         /// </summary>
-        public List<OrderWrap> Orders { get; set; } = new List<OrderWrap>();
+        public List<OrderWrap> Orders { get; set; }
 
         /// <summary>
         /// 付款紀錄
         /// </summary>
         public List<Payment> Payments { get; set; }
+
+        public MemberInformation MemberInformation { get; set; }
 
         /// <summary>
         /// 總訂單數量
@@ -40,9 +55,19 @@ namespace TravelLog.Models {
         public int? FilterStatus { get; set; }
 
         /// <summary>
+        /// 訂單狀態
+        /// </summary>
+        public string OrderStatusName { get; set; }
+
+        /// <summary>
         /// 篩選：付款狀態
         /// </summary>
         public int? FilterPaymentStatus { get; set; }
+
+        /// <summary>
+        /// 付款狀態
+        /// </summary>
+        public string PaymentStatusName { get; set; }
 
         /// <summary>
         /// 篩選：開始日期

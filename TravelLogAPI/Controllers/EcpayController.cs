@@ -16,25 +16,27 @@ namespace TravelLogAPI.Controllers {
         private readonly string ApiAddress = "https://localhost:7092"; // API server url
         private readonly string VueAddress = "https://localhost:5173"; // Vue url
 
+        // 產生訂單
+        // POST: Ecpay/CreateOrder
         [HttpPost("CreateOrder")]
         public IActionResult CreateOrder([FromBody] OrderRequest request) {
             try {
                 var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
                 var order = new Dictionary<string, string>
                 {
-            { "MerchantTradeNo", orderId },
-            { "MerchantTradeDate", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") },
-            { "TotalAmount", request.TotalAmount.ToString() },
-            { "TradeDesc", HttpUtility.UrlEncode(request.TradeDesc ?? "測試交易") },
-            { "ItemName", request.ItemName },
-            { "MerchantID", MerchantID },
-            { "PaymentType", "aio" }, // 一站式付款
-            { "ChoosePayment", "ALL" }, // 允許所有支付方式
-            { "EncryptType", "1" }, // 加密類型
-            { "ReturnURL", $"{ApiAddress}/Ecpay/PaymentResult" },
-            { "ClientBackURL", $"{VueAddress}/payment" }, // 返回商店的網址
-            { "OrderResultURL", $"{VueAddress}/payment" }, // 交易結果返回網址
-        };
+                    { "MerchantTradeNo", orderId },
+                    { "MerchantTradeDate", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") },
+                    { "TotalAmount", request.TotalAmount.ToString() },
+                    { "TradeDesc", HttpUtility.UrlEncode(request.TradeDesc ?? "測試交易") },
+                    { "ItemName", request.ItemName },
+                    { "MerchantID", MerchantID },
+                    { "PaymentType", "aio" }, // 一站式付款
+                    { "ChoosePayment", "ALL" }, // 允許所有支付方式
+                    { "EncryptType", "1" }, // 加密類型
+                    { "ReturnURL", $"{ApiAddress}/Ecpay/PaymentResult" },
+                    { "ClientBackURL", $"{VueAddress}/payment" }, // 返回商店的網址
+                    { "OrderResultURL", $"{VueAddress}/payment" }, // 交易結果返回網址
+                };
 
                 order["CheckMacValue"] = GetCheckMacValue(order);
 
@@ -71,6 +73,8 @@ namespace TravelLogAPI.Controllers {
             return result.ToString();
         }
 
+        // 付款結果
+        // POST: Ecpay/PaymentResult
         [HttpPost("PaymentResult")]
         public IActionResult PaymentResult([FromForm] Dictionary<string, string> formData) {
             try {
@@ -107,7 +111,7 @@ namespace TravelLogAPI.Controllers {
         }
 
         private bool ValidateCheckMacValue(Dictionary<string, string> formData) {
-            // 複製一份 formData 以進行驗證
+            // 複製一份 formData 進行驗證
             var validationDict = new Dictionary<string, string>(formData);
 
             // 移除 CheckMacValue 進行驗證

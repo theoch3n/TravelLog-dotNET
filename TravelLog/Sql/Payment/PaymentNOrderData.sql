@@ -31,14 +31,14 @@ INSERT INTO [Payment_Method] (payment_Method, payment_MethodCode) VALUES
 
 -- ´¡¤J Order¡]­q³æ¡^
 INSERT INTO [Order] (order_Time, order_TotalAmount, delete_at, user_Id, order_Status, order_PaymentStatus) VALUES
-(DATEADD(DAY, -ABS(CHECKSUM(NEWID())) % 7, GETDATE()), 1500.00, NULL, 1, 1, 1),  
-('2023-06-15 10:45:00', 3200.50, NULL, 2, 2, 2),  
-('2024-03-22 14:30:00', 499.99, NULL, 3, 3, 3),   
-('2024-12-10 18:15:00', 7899.00, NULL, 4, 4, 2);  
+(DATEADD(DAY, -ABS(CHECKSUM(NEWID())) % 7, GETDATE()), 1500.00, NULL, 1, 1, 1),
+('2023-06-15 10:45:00', 3200.50, NULL, 2, 2, 2),
+('2024-03-22 14:30:00', 499.99, NULL, 3, 3, 3),
+('2024-12-10 18:15:00', 7899.00, NULL, 4, 4, 2);
 
 -- ´¡¤J Payment¡]¥I´Ú¬ö¿ý¡^
 INSERT INTO [Payment] (payment_Time, payment_Method, order_Id, paymentStatus_Id, ECPay_TransactionId) VALUES
-(NULL, 1, 1, 1, NULL),  
-(DATEADD(DAY, 3, '2023-06-15 10:45:00'), 2, 2, 2, 'EC1234567890'),  
-(NULL, 3, 3, 3, NULL),  
-(DATEADD(DAY, 5, '2024-12-10 18:15:00'), 1, 4, 2, 'EC9876543210');  
+(NULL, 1, 1, 1, NULL),
+(DATEADD(DAY, 3, '2023-06-15 10:45:00'), 2, 2, 2, 'EC1234567890'),
+(NULL, 3, 3, 3, NULL),
+(DATEADD(DAY, 5, '2024-12-10 18:15:00'), 1, 4, 2, 'EC9876543210');

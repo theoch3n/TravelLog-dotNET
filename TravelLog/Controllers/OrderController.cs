@@ -1,9 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TravelLog.Models;
+using TravelLog.ViewModels;
 
 namespace TravelLog.Controllers {
     public class OrderController : Controller {
@@ -18,17 +16,20 @@ namespace TravelLog.Controllers {
         [HttpGet]
         public async Task<IActionResult> OrderManage(
             int? status = null,
+            //string orderStatusName = "",
             int? paymentStatus = null,
+            //string paymentStatusName = "",
             DateTime? startDate = null,
             DateTime? endDate = null,
             string sortBy = "OrderTime",
             bool descending = true,
             int page = 1,
-            int pageSize = 10)
-        {
+            int pageSize = 10) {
             var orderManageWrap = new OrderManageWrap {
                 FilterStatus = status,
+                //OrderStatusName = orderStatusName,
                 FilterPaymentStatus = paymentStatus,
+                //PaymentStatusName = paymentStatusName,
                 FilterStartDate = startDate,
                 FilterEndDate = endDate,
                 SortBy = sortBy,
@@ -36,6 +37,10 @@ namespace TravelLog.Controllers {
                 CurrentPage = page,
                 PageSize = pageSize
             };
+            // 查詢所有訂單狀態
+            orderManageWrap.OrderStatuses = await _context.OrderStatuses.ToListAsync();
+            // 查詢所有付款狀態
+            orderManageWrap.PaymentStatuses = await _context.PaymentStatuses.ToListAsync();
             // 查詢訂單
             var query = _context.Orders
                 .Include(o => o.OrderStatusNavigation)
@@ -60,7 +65,7 @@ namespace TravelLog.Controllers {
                 "OrderTotalAmount" => descending
                     ? query.OrderByDescending(o => o.OrderTotalAmount)
                     : query.OrderBy(o => o.OrderTotalAmount),
-                _ => descending
+                "OrderTime" => descending
                     ? query.OrderByDescending(o => o.OrderTime)
                     : query.OrderBy(o => o.OrderTime)
             };
@@ -75,9 +80,10 @@ namespace TravelLog.Controllers {
                 .ToListAsync();
             orderManageWrap.Orders = orders.Select(o => new OrderWrap {
                 order = o,
-                StatusName = o.OrderStatusNavigation?.OsOrderStatus,
-                PaymentStatusName = o.OrderPaymentStatusNavigation?.PsPaymentStatus
+                OrderId = o.OrderId,
             }).ToList();
+            orderManageWrap.OrderStatusName = status.HasValue ? orders.FirstOrDefault()?.OrderStatusNavigation?.OsOrderStatus ?? "未知" : "全部狀態";
+            orderManageWrap.PaymentStatusName = status.HasValue ? orders.FirstOrDefault()?.OrderPaymentStatusNavigation?.PsPaymentStatus ?? "未知" : "全部狀態";
 
             return View(orderManageWrap);
         }
@@ -103,6 +109,7 @@ namespace TravelLog.Controllers {
 
                 var orderWrap = new OrderWrap {
                     order = data,
+                    OrderId = data.OrderId,
                     StatusName = data.OrderStatusNavigation?.OsOrderStatus,
                     PaymentStatusName = data.OrderPaymentStatusNavigation?.PsPaymentStatus,
                     Payments = data.Payments.ToList()
@@ -111,6 +118,7 @@ namespace TravelLog.Controllers {
                 return View(orderWrap);
             }
             catch (Exception ex) {
+                Console.WriteLine(ex.Message);
                 return View("Error", new ErrorViewModel {
                     RequestId = HttpContext.TraceIdentifier
                 });
@@ -137,6 +145,7 @@ namespace TravelLog.Controllers {
                 return View(orderWrap);
             }
             catch (Exception ex) {
+                Console.WriteLine(ex.Message);
                 return View("Error", new ErrorViewModel {
                     RequestId = HttpContext.TraceIdentifier
                 });
@@ -156,6 +165,7 @@ namespace TravelLog.Controllers {
                 return View(orderWrap);
             }
             catch (Exception ex) {
+                Console.WriteLine(ex.Message);
                 return View("Error", new ErrorViewModel {
                     RequestId = HttpContext.TraceIdentifier
                 });
@@ -192,6 +202,7 @@ namespace TravelLog.Controllers {
                 return Json(new { success = true, message = "訂單已取消" });
             }
             catch (Exception ex) {
+                Console.WriteLine(ex.Message);
                 return Json(new { success = false, message = "取消訂單失敗，請稍後再試" });
             }
         }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace TravelLog.Models {
     public class OrderWrap {
@@ -51,12 +49,20 @@ namespace TravelLog.Models {
             set { _order.OrderStatus = value; }
         }
 
-        [DisplayName("訂單狀態名稱")]
-        public string StatusName { get; set; }
+        [DisplayName("訂單狀態")]
+        public string StatusName {
+            get { return _order.OrderStatusNavigation?.OsOrderStatus ?? "未知"; }
+            set { _order.OrderStatusNavigation.OsOrderStatus = value; }
+        }
 
-        [DisplayName("付款狀態名稱")]
-        public string PaymentStatusName { get; set; }
+        [DisplayName("付款狀態")]
+        public string PaymentStatusName {
+            get { return _order.OrderPaymentStatusNavigation?.PsPaymentStatus ?? "未知"; }
+            set { _order.OrderPaymentStatusNavigation.PsPaymentStatus = value; }
+        }
 
         public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+
+        //public virtual ICollection<MemberInformation> MemberInformation { get; set; } = new List<MemberInformation>();
     }
 }

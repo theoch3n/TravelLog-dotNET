@@ -1,10 +1,10 @@
-﻿@model TravelLog.Models.OrderManageWrap
+﻿@model TravelLog.Models.OrderWrap
 
 @{
     ViewData["OrderDetail"] = "訂單詳細資料";
 
-    var order = Model.Orders.FirstOrDefault();
-    var orderIndex = Model.Orders.IndexOf(order) + 1;
+    var order = Model.order;
+    var orderIndex = Model.OrderId;
 }
 
 <div class="container">
@@ -14,7 +14,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h4>訂單基本資訊</h4>
+                    <h4>訂單資料</h4>
                 </div>
                 <div class="card-body text-dark">
                     <div class="row">
@@ -23,7 +23,7 @@
                                 <dt class="col-sm-4">訂單序號</dt>
                                 <dd class="col-sm-8">@orderIndex</dd>
 
-                                <dt class="col-sm-4">訂單時間</dt>
+                                <dt class="col-sm-4">創建時間</dt>
                                 <dd class="col-sm-8">@order.OrderTime.ToString("yyyy-MM-dd HH:mm:ss")</dd>
 
                                 <dt class="col-sm-4">總金額</dt>
@@ -40,20 +40,20 @@
                                     @switch (order.OrderStatus)
                                     {
                                         case 1:
-                                            <span class="badge bg-warning">處理中</span>
-                                            break;
+                                            <span class="badge bg-warning">待付款</span>
+                                            ; break;
                                         case 2:
-                                            <span class="badge bg-info">已確認</span>
-                                            break;
+                                            <span class="badge bg-info">已付款</span>
+                                            ; break;
                                         case 3:
-                                            <span class="badge bg-success">已完成</span>
-                                            break;
+                                            <span class="badge bg-danger text-white">已取消</span>
+                                            ; break;
                                         case 4:
-                                            <span class="badge bg-danger">已取消</span>
-                                            break;
+                                            <span class="badge bg-success">已完成</span>
+                                            ; break;
                                         default:
-                                            <span class="badge bg-secondary">未知狀態</span>
-                                            break;
+                                            <span class="badge bg-secondary">未知</span>
+                                            ; break;
                                     }
                                 </dd>
 
