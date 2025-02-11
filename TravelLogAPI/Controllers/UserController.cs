@@ -49,6 +49,60 @@ namespace TravelLogAPI.Controllers
             // 登入成功，回傳成功訊息或產生 JWT Token 等
             return Ok(new { message = "登入成功！" });
         }
+
+        // POST: api/User/register
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+        {
+            // 驗證輸入是否完整
+            if (string.IsNullOrWhiteSpace(request.Email) ||
+                string.IsNullOrWhiteSpace(request.Password) ||
+                string.IsNullOrWhiteSpace(request.UserName))
+            {
+                return BadRequest(new { message = "請提供完整的註冊資訊。" });
+            }
+
+            // 檢查電子郵件是否已存在
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.UserEmail == request.Email);
+            if (existingUser != null)
+            {
+                return BadRequest(new { message = "此電子郵件已被使用。" });
+            }
+
+            // 建立新的 User 資料
+            var user = new User
+            {
+                // 根據反向工程生成的模型屬性名稱，這裡假設為 User_Name, User_Email, User_Phone, User_Enabled, User_CreateDate
+                UserName = request.UserName,
+                UserEmail = request.Email,
+                UserPhone = request.Phone,  // 若沒有提供可為 null 或空字串
+                UserEnabled = true,
+                UserCreateDate = DateTime.Now
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();  // 儲存後，user.UserId 會被生成
+
+            // 建立對應的 UserPd 資料
+            var userPd = new UserPd
+            {
+                UserId = user.UserId,  // 使用剛剛生成的 UserId
+                // 示範用途：直接儲存明文密碼，實際上必須進行密碼雜湊處理
+                UserPdPasswordHash = request.Password,
+                UserPdToken = "",  // 預設空字串，可後續產生 Token
+                UserPdCreateDate = DateTime.Now
+            };
+
+            _context.UserPds.Add(userPd);
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "註冊成功！",
+                userId = user.UserId,
+                userName = user.UserName
+            });
+        }
     }
 
     // LoginRequest 用於接收前端傳來的登入資料
