@@ -139,7 +139,7 @@ public partial class TravelLogContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("UserPD_CreateDate");
             entity.Property(e => e.UserPdPasswordHash)
-                .HasMaxLength(50)
+                .HasMaxLength(256)
                 .IsUnicode(false)
                 .HasDefaultValue("")
                 .HasComment("密碼")

@@ -1,7 +1,7 @@
 USE [TravelLog]
 GO
 
-/****** Object:  Table [dbo].[User_PD]    Script Date: 2025/2/10 ¤W¤È 10:43:32 ******/
+/****** Object:  Table [dbo].[User_PD]    Script Date: 2025/2/11 ¤U¤È 12:09:46 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -11,8 +11,8 @@ GO
 CREATE TABLE [dbo].[User_PD](
 	[UserPD_ID] [int] IDENTITY(1,1) NOT NULL,
 	[User_ID] [int] NOT NULL,
-	[UserPD_PasswordHash] [varchar](50) NOT NULL,
-	[UserPD_Token] [varchar](max) NULL,
+	[UserPD_PasswordHash] varchar(256) NULL,
+	[UserPD_Token] varchar(max) NOT NULL,
 	[UserPD_CreateDate] [datetime] NOT NULL,
  CONSTRAINT [PK_User_PD] PRIMARY KEY CLUSTERED 
 (
