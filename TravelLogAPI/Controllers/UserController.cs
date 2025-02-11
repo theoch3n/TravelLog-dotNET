@@ -58,4 +58,16 @@ namespace TravelLogAPI.Controllers
         public string Password { get; set; }
         public bool RememberMe { get; set; }
     }
+
+    public class RegisterRequest
+    {
+        // 使用者名稱，例如 "TestUser"
+        public string UserName { get; set; }
+        // 使用者電子郵件，例如 "Test@gmail.com"
+        public string Email { get; set; }
+        // 使用者電話，若有需要
+        public string Phone { get; set; }
+        // 密碼（注意：此處示範直接儲存明文，實際應使用安全的密碼雜湊）
+        public string Password { get; set; }
+    }
 }

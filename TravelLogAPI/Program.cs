@@ -1,65 +1,37 @@
 using Microsoft.EntityFrameworkCore;
 using TravelLogAPI.Models;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the DI container.
+// 註冊 DbContext，只需一次
 builder.Services.AddDbContext<TravelLogContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TravelLog")));
 
-//CORS
-string PolicyName = "VueSinglePage";
-builder.Services.AddCors(options => {
-    options.AddPolicy(
-        name: PolicyName,
-        policy => policy.WithOrigins("*").WithMethods("*").WithHeaders("*"));
-});
-
-//必需
-string PolicyName = "Room145";
-
+// 設定 CORS 策略，允許來自 Vue 應用的請求 (例如 http://localhost:5173 與 http://localhost:5182)
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(
-        name: PolicyName,
-       policy => policy.WithOrigins("*").WithMethods("*").WithHeaders("*"));
+    options.AddPolicy("AllowVueApp", policy =>
+        policy.WithOrigins
+        ("http://localhost:5173", "http://localhost:5182")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials());
 });
 
-builder.Services.AddDbContext<TravelLogContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("TravelLog")));
-//必需結尾
-
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddCors(options => {
-    options.AddPolicy("AllowVueApp",
-        builder => builder
-            .WithOrigins("http://localhost:5173") // Vue project url
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials()
-    );
-});
-
-
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// 如果處於開發環境，啟用 Swagger
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors();
 
-
-// 啟用 CORS
+// 啟用 CORS，請確保在 UseHttpsRedirection 與 UseAuthorization 之前呼叫
 app.UseCors("AllowVueApp");
 
 app.UseHttpsRedirection();
@@ -67,5 +39,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-app.UseCors();
+
 app.Run();
