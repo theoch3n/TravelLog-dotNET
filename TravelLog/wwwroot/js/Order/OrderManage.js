@@ -1,68 +1,54 @@
-﻿async function cancelOrder(btnCancel) {
+﻿async function cancelOrder(orderId) {
+    if (!confirm("確定要取消這筆訂單嗎?")) return;
 
-    if (!confirm('確定要取消這筆訂單嗎?'))
-        return
+    const btnCancel = document.getElementById(`cancel-btn-${orderId}`);
+    const statusElement = document.getElementById(`order-status-${orderId}`);
+    const paymentStatusElement = document.getElementById(`payment-status-${orderId}`);
 
-
-    const orderId = btnCancel.dataset.orderId; // 從取消按鈕的 data-orderId 屬性獲取 orderId
-    console.log("取消訂單 ID:", orderId); // 調試用
-    const baseAddress = "https://localhost:7206";
     try {
-        // 禁用取消按鈕，防止重複點擊
+        // 禁用按鈕，防止重複點擊
         btnCancel.disabled = true;
-        //btnCancel.textContent = '取消中...';
+        btnCancel.textContent = "取消中...";
 
-        const response = await fetch(${ baseAddress } / Order / Cancel, {
+        const response = await fetch("/Order/Cancel", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(parseInt(orderId))
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(orderId)
         });
 
-        if (!response.ok) {
-            throw new Error(HTTP error! status: ${ response.status });
-        }
-
         const result = await response.json();
-        console.log("伺服器返回:", result);
 
         if (result.success) {
-            // 使用更友好的狀態顯示
-            const statusMap = {
-                4: '已取消'
-            };
+            alert("訂單取消成功！");
 
-            const orderStatusElement = document.getElementById("order-status-" + orderId);
-            const cancelAtElement = document.getElementById("cancel-at-" + orderId);
-
-            if (orderStatusElement) {
-                orderStatusElement.textContent = statusMap[4] || '已取消';
-                orderStatusElement.classList.add('text-danger');
+            // 更新 UI：顯示「已取消」
+            if (statusElement) {
+                statusElement.textContent = "已取消";
+                statusElement.classList.remove("badge-primary", "badge-success");
+                statusElement.classList.add("badge-danger");
             }
 
-            if (cancelAtElement) {
-                cancelAtElement.textContent = new Date().toLocaleString();
+            // 更新 UI：顯示「已退款」
+            if (paymentStatusElement) {
+                paymentStatusElement.textContent = "已退款";
+                paymentStatusElement.classList.remove("badge-primary", "badge-success");
+                paymentStatusElement.classList.add("badge-info");
             }
 
-            // 禁用取消按鈕
+            // 更新 UI：禁用按鈕
+            btnCancel.textContent = "已取消";
+            btnCancel.classList.remove("btn-danger");
+            btnCancel.classList.add("btn-secondary");
             btnCancel.disabled = true;
-            btnCancel.classList.remove('btn-outline-danger');
-            btnCancel.classList.add('btn-secondary');
-            btnCancel.textContent = '已取消';
-
-            alert("訂單取消成功");
         } else {
-            alert(result.message || "訂單取消失敗");
-            // 恢復按鈕狀態
+            alert(result.message || "取消失敗");
             btnCancel.disabled = false;
-            btnCancel.textContent = '取消訂單';
+            btnCancel.textContent = "取消";
         }
     } catch (error) {
-        console.error("訂單取消失敗:", error);
-        alert("訂單取消失敗，請稍後再試");
-        // 恢復按鈕狀態
+        console.error("取消訂單失敗:", error);
+        alert("取消訂單失敗，請稍後再試");
         btnCancel.disabled = false;
-        btnCancel.textContent = '取消訂單';
+        btnCancel.textContent = "取消";
     }
 }

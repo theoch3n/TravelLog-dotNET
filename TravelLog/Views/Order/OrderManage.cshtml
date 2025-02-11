@@ -52,26 +52,14 @@
             </form>
 
             <!-- 訂單列表 -->
-            <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th>訂單編號</th>
-                        <th>訂單時間</th>
-                        <th>總金額</th>
-                        <th>訂單狀態</th>
-                        <th>付款狀態</th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
                             <th>訂單編號</th>
-                            <th>訂單時間</th>
+                            <th>訂單建立時間</th>
                             <th>總金額</th>
                             <th>訂單狀態</th>
                             <th>付款狀態</th>
-                            <th>操作</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -83,18 +71,53 @@
                                 <td>@item.OrderTotalAmount.ToString("C")</td>
 
                                 <!-- 訂單狀態 -->
-                                <td><span class="badge">@item.StatusName</span></td>
+                                <td>
+                                    <span id="order-status-@item.OrderId"
+                                          class="badge @(item.OrderStatus switch {
+                                              1 => "badge-warning",
+                                              2 => "badge-success",
+                                              3 => "badge-danger",
+                                              4 => "badge-primary",
+                                              _ => "badge-secondary"
+                                          })">
+                                        @item.StatusName
+                                    </span>
+                                </td>
 
                                 <!-- 付款狀態 -->
-                                <td><span class="badge">@item.PaymentStatusName</span></td>
+                                <td>
+                                    <span id="payment-status-@item.OrderId"
+                                        class="badge @(item.OrderPaymentStatus switch {
+                                            1 => "badge-warning",
+                                            2 => "badge-success",
+                                            3 => "badge-danger",
+                                            4 => "badge-warning",
+                                            5 => "badge-success",
+                                            6 => "badge-info",
+                                            _ => "badge-secondary"
+                                        })">
+                                        @item.PaymentStatusName
+                                    </span>
+                                </td>
 
                                 <td>
                                     <div class="btn-group" role="group">
                                         <a asp-controller="Order" asp-action="OrderDetail" asp-route-id="@item.OrderId" class="btn btn-sm btn-info">詳情</a>
                                         <a asp-controller="Order" asp-action="OrderEdit" asp-route-id="@item.OrderId" class="btn btn-sm btn-warning">編輯</a>
-                                        <button type="button" class="btn btn-sm btn-danger" onclick="cancelOrder(@item.OrderId)">取消</button>
+
+                                        @if (item.OrderStatus != 3) // 只有「未取消」的訂單才顯示「取消」按鈕
+                                       {
+                                            <button type="button"
+                                                    id="cancel-btn-@item.OrderId"
+                                                    class="btn btn-sm btn-danger"
+                                                    onclick="cancelOrder(@item.OrderId)">
+                                                取消
+                                            </button>
+                                        }
                                     </div>
                                 </td>
+
+
                             </tr>
                         }
                     </tbody>

@@ -43,10 +43,16 @@ namespace TravelLog.Models {
             set { _order.UserId = value; }
         }
 
-        [DisplayName("訂單狀態 ID")]
+        [DisplayName("訂單狀態")]
         public int OrderStatus {
             get { return _order.OrderStatus; }
             set { _order.OrderStatus = value; }
+        }
+
+        [DisplayName("付款狀態")]
+        public int OrderPaymentStatus {
+            get { return _order.OrderPaymentStatus; }
+            set { _order.OrderPaymentStatus = value; }
         }
 
         [DisplayName("訂單狀態")]
@@ -55,13 +61,15 @@ namespace TravelLog.Models {
             set { _order.OrderStatusNavigation.OsOrderStatus = value; }
         }
 
-        [DisplayName("付款狀態")]
+        [DisplayName("付款狀態名稱")]
         public string PaymentStatusName {
             get { return _order.OrderPaymentStatusNavigation?.PsPaymentStatus ?? "未知"; }
             set { _order.OrderPaymentStatusNavigation.PsPaymentStatus = value; }
         }
 
         public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+        public virtual ICollection<OrderStatus> OrderStatuses { get; set; } = new List<OrderStatus>();
+        public virtual ICollection<PaymentStatus> PaymentStatuses { get; set; } = new List<PaymentStatus>();
 
         //public virtual ICollection<MemberInformation> MemberInformation { get; set; } = new List<MemberInformation>();
     }

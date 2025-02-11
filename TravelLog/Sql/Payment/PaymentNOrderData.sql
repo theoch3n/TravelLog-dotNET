@@ -16,12 +16,12 @@ INSERT INTO [Order_Status] (OS_OrderStatus) VALUES
 
 -- ´¡¤J Payment_Status¡]¥I´Úª¬ºA¡^
 INSERT INTO [Payment_Status] (payment_Status) VALUES
-(N'Pending'),
-(N'Paid'),
+(N'«Ý¥I´Ú'),
+(N'¤w¥I´Ú'),
 (N'Failed'),
-(N'Refunding'),
-(N'Refunded'),
-(N'Expired');
+(N'°h´Ú¤¤'),
+(N'¤w°h´Ú'),
+(N'¤w¹O´Á');
 
 -- ´¡¤J Payment_Method¡]¥I´Ú¤è¦¡¡^
 INSERT INTO [Payment_Method] (payment_Method, payment_MethodCode) VALUES

@@ -135,42 +135,53 @@ namespace TravelLog.Controllers {
             }
 
             try {
-                var data = await _context.Orders.FindAsync(id);
+                var data = await _context.Orders
+                    .Include(o => o.OrderStatusNavigation)
+                    .Include(o => o.OrderPaymentStatusNavigation)
+                    .FirstOrDefaultAsync(o => o.OrderId == id);
+
                 if (data == null) {
                     return RedirectToAction("OrderManage");
                 }
+
                 var orderWrap = new OrderWrap {
-                    order = data
+                    order = data,
+                    OrderStatuses = await _context.OrderStatuses.ToListAsync(),
+                    PaymentStatuses = await _context.PaymentStatuses.ToListAsync()
                 };
+
                 return View(orderWrap);
             }
             catch (Exception ex) {
                 Console.WriteLine(ex.Message);
-                return View("Error", new ErrorViewModel {
-                    RequestId = HttpContext.TraceIdentifier
-                });
+                return View("Error", new ErrorViewModel { RequestId = HttpContext.TraceIdentifier });
             }
         }
+
+
 
         // 儲存編輯的訂單
         // POST: Order/SaveEdit
         [HttpPost]
         public async Task<IActionResult> SaveEdit(OrderWrap orderWrap) {
-            try {
-                if (ModelState.IsValid) {
-                    _context.Update(orderWrap.order);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction("OrderManage");
+            if (ModelState.IsValid) {
+                var order = await _context.Orders.FindAsync(orderWrap.OrderId);
+                if (order == null) {
+                    return NotFound();
                 }
-                return View(orderWrap);
+
+                // 更新付款狀態
+                order.OrderPaymentStatus = orderWrap.OrderPaymentStatus;
+                // 更新訂單狀態
+                order.OrderStatus = orderWrap.OrderStatus;
+
+                _context.Update(order);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("OrderManage");
             }
-            catch (Exception ex) {
-                Console.WriteLine(ex.Message);
-                return View("Error", new ErrorViewModel {
-                    RequestId = HttpContext.TraceIdentifier
-                });
-            }
+            return View(orderWrap);
         }
+
 
         // 取消訂單
         // POST: Order/Cancel
@@ -182,7 +193,6 @@ namespace TravelLog.Controllers {
 
             try {
                 var data = await _context.Orders
-                    .Include(o => o.OrderStatusNavigation)
                     .FirstOrDefaultAsync(o => o.OrderId == id);
 
                 if (data == null) {
@@ -193,19 +203,25 @@ namespace TravelLog.Controllers {
                     return Json(new { success = false, message = "訂單已取消" });
                 }
 
+                // 更新訂單狀態為「已取消」
                 data.OrderStatus = 3;
+                data.OrderPaymentStatus = 3;
                 data.DeleteAt = DateTime.Now;
 
                 _context.Update(data);
                 await _context.SaveChangesAsync();
 
-                return Json(new { success = true, message = "訂單已取消" });
+                return Json(new {
+                    success = true,
+                    message = "訂單已取消",
+                    updatedStatus = data.OrderStatus,
+                    deleteAt = data.DeleteAt?.ToString("yyyy-MM-dd HH:mm:ss")
+                });
             }
             catch (Exception ex) {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine($"訂單取消錯誤: {ex.Message}");
                 return Json(new { success = false, message = "取消訂單失敗，請稍後再試" });
             }
         }
-
     }
 }
