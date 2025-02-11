@@ -15,7 +15,19 @@
    "T4TemplatePath": null,
    "Tables": [
       {
+         "Name": "[dbo].[Place]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Tour_Bundles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[User]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[User_PD]",
          "ObjectType": 0
       }
    ],
@@ -32,7 +44,6 @@
    "UseHandleBars": false,
    "UseHierarchyId": false,
    "UseInflector": true,
-   "UseInternalAccessModifiersForSprocsAndFunctions": false,
    "UseLegacyPluralizer": false,
    "UseManyToManyEntity": false,
    "UseNoDefaultConstructor": false,

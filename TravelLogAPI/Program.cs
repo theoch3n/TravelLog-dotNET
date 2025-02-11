@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TravelLogAPI.Models;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the DI container.
@@ -44,6 +45,8 @@ builder.Services.AddCors(options => {
             .AllowCredentials()
     );
 });
+
+
 
 var app = builder.Build();
 
