@@ -7,15 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<TravelLogContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TravelLog")));
 
-// 設定 CORS 策略，允許來自 Vue 應用的請求 (例如 http://localhost:5173 與 http://localhost:5182)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowVueApp", policy =>
-        policy.WithOrigins
-        ("http://localhost:5173", "http://localhost:5182")
-              .AllowAnyMethod()
-              .AllowAnyHeader()
-              .AllowCredentials());
+        policy.AllowAnyOrigin()   // 允許所有來源
+              .AllowAnyMethod()   // 允許所有 HTTP 方法
+              .AllowAnyHeader()); // 允許所有標頭
 });
 
 builder.Services.AddControllers();
