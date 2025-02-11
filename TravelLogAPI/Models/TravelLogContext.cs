@@ -35,6 +35,10 @@ public partial class TravelLogContext : DbContext
                 .HasComment("創建時間")
                 .HasColumnType("datetime")
                 .HasColumnName("Itinerary_CreateDate");
+            entity.Property(e => e.ItineraryEndDate)
+                .HasComment("行程結束時間")
+                .HasColumnType("datetime")
+                .HasColumnName("Itinerary_EndDate");
             entity.Property(e => e.ItineraryImage)
                 .IsRequired()
                 .HasMaxLength(200)
@@ -42,6 +46,11 @@ public partial class TravelLogContext : DbContext
                 .HasDefaultValue("")
                 .HasComment("行程圖片")
                 .HasColumnName("Itinerary_Image");
+            entity.Property(e => e.ItineraryStartDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasComment("行程起始時間")
+                .HasColumnType("datetime")
+                .HasColumnName("Itinerary_StartDate");
             entity.Property(e => e.ItineraryTitle)
                 .IsRequired()
                 .HasMaxLength(50)

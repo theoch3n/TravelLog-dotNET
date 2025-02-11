@@ -60,5 +60,5 @@ public partial class ItineraryDetail
     /// <summary>
     /// 創建時間
     /// </summary>
-    public DateTime ItineraryDetailCreateDate { get; set; }
+    public DateTime? ItineraryDetailCreateDate { get; set; }
 }

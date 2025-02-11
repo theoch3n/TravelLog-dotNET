@@ -23,6 +23,16 @@ public partial class Itinerary
     public string ItineraryImage { get; set; }
 
     /// <summary>
+    /// 行程起始時間
+    /// </summary>
+    public DateTime ItineraryStartDate { get; set; }
+
+    /// <summary>
+    /// 行程結束時間
+    /// </summary>
+    public DateTime ItineraryEndDate { get; set; }
+
+    /// <summary>
     /// 創建時間
     /// </summary>
     public DateTime? ItineraryCreateDate { get; set; }
