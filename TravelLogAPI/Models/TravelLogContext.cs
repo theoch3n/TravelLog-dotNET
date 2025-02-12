@@ -13,13 +13,84 @@ public partial class TravelLogContext : DbContext
     {
     }
 
+    public virtual DbSet<Bill> Bills { get; set; }
+
+    public virtual DbSet<BillDetail> BillDetails { get; set; }
+
+    public virtual DbSet<Place> Places { get; set; }
+
     public virtual DbSet<TourBundle> TourBundles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Bill>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Bill__3214EC074730CF58");
+
+            entity.ToTable("Bill");
+
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("Created_At");
+            entity.Property(e => e.PaidBy)
+                .IsRequired()
+                .HasMaxLength(50);
+            entity.Property(e => e.Title)
+                .IsRequired()
+                .HasMaxLength(50);
+            entity.Property(e => e.TotalAmount)
+                .HasColumnType("decimal(18, 0)")
+                .HasColumnName("Total_Amount");
+        });
+
+        modelBuilder.Entity<BillDetail>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Bill_Det__3214EC070EE3CCCE");
+
+            entity.ToTable("Bill_Details");
+
+            entity.Property(e => e.Amount).HasColumnType("decimal(18, 0)");
+            entity.Property(e => e.BillId).HasColumnName("Bill_Id");
+            entity.Property(e => e.MemberName)
+                .IsRequired()
+                .HasMaxLength(20)
+                .HasColumnName("Member_Name");
+
+            entity.HasOne(d => d.Bill).WithMany(p => p.BillDetails)
+                .HasForeignKey(d => d.BillId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Bill_Deta__Bill___498EEC8D");
+        });
+
+        modelBuilder.Entity<Place>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Place__3214EC070B0A9BF0");
+
+            entity.ToTable("Place");
+
+            entity.Property(e => e.Id).HasComment("地點ID");
+            entity.Property(e => e.Address)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasComment("地址");
+            entity.Property(e => e.Date)
+                .HasComment("第幾天的行程")
+                .HasColumnName("date");
+            entity.Property(e => e.Latitude).HasComment("經度");
+            entity.Property(e => e.Longitude).HasComment("緯度");
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasComment("景點名稱");
+            entity.Property(e => e.ScheduleId)
+                .HasComment("連接行程id")
+                .HasColumnName("scheduleId");
+        });
+
         modelBuilder.Entity<TourBundle>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tour_Bun__3213E83F516B86CA");
+            entity.HasKey(e => e.Id).HasName("PK__Tour_Bun__3213E83F3A098B8E");
 
             entity.ToTable("Tour_Bundles");
 

@@ -364,7 +364,7 @@ public partial class TravelLogContext : DbContext
 
         modelBuilder.Entity<TourBundle>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tour_Bun__3213E83F516B86CA");
+            entity.HasKey(e => e.Id).HasName("PK__Tour_Bun__3213E83F3A098B8E");
 
             entity.ToTable("Tour_Bundles");
 

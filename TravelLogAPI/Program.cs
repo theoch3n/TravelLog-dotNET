@@ -15,20 +15,6 @@ builder.Services.AddCors(options => {
         policy => policy.WithOrigins("*").WithMethods("*").WithHeaders("*"));
 });
 
-//必需
-string PolicyName = "Room145";
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(
-        name: PolicyName,
-       policy => policy.WithOrigins("*").WithMethods("*").WithHeaders("*"));
-});
-
-builder.Services.AddDbContext<TravelLogContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("TravelLog")));
-//必需結尾
-
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

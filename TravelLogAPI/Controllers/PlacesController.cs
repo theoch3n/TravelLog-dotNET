@@ -7,17 +7,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using TravelLogAPI.Models;
+//using TravelLogAPI.Models;
+using TravelLog.Models;
 
 namespace TravelLogAPI.Controllers
 {
-    [EnableCors("Room145")]
+    [EnableCors("VueSinglePage")]
     [Route("api/[controller]")]
     [ApiController]
     public class PlacesController : Controller
     {
-
-
         private readonly TravelLogContext _context;
 
         public PlacesController(TravelLogContext context)

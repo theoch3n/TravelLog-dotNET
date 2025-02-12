@@ -15,6 +15,18 @@
    "T4TemplatePath": null,
    "Tables": [
       {
+         "Name": "[dbo].[Bill]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Bill_Details]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Place]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Tour_Bundles]",
          "ObjectType": 0
       }
