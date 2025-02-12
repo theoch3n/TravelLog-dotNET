@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using TravelLogAPI.Models;
+using TravelLog.Models;
 
 namespace TravelLogAPI.Controllers
 {
-    [EnableCors("Room145")]
+    //[EnableCors("Room145")]
     [Route("api/[controller]")]
     [ApiController]
     public class PlacesController : Controller
@@ -82,7 +82,7 @@ namespace TravelLogAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Place>> PostPlace(Place place)
         {
-            
+
 
 
             // 新增 place

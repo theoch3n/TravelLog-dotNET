@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using TravelLog.Models;
 
 namespace TravelLogAPI.Controllers {
     [ApiController]
@@ -19,39 +21,60 @@ namespace TravelLogAPI.Controllers {
         // 產生訂單
         // POST: Ecpay/CreateOrder
         [HttpPost("CreateOrder")]
-        public IActionResult CreateOrder([FromBody] OrderRequest request) {
+        public async Task<IActionResult> CreateOrder([FromBody] OrderRequest request) {
             try {
-                var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
-                var order = new Dictionary<string, string>
-                {
-                    { "MerchantTradeNo", orderId },
-                    { "MerchantTradeDate", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") },
-                    { "TotalAmount", request.TotalAmount.ToString() },
-                    { "TradeDesc", HttpUtility.UrlEncode(request.TradeDesc ?? "測試交易") },
-                    { "ItemName", request.ItemName },
-                    { "MerchantID", MerchantID },
-                    { "PaymentType", "aio" }, // 一站式付款
-                    { "ChoosePayment", "ALL" }, // 允許所有支付方式
-                    { "EncryptType", "1" }, // 加密類型
-                    { "ReturnURL", $"{ApiAddress}/Ecpay/PaymentResult" },
-                    { "ClientBackURL", $"{VueAddress}/payment" }, // 返回商店的網址
-                    { "OrderResultURL", $"{VueAddress}/payment" }, // 交易結果返回網址
-                };
+                using (var dbContext = new TravelLogContext()) {
+                    var merchantTradeNo = GenerateMerchantTradeNo(); // 產生 MerchantTradeNo
 
-                order["CheckMacValue"] = GetCheckMacValue(order);
+                    // 建立訂單
+                    var newOrder = new Order {
+                        OrderTime = DateTime.Now,
+                        OrderTotalAmount = request.TotalAmount,
+                        UserId = 1, // TODO: 要改成從前端傳入的 UserId
+                        //UserId = request.UserId, // 前端傳入的 UserId
+                        OrderStatus = 1, // 1 = 進行中
+                        OrderPaymentStatus = 1, // 1 = 未付款
+                        MerchantTradeNo = merchantTradeNo
+                    };
 
-                //var formHtml = GenerateEcpayForm(order);
+                    dbContext.Orders.Add(newOrder);
+                    await dbContext.SaveChangesAsync();
 
-                return Ok(new {
-                    orderId = orderId,
-                    //formHtml = formHtml
-                    orderParams = order
-                });
+                    var orderParams = new Dictionary<string, string>
+                    {
+                        { "MerchantTradeNo", newOrder.MerchantTradeNo },
+                        { "MerchantTradeDate", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") },
+                        { "TotalAmount", request.TotalAmount.ToString() },
+                        { "TradeDesc", HttpUtility.UrlEncode(request.TradeDesc ?? "測試交易") },
+                        { "ItemName", request.ItemName },
+                        { "MerchantID", MerchantID },
+                        { "PaymentType", "aio" },
+                        { "ChoosePayment", "ALL" },
+                        { "EncryptType", "1" },
+                        { "ReturnURL", $"{ApiAddress}/Ecpay/PaymentResult" },
+                        { "ClientBackURL", $"{VueAddress}/payment?MerchantTradeNo={newOrder.MerchantTradeNo}" },
+                        { "OrderResultURL", $"{VueAddress}/payment?MerchantTradeNo={newOrder.MerchantTradeNo}" }
+                    };
+
+                    orderParams["CheckMacValue"] = GetCheckMacValue(orderParams);
+
+                    return Ok(new {
+                        orderId = newOrder.OrderId,
+                        merchantTradeNo = newOrder.MerchantTradeNo,
+                        orderParams = orderParams
+                    });
+                }
             }
             catch (Exception ex) {
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        // 產生唯一的 MerchantTradeNo
+        private string GenerateMerchantTradeNo() {
+            return $"T{DateTime.Now:yyyyMMddHHmmss}{Guid.NewGuid().ToString("N").Substring(0, 6)}";
+        }
+
 
         private string GetCheckMacValue(Dictionary<string, string> order) {
             var param = order.OrderBy(x => x.Key).Select(x => $"{x.Key}={x.Value}");
@@ -76,39 +99,92 @@ namespace TravelLogAPI.Controllers {
         // 付款結果
         // POST: Ecpay/PaymentResult
         [HttpPost("PaymentResult")]
-        public IActionResult PaymentResult([FromForm] Dictionary<string, string> formData) {
+        public async Task<IActionResult> PaymentResult([FromForm] Dictionary<string, string> formData) {
             try {
-                // 驗證 CheckMacValue
                 if (!ValidateCheckMacValue(formData)) {
                     return BadRequest(new { message = "付款驗證失敗" });
                 }
 
-                // 解析付款狀態
-                string paymentStatus = formData.ContainsKey("RtnCode") ? formData["RtnCode"] : "";
-                string tradeNo = formData.ContainsKey("MerchantTradeNo") ? formData["MerchantTradeNo"] : "";
-                string ecpayTradeNo = formData.ContainsKey("TradeNo") ? formData["TradeNo"] : "";
+                string merchantTradeNo = formData["MerchantTradeNo"];
+                string ecpayTradeNo = formData["TradeNo"];
+                string paymentStatus = formData["RtnCode"];
+                string paymentType = formData.ContainsKey("PaymentType") ? formData["PaymentType"] : "未知";
 
-                // 根據付款狀態處理
-                switch (paymentStatus) {
-                    case "1": // 付款成功
-                              // TODO: 更新訂單狀態為已付款
-                              // 可以在這裡呼叫服務層進行訂單狀態更新
-                        break;
-                    case "10100073": // ATM 轉帳已完成
-                        break;
-                    default:
-                        // 其他狀態，可能需要特別處理
-                        break;
+                using (var dbContext = new TravelLogContext()) {
+                    var order = await dbContext.Orders.FirstOrDefaultAsync(o => o.MerchantTradeNo == merchantTradeNo);
+                    if (order == null) {
+                        return NotFound(new { message = "找不到對應的訂單" });
+                    }
+
+                    // 記錄付款資訊
+                    var payment = new Payment {
+                        OrderId = order.OrderId,
+                        PaymentTime = (paymentStatus == "1") ? DateTime.Now : (DateTime?)null,
+                        PaymentMethod = GetPaymentMethodId(paymentType),
+                        PaymentStatusId = (paymentStatus == "1") ? 2 : 3,
+                        EcpayTransactionId = ecpayTradeNo
+                    };
+
+                    dbContext.Payments.Add(payment);
+
+                    // 更新訂單付款狀態
+                    order.OrderPaymentStatus = payment.PaymentStatusId;
+                    await dbContext.SaveChangesAsync();
                 }
 
-                // 回傳 "1|OK" 告知 ECPay 已成功接收
                 return Content("1|OK", "text/plain");
             }
             catch (Exception ex) {
-                // 記錄錯誤
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        // 取得付款方式 ID
+        private int GetPaymentMethodId(string paymentType) {
+            return paymentType switch {
+                "Credit" => 1,
+                "WebATM" => 2,
+                "ATM" => 3,
+                "CVS" => 4,
+                "BARCODE" => 5,
+                "ALL" => 6,
+                _ => 7,
+            };
+        }
+
+        // 取得訂單資訊
+        // GET: Ecpay/GetOrder
+        [HttpGet("GetOrder")]
+        public async Task<IActionResult> GetOrder([FromQuery] string merchantTradeNo) {
+            using (var dbContext = new TravelLogContext()) {
+                var order = await dbContext.Orders
+                    .Where(o => o.MerchantTradeNo == merchantTradeNo)
+                    .Select(o => new {
+                        o.OrderId,
+                        o.MerchantTradeNo,
+                        TradeDate = o.OrderTime.ToString("yyyy/MM/dd HH:mm:ss"),
+                        o.OrderTotalAmount,
+                        o.OrderPaymentStatus,
+                        PaymentStatus = o.OrderPaymentStatusNavigation.PsPaymentStatus,
+                        PaymentInfo = dbContext.Payments
+                            .Where(p => p.OrderId == o.OrderId)
+                            .Select(p => new {
+                                p.PaymentTime,
+                                p.EcpayTransactionId
+                            })
+                            .FirstOrDefault()
+                    })
+                    .FirstOrDefaultAsync();
+
+                if (order == null) {
+                    return NotFound(new { message = "找不到訂單" });
+                }
+
+                return Ok(order);
+            }
+        }
+
+
 
         private bool ValidateCheckMacValue(Dictionary<string, string> formData) {
             // 複製一份 formData 進行驗證
@@ -130,6 +206,7 @@ namespace TravelLogAPI.Controllers {
         public decimal TotalAmount { get; set; }
         public string ItemName { get; set; }
         public string TradeDesc { get; set; }
-        //public string MerchantID { get; set; }
+        public int UserId { get; set; }
     }
+
 }

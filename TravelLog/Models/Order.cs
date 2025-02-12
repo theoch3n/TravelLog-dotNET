@@ -13,6 +13,11 @@ public partial class Order
     public int OrderId { get; set; }
 
     /// <summary>
+    /// 綠界訂單交易編號
+    /// </summary>
+    public string MerchantTradeNo { get; set; }
+
+    /// <summary>
     /// 訂單建立時間
     /// </summary>
     public DateTime OrderTime { get; set; }

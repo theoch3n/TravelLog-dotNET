@@ -13,7 +13,8 @@ CREATE TABLE Payment_Status (
 -- 訂單表 Order
 CREATE TABLE [Order] (
     order_Id INT IDENTITY(1,1) PRIMARY KEY,  -- 訂單 ID (PK)
-    order_Time DATETIME NOT NULL,  -- 訂單建立時間
+    merchant_TradeNo VARCHAR(50) UNIQUE NOT NULL,  -- 綠界訂單交易編號 (必須唯一)
+    order_Time DATETIME NOT NULL DEFAULT GETDATE(),  -- 訂單建立時間
     order_TotalAmount DECIMAL(10,2) NOT NULL,  -- 訂單總金額
     delete_at DATETIME NULL,  -- 刪除時間 (可為 NULL)
     user_Id INT NOT NULL,  -- 使用者 ID
@@ -58,6 +59,7 @@ EXEC sp_addextendedproperty 'MS_Description', '訂單狀態 ID', 'SCHEMA', 'dbo', 'T
 EXEC sp_addextendedproperty 'MS_Description', '訂單狀態名稱（例：待付款、已付款、已取消）', 'SCHEMA', 'dbo', 'TABLE', 'Order_Status', 'COLUMN', 'OS_OrderStatus';
 
 EXEC sp_addextendedproperty 'MS_Description', '訂單 ID', 'SCHEMA', 'dbo', 'TABLE', 'Order', 'COLUMN', 'order_Id';
+EXEC sp_addextendedproperty 'MS_Description', '綠界訂單交易編號', 'SCHEMA', 'dbo', 'TABLE', 'Order', 'COLUMN', 'merchant_TradeNo';
 EXEC sp_addextendedproperty 'MS_Description', '訂單建立時間', 'SCHEMA', 'dbo', 'TABLE', 'Order', 'COLUMN', 'order_Time';
 EXEC sp_addextendedproperty 'MS_Description', '訂單總金額', 'SCHEMA', 'dbo', 'TABLE', 'Order', 'COLUMN', 'order_TotalAmount';
 EXEC sp_addextendedproperty 'MS_Description', '刪除時間（可為 NULL）', 'SCHEMA', 'dbo', 'TABLE', 'Order', 'COLUMN', 'delete_at';

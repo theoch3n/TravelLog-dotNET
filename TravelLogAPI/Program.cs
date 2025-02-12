@@ -16,7 +16,7 @@ builder.Services.AddCors(options => {
 });
 
 //¥²»Ý
-string PolicyName = "Room145";
+//string PolicyName = "Room145";
 
 builder.Services.AddCors(options =>
 {

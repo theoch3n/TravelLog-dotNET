@@ -19,6 +19,12 @@ namespace TravelLog.Models {
             set { _order.OrderId = value; }
         }
 
+        [DisplayName("綠界訂單交易編號")]
+        public string MerchantTradeNo {
+            get { return _order.MerchantTradeNo; }
+            set { _order.MerchantTradeNo = value; }
+        }
+
         [DisplayName("訂單時間")]
         public DateTime OrderTime {
             get { return _order.OrderTime; }

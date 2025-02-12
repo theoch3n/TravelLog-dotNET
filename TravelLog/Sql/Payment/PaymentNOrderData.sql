@@ -30,15 +30,29 @@ INSERT INTO [Payment_Method] (payment_Method, payment_MethodCode) VALUES
 (N'超商代碼', 'CVS');
 
 -- 插入 Order（訂單）
-INSERT INTO [Order] (order_Time, order_TotalAmount, delete_at, user_Id, order_Status, order_PaymentStatus) VALUES
-(DATEADD(DAY, -ABS(CHECKSUM(NEWID())) % 7, GETDATE()), 1500.00, NULL, 1, 1, 1),
-('2023-06-15 10:45:00', 3200.50, NULL, 2, 2, 2),
-('2024-03-22 14:30:00', 499.99, NULL, 3, 3, 3),
-('2024-12-10 18:15:00', 7899.00, NULL, 4, 4, 2);
+INSERT INTO [Order] (merchant_TradeNo, order_Time, order_TotalAmount, delete_at, user_Id, order_Status, order_PaymentStatus) VALUES
+('2024021216375237', DATEADD(DAY, -ABS(CHECKSUM(NEWID())) % 30, GETDATE()), 1200.75, NULL, 5, 1, 1),
+('2024010509300040', '2024-01-05 09:30:00', 2750.40, NULL, 6, 2, 1),
+('2023122012000099', '2023-12-20 12:00:00', 850.99, NULL, 7, 3, 2),
+('2024021015454520', '2024-02-10 15:45:00', 4520.00, NULL, 8, 1, 3),
+('2024020820100995', '2024-02-08 20:10:00', 999.50, NULL, 9, 2, 1),
+('2024020214003750', DATEADD(DAY, -ABS(CHECKSUM(NEWID())) % 30, GETDATE()), 3750.00, NULL, 10, 4, 2),
+('2024012011156499', '2024-01-20 11:15:00', 6499.99, NULL, 11, 3, 3),
+('2024021208451299', '2024-02-12 08:45:00', 1299.25, NULL, 12, 1, 1),
+('2024012814300520', '2024-01-28 14:30:00', 520.00, NULL, 13, 2, 1),
+('2023123017208750', '2023-12-30 17:20:00', 8750.50, NULL, 14, 4, 3);
+
 
 -- 插入 Payment（付款紀錄）
 INSERT INTO [Payment] (payment_Time, payment_Method, order_Id, paymentStatus_Id, ECPay_TransactionId) VALUES
-(NULL, 1, 1, 1, NULL),
-(DATEADD(DAY, 3, '2023-06-15 10:45:00'), 2, 2, 2, 'EC1234567890'),
-(NULL, 3, 3, 3, NULL),
-(DATEADD(DAY, 5, '2024-12-10 18:15:00'), 1, 4, 2, 'EC9876543210');
+(NULL, 1, 1, 1, NULL),  -- 訂單1：尚未付款
+(DATEADD(DAY, 3, '2024-01-05 09:30:00'), 2, 2, 2, '2501211632090937'), -- 訂單2：已付款
+(NULL, 3, 3, 3, NULL), -- 訂單3：未付款
+(DATEADD(DAY, 5, '2024-02-10 15:45:00'), 1, 4, 2, '2501215383108412'), -- 訂單4：已付款
+(NULL, 1, 5, 1, NULL), -- 訂單5：未付款
+(DATEADD(DAY, 2, '2024-02-02 14:00:37'), 2, 6, 2, '2501211630000973'), -- 訂單6：已付款
+(NULL, 3, 7, 3, NULL), -- 訂單7：未付款
+(DATEADD(DAY, 1, '2024-02-12 08:45:00'), 1, 8, 1, '2501215383108459'), -- 訂單8：已付款
+(NULL, 1, 9, 1, NULL), -- 訂單9：未付款
+(DATEADD(DAY, 3, '2023-12-30 17:20:00'), 2, 10, 2, '2501211632090999'); -- 訂單10：已付款
+
