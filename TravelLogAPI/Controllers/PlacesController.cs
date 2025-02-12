@@ -11,7 +11,7 @@ using TravelLogAPI.Models;
 
 namespace TravelLogAPI.Controllers
 {
-    [EnableCors("Room145")]
+    [EnableCors("VueSinglePage")]
     [Route("api/[controller]")]
     [ApiController]
     public class PlacesController : Controller

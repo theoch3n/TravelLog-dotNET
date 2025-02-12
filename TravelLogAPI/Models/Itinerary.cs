@@ -18,6 +18,16 @@ public partial class Itinerary
     public string ItineraryTitle { get; set; }
 
     /// <summary>
+    /// 行程地點
+    /// </summary>
+    public string ItineraryLocation { get; set; }
+
+    /// <summary>
+    /// 行程座標
+    /// </summary>
+    public string ItineraryCoordinate { get; set; }
+
+    /// <summary>
     /// 行程圖片
     /// </summary>
     public string ItineraryImage { get; set; }
