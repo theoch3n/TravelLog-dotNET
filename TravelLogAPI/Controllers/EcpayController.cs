@@ -71,22 +71,43 @@ namespace TravelLogAPI.Controllers {
             return $"T{DateTime.Now:yyyyMMddHHmmss}{Guid.NewGuid().ToString("N").Substring(0, 5)}";
         }
 
+        //private string GetCheckMacValue(Dictionary<string, string> order) {
+        //    var param = order.OrderBy(x => x.Key).Select(x => $"{x.Key}={x.Value}");
+        //    var checkValue = $"HashKey={HashKey}&{string.Join("&", param)}&HashIV={HashIV}";
+        //    checkValue = HttpUtility.UrlEncode(checkValue).ToLower();
+        //    checkValue = GetSHA256(checkValue);
+        //    return checkValue.ToUpper();
+        //}
         private string GetCheckMacValue(Dictionary<string, string> order) {
-            var param = order.OrderBy(x => x.Key).Select(x => $"{x.Key}={x.Value}");
-            var checkValue = $"HashKey={HashKey}&{string.Join("&", param)}&HashIV={HashIV}";
+            var param = order.Keys.OrderBy(x => x).Select(key => key + "=" + order[key]).ToList()
+            var checkValue = string.Join("&", param);
+            //測試用的 HashKey
+            var hashKey = "5294y06JbISpM5x9";
+            //測試用的 HashIV
+            var HashIV = "v77hoKGq4kWxNNIS";
+            checkValue = $"HashKey={hashKey}" + "&" + checkValue + $"&HashIV={HashIV}";
             checkValue = HttpUtility.UrlEncode(checkValue).ToLower();
             checkValue = GetSHA256(checkValue);
             return checkValue.ToUpper();
         }
-
+        //private string GetSHA256(string value) {
+        //    var result = new StringBuilder();
+        //    using (var sha256 = SHA256.Create()) {
+        //        var bytes = Encoding.UTF8.GetBytes(value);
+        //        var hash = sha256.ComputeHash(bytes);
+        //        for (int i = 0; i < hash.Length; i++) {
+        //            result.Append(hash[i].ToString("x2"));
+        //        }
+        //    }
+        //    return result.ToString();
+        //}
         private string GetSHA256(string value) {
             var result = new StringBuilder();
-            using (var sha256 = SHA256.Create()) {
-                var bytes = Encoding.UTF8.GetBytes(value);
-                var hash = sha256.ComputeHash(bytes);
-                for (int i = 0; i < hash.Length; i++) {
-                    result.Append(hash[i].ToString("x2"));
-                }
+            var sha256 = SHA256.Create();
+            var bts = Encoding.UTF8.GetBytes(value);
+            var hash = sha256.ComputeHash(bts);
+            for (int i = 0; i < hash.Length; i++) {
+                result.Append(hash[i].ToString("X2"));
             }
             return result.ToString();
         }
