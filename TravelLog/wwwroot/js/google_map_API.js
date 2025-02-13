@@ -36,7 +36,6 @@ loadGoogleMapsAPI();
 
 
 
-
 //初始化地圖
 function initMap() {
   

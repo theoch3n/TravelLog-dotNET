@@ -8,10 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TravelLogAPI.Models;
+using System.Globalization; // 確保加上這個命名空間
+
 
 namespace TravelLogAPI.Controllers
 {
-    [EnableCors("Room145")]
+    [EnableCors("VueSinglePage")]
     [Route("api/[controller]")]
     [ApiController]
     public class PlacesController : Controller
@@ -31,6 +33,39 @@ namespace TravelLogAPI.Controllers
         {
             return await _context.Places.ToListAsync();
         }
+
+        // GET: api/Places/2025-02-11
+        [HttpGet("by-date/{date}")]
+        public async Task<IActionResult> GetPlacesByDate([FromRoute] string date)
+        {
+            if (string.IsNullOrEmpty(date))
+            {
+                return BadRequest("請提供日期");
+            }
+
+            // 使用 "yyyy-MM-dd" 明確解析日期
+            if (!DateTime.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime selectedDate))
+            {
+                return BadRequest("日期格式錯誤，請使用 YYYY-MM-DD 格式");
+            }
+
+            var places = await _context.Places
+                .Where(p => p.Date.Date == selectedDate.Date) // 確保比較時只使用日期部分
+                .ToListAsync();
+
+            if (!places.Any())
+            {
+                return NotFound("沒有找到符合的資料");
+            }
+
+            return Ok(places);
+        }
+
+
+
+
+
+
 
         // GET: api/Places/5
         [HttpGet("{id}")]
