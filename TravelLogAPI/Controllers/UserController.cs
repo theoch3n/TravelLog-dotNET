@@ -1,6 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using TravelLogAPI.Models;  // 反向工程生成的模型所在的命名空間
 
@@ -10,6 +15,7 @@ namespace TravelLogAPI.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+
         private readonly TravelLogContext _context;
 
         public UserController(TravelLogContext context)
@@ -48,9 +54,36 @@ namespace TravelLogAPI.Controllers
             {
                 return Unauthorized(new { message = "密碼不正確。" });
             }
+            var secretKey = "your_secret_key_here"; // 請確保此密鑰足夠複雜並保存在安全位置（例如 appsettings.json）
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            // 登入成功後，可產生 JWT Token 或回傳其他資料（此處僅示範回傳成功訊息）
-            return Ok(new { message = "登入成功！" });
+            // 2. 定義 Token 所包含的 claims（這裡可以根據需求加入更多資訊）
+            var claims = new[]
+            {
+        new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
+        new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
+        new Claim(JwtRegisteredClaimNames.Email, user.UserEmail),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+    };
+
+            // 3. 生成 JWT Token
+            var token = new JwtSecurityToken(
+                issuer: "MyAppIssuer",           // 發行者，請根據需求設定
+                audience: "MyAppAudience",       // 受眾，請根據需求設定
+                claims: claims,
+                expires: DateTime.UtcNow.AddHours(1), // Token 過期時間
+                signingCredentials: creds
+            );
+
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+            // 回傳 JWT Token 給前端
+            return Ok(new
+            {
+                message = "登入成功！",
+                token = tokenString
+            });
         }
 
         // POST: api/User/register
