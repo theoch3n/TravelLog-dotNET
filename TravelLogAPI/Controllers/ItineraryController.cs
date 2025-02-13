@@ -92,14 +92,30 @@ namespace TravelLogAPI.Controllers
         
         // GET api/Itinerary/getLocation/5
         [HttpGet("getLocation/{id}")]
-        public async Task<IActionResult> GetLocation(int id)
+        public async Task<IActionResult> GetLocation(int id, DateOnly starddate, DateOnly enddate)
         {
-            var location = await _procedures.GetLocationByIdAsync(id);
+            var location = await _procedures.get_LocationAsync(id, starddate, enddate);
+
             if (location == null)
             {
                 return NotFound();
             }
             return Ok(location);
+        }
+
+
+        // GET api/Itinerary/getitineraryData
+        [HttpGet("getitineraryData")]
+        public async Task<ActionResult<IEnumerable<Itinerary>>> getitineraryData()
+        {
+            var itineraries = await _context.Itineraries.ToListAsync();
+
+            if (itineraries == null || !itineraries.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(itineraries);
         }
     }
 }

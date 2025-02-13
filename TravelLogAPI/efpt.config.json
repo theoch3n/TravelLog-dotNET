@@ -31,7 +31,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[getLocation]",
+         "Name": "[dbo].[get_Location]",
          "ObjectType": 1
       }
    ],

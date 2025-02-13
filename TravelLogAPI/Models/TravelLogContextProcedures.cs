@@ -42,21 +42,43 @@ namespace TravelLogAPI.Models
         {
             _context = context;
         }
-        //public async Task<Location> GetLocationByIdAsync(int id)
-        //{
-        //    var param = new SqlParameter("@Itinerary_ID", id);
-        //    var result = await _context.Set<Location>().FromSqlRaw("EXEC getLocation @Itinerary_ID", param).ToListAsync();
 
-        //    return result.FirstOrDefault();
-        //}
-        public async Task<List<Location>> GetLocationByIdAsync(int id)
+        public virtual async Task<List<get_LocationResult>> get_LocationAsync(int? Itinerary_ID, DateOnly? StartDate, DateOnly? EndDate, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default)
         {
-            var param = new SqlParameter("@Itinerary_ID", id);
-            var sql = "EXEC getLocation @Itinerary_ID";
+            var parameterreturnValue = new SqlParameter
+            {
+                ParameterName = "returnValue",
+                Direction = System.Data.ParameterDirection.Output,
+                SqlDbType = System.Data.SqlDbType.Int,
+            };
 
-            var result = await _context.SqlQueryAsync<Location>(sql, new object[] { param });
+            var sqlParameters = new []
+            {
+                new SqlParameter
+                {
+                    ParameterName = "Itinerary_ID",
+                    Value = Itinerary_ID ?? Convert.DBNull,
+                    SqlDbType = System.Data.SqlDbType.Int,
+                },
+                new SqlParameter
+                {
+                    ParameterName = "StartDate",
+                    Value = StartDate ?? Convert.DBNull,
+                    SqlDbType = System.Data.SqlDbType.Date,
+                },
+                new SqlParameter
+                {
+                    ParameterName = "EndDate",
+                    Value = EndDate ?? Convert.DBNull,
+                    SqlDbType = System.Data.SqlDbType.Date,
+                },
+                parameterreturnValue,
+            };
+            var _ = await _context.SqlQueryAsync<get_LocationResult>("EXEC @returnValue = [dbo].[get_Location] @Itinerary_ID = @Itinerary_ID, @StartDate = @StartDate, @EndDate = @EndDate", sqlParameters, cancellationToken);
 
-            return result; // 直接回傳整個 List
+            returnValue?.SetValue(parameterreturnValue.Value);
+
+            return _;
         }
     }
 }
