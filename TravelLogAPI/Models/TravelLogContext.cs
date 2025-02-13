@@ -21,6 +21,7 @@ public partial class TravelLogContext : DbContext
 
     public virtual DbSet<TourBundle> TourBundles { get; set; }
 
+    public DbSet<Location> Locations { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Itinerary>(entity =>

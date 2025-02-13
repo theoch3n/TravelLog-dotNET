@@ -14,11 +14,21 @@ namespace TravelLogAPI.Controllers
     public class ItineraryController : ControllerBase
     {
         private readonly TravelLogContext _context;
+        private readonly TravelLogContextProcedures _procedures;
 
-        public ItineraryController(TravelLogContext context)
+
+        public ItineraryController(TravelLogContext context, TravelLogContextProcedures procedures)
         {
             _context = context;
+            _procedures = procedures;
         }
+
+        //public async Task<List<Map>> GetLocationAsync(int id)
+        //{
+        //    // 假設這裡是執行儲存程序的邏輯
+        //    // 這裡使用 Entity Framework Core 的 FromSqlRaw 方法來執行儲存程序
+        //    return await _procedures.Maps.FromSqlRaw("EXEC GetLocation @Id = {0}", id).ToListAsync();
+        //}
 
         // GET api/Itinerary/5
         [HttpGet("Itinerary/{id}")]
@@ -78,6 +88,18 @@ namespace TravelLogAPI.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+        }
+        
+        // GET api/Itinerary/getLocation/5
+        [HttpGet("getLocation/{id}")]
+        public async Task<IActionResult> GetLocation(int id)
+        {
+            var location = await _procedures.GetLocationByIdAsync(id);
+            if (location == null)
+            {
+                return NotFound();
+            }
+            return Ok(location);
         }
     }
 }
