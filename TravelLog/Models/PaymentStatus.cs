@@ -15,7 +15,7 @@ public partial class PaymentStatus
     /// <summary>
     /// 付款狀態名稱（例：Pending、Paid、Refunded）
     /// </summary>
-    public string PsPaymentStatus { get; set; }
+    public string PaymentStatus1 { get; set; }
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 

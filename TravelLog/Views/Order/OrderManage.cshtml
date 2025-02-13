@@ -30,7 +30,7 @@
                             <option value="">全部付款狀態</option>
                             @foreach(var status in Model.PaymentStatuses){
                                 <option value="@status.PsId" selected="@(Model.FilterPaymentStatus == status.PsId)">
-                                    @status.PsPaymentStatus
+                                    @status.PaymentStatus1
                                 </option>
                             }
                         </select>

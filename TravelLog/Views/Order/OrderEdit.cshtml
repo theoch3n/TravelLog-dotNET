@@ -65,7 +65,7 @@
                             <select asp-for="OrderPaymentStatus" class="form-control">
                                 @foreach (var status in Model.PaymentStatuses) {
                                     <option value="@status.PsId" selected="@(status.PsId == Model.OrderPaymentStatus ? "selected" : null)">
-                                        @status.PsPaymentStatus
+                                        @status.PaymentStatus1
                                     </option>
                                 }
                             </select>

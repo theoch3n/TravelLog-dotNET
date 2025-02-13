@@ -69,8 +69,8 @@ namespace TravelLog.Models {
 
         [DisplayName("付款狀態名稱")]
         public string PaymentStatusName {
-            get { return _order.OrderPaymentStatusNavigation?.PsPaymentStatus ?? "未知"; }
-            set { _order.OrderPaymentStatusNavigation.PsPaymentStatus = value; }
+            get { return _order.OrderPaymentStatusNavigation?.PaymentStatus1 ?? "未知"; }
+            set { _order.OrderPaymentStatusNavigation.PaymentStatus1 = value; }
         }
 
         public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();

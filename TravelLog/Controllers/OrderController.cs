@@ -83,7 +83,7 @@ namespace TravelLog.Controllers {
                 OrderId = o.OrderId,
             }).ToList();
             orderManageWrap.OrderStatusName = status.HasValue ? orders.FirstOrDefault()?.OrderStatusNavigation?.OsOrderStatus ?? "未知" : "全部狀態";
-            orderManageWrap.PaymentStatusName = status.HasValue ? orders.FirstOrDefault()?.OrderPaymentStatusNavigation?.PsPaymentStatus ?? "未知" : "全部狀態";
+            orderManageWrap.PaymentStatusName = status.HasValue ? orders.FirstOrDefault()?.OrderPaymentStatusNavigation?.PaymentStatus1 ?? "未知" : "全部狀態";
 
             return View(orderManageWrap);
         }
@@ -111,7 +111,7 @@ namespace TravelLog.Controllers {
                     order = data,
                     OrderId = data.OrderId,
                     StatusName = data.OrderStatusNavigation?.OsOrderStatus,
-                    PaymentStatusName = data.OrderPaymentStatusNavigation?.PsPaymentStatus,
+                    PaymentStatusName = data.OrderPaymentStatusNavigation?.PaymentStatus1,
                     Payments = data.Payments.ToList()
                 };
 

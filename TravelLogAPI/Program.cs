@@ -18,8 +18,7 @@ builder.Services.AddCors(options => {
 //必需
 //string PolicyName = "Room145";
 
-builder.Services.AddCors(options =>
-{
+builder.Services.AddCors(options => {
     options.AddPolicy(
         name: PolicyName,
        policy => policy.WithOrigins("*").WithMethods("*").WithHeaders("*"));
@@ -38,7 +37,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowVueApp",
         builder => builder
-            .WithOrigins("http://localhost:5173") // Vue project url
+            .WithOrigins("https://localhost:5173") // Vue project url
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials()
@@ -48,8 +47,7 @@ builder.Services.AddCors(options => {
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
@@ -66,3 +64,14 @@ app.UseAuthorization();
 app.MapControllers();
 app.UseCors();
 app.Run();
+
+// 啟用 Vue Router History 模式的後端支援
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseEndpoints(endpoints => {
+    endpoints.MapControllers();
+    endpoints.MapFallbackToFile("/index.html"); // Vue history fallback
+});
