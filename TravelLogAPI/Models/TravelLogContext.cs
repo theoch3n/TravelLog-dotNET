@@ -193,16 +193,14 @@ public partial class TravelLogContext : DbContext
 
         modelBuilder.Entity<Place>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Place__3214EC074DA103CD");
+            entity.HasKey(e => e.Id).HasName("PK__Place__3214EC07B41518C3");
 
             entity.ToTable("Place");
 
             entity.Property(e => e.Address)
                 .IsRequired()
                 .HasMaxLength(255);
-            entity.Property(e => e.Date)
-                .HasColumnType("datetime")
-                .HasColumnName("date");
+            entity.Property(e => e.Date).HasColumnName("date");
             entity.Property(e => e.Img)
                 .IsRequired()
                 .HasColumnName("img");
