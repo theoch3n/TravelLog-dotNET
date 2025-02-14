@@ -1,36 +1,84 @@
-﻿using System;
-using System.Text;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Owin;
-using Microsoft.Owin.Security.Jwt;
-using Owin;
+using System.Text;
 
-[assembly: OwinStartup(typeof(TravelLogAPI.Startup))]
 namespace TravelLogAPI
 {
     public class Startup
     {
-        public void Configuration(IAppBuilder app)
+        public IConfiguration Configuration { get; }
+
+        // 在建構子中注入 IConfiguration
+        public Startup(IConfiguration configuration)
         {
-            // 設定發行者、接收者以及密鑰（請務必妥善保管密鑰）
-            var issuer = "MyAppIssuer";
-            var audience = "MyAppAudience";
-            var secret = Encoding.UTF8.GetBytes("your_secret_key_here");
+            Configuration = configuration;
+        }
+
+        // 配置服務
+        public void ConfigureServices(IServiceCollection services)
+        {
+            var jwtSection = Configuration.GetSection("Jwt");
+            var issuer = jwtSection["Issuer"]; // 例如 "MyAppIssuer"
+            var audience = jwtSection["Audience"]; // 例如 "MyAppAudience"
+            var secret = jwtSection["SecretKey"]; // 注意屬性名稱要與 appsettings.json 一致
 
 
-            app.UseJwtBearerAuthentication(new JwtBearerAuthenticationOptions
+            // 建立對稱安全金鑰
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
+
+            // 設定 JWT 驗證服務
+            services.AddAuthentication(options =>
             {
-                AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode.Active,
-                TokenValidationParameters = new TokenValidationParameters
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidateLifetime = true,
                     ValidIssuer = issuer,
+
+                    ValidateAudience = true,
                     ValidAudience = audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(secret)
-                }
+
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = key,
+
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.FromMinutes(5)
+                };
+            });
+
+            // 加入控制器服務（若為 MVC 專案，可使用 AddControllersWithViews()）
+            services.AddControllers();
+        }
+
+        // 配置 HTTP 請求管線
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseRouting();
+
+            // 啟用認證與授權中間件
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
             });
         }
     }
