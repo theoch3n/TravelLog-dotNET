@@ -381,7 +381,7 @@ public partial class TravelLogContext : DbContext
 
         modelBuilder.Entity<Place>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Place__3214EC07C59269C5");
+            entity.HasKey(e => e.Id).HasName("PK__Place__3214EC07B41518C3");
 
             entity.ToTable("Place");
 
