@@ -15,7 +15,15 @@
    "T4TemplatePath": null,
    "Tables": [
       {
-         "Name": "[dbo].[Location]",
+         "Name": "[dbo].[Itinerary]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Itinerary_Detail]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Map]",
          "ObjectType": 0
       },
       {
@@ -43,15 +51,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Place]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[Product_Ticket]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Schedule]",
          "ObjectType": 0
       },
       {
@@ -65,6 +65,10 @@
       {
          "Name": "[dbo].[Tour_Bundles]",
          "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[get_SerialNumber]",
+         "ObjectType": 1
       }
    ],
    "UiHint": null,
@@ -80,7 +84,6 @@
    "UseHandleBars": false,
    "UseHierarchyId": false,
    "UseInflector": true,
-   "UseInternalAccessModifiersForSprocsAndFunctions": false,
    "UseLegacyPluralizer": false,
    "UseManyToManyEntity": false,
    "UseNoDefaultConstructor": false,

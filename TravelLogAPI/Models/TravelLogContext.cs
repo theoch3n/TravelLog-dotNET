@@ -13,6 +13,12 @@ public partial class TravelLogContext : DbContext
     {
     }
 
+    public virtual DbSet<Itinerary> Itineraries { get; set; }
+
+    public virtual DbSet<ItineraryDetail> ItineraryDetails { get; set; }
+
+    public virtual DbSet<Place> Places { get; set; }
+
     public virtual DbSet<MemberInformation> MemberInformations { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
@@ -45,6 +51,125 @@ public partial class TravelLogContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Itinerary>(entity =>
+        {
+            entity.ToTable("Itinerary");
+
+            entity.Property(e => e.ItineraryId)
+                .HasComment("ID")
+                .HasColumnName("Itinerary_ID");
+            entity.Property(e => e.ItineraryCoordinate)
+                .IsRequired()
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasComment("行程座標")
+                .HasColumnName("Itinerary_Coordinate");
+            entity.Property(e => e.ItineraryCreateDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasComment("創建時間")
+                .HasColumnType("datetime")
+                .HasColumnName("Itinerary_CreateDate");
+            entity.Property(e => e.ItineraryEndDate)
+                .HasComment("行程結束時間")
+                .HasColumnType("datetime")
+                .HasColumnName("Itinerary_EndDate");
+            entity.Property(e => e.ItineraryImage)
+                .IsRequired()
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasComment("行程圖片")
+                .HasColumnName("Itinerary_Image");
+            entity.Property(e => e.ItineraryLocation)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasDefaultValue("")
+                .HasComment("行程地點")
+                .HasColumnName("Itinerary_Location");
+            entity.Property(e => e.ItineraryStartDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasComment("行程起始時間")
+                .HasColumnType("datetime")
+                .HasColumnName("Itinerary_StartDate");
+            entity.Property(e => e.ItineraryTitle)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasDefaultValue("")
+                .HasComment("行程名稱")
+                .HasColumnName("Itinerary_Title");
+        });
+
+        modelBuilder.Entity<ItineraryDetail>(entity =>
+        {
+            entity.ToTable("Itinerary_Detail");
+
+            entity.Property(e => e.ItineraryDetailId)
+                .HasComment("ID")
+                .HasColumnName("ItineraryDetail_ID");
+            entity.Property(e => e.ItineraryDetailAccommodation)
+                .HasComment("住宿 關聯 ProductType_ID")
+                .HasColumnName("ItineraryDetail_Accommodation");
+            entity.Property(e => e.ItineraryDetailCreateDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasComment("創建時間")
+                .HasColumnType("datetime")
+                .HasColumnName("ItineraryDetail_CreateDate");
+            entity.Property(e => e.ItineraryDetailDay)
+                .HasComment("第幾天")
+                .HasColumnName("ItineraryDetail_Day");
+            entity.Property(e => e.ItineraryDetailEndDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasComment("行程結束時間")
+                .HasColumnType("datetime")
+                .HasColumnName("ItineraryDetail_EndDate");
+            entity.Property(e => e.ItineraryDetailGroup)
+                .HasComment("群組")
+                .HasColumnName("ItineraryDetail_Group");
+            entity.Property(e => e.ItineraryDetailMapId)
+                .HasComment("地點 關聯 Map_ID")
+                .HasColumnName("ItineraryDetail_MapID");
+            entity.Property(e => e.ItineraryDetailMemo)
+                .IsRequired()
+                .HasMaxLength(500)
+                .HasDefaultValue("")
+                .HasComment("行程備註")
+                .HasColumnName("ItineraryDetail_Memo");
+            entity.Property(e => e.ItineraryDetailProductTypeId)
+                .HasComment("商品類別 關聯 ProductType_ID")
+                .HasColumnName("ItineraryDetail_ProductTypeID");
+            entity.Property(e => e.ItineraryDetailStartDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasComment("行程起始時間")
+                .HasColumnType("datetime")
+                .HasColumnName("ItineraryDetail_StartDate");
+            entity.Property(e => e.ItineraryId)
+                .HasComment("外鍵")
+                .HasColumnName("Itinerary_ID");
+        });
+
+        modelBuilder.Entity<Place>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Place__3214EC07C59269C5");
+
+            entity.ToTable("Place");
+
+            entity.Property(e => e.Address)
+                .IsRequired()
+                .HasMaxLength(255);
+            entity.Property(e => e.Date).HasColumnName("date");
+            entity.Property(e => e.Img)
+                .IsRequired()
+                .HasColumnName("img");
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(255);
+            entity.Property(e => e.Rating)
+                .IsRequired()
+                .HasMaxLength(10)
+                .HasColumnName("rating");
+            entity.Property(e => e.ScheduleId).HasColumnName("scheduleId");
+        });
+
         modelBuilder.Entity<MemberInformation>(entity =>
         {
             entity.HasKey(e => e.MiMemberId).HasName("PK__MemberIn__C80AA262C98FE9E9");
@@ -384,6 +509,7 @@ public partial class TravelLogContext : DbContext
 
         modelBuilder.Entity<TourBundle>(entity =>
         {
+            entity.HasKey(e => e.Id).HasName("PK__Tour_Bun__3213E83F8814B1C3");
             entity.HasKey(e => e.Id).HasName("PK__Tour_Bun__3213E83FE742FDDE");
             entity.HasKey(e => e.Id).HasName("PK__Tour_Bun__3213E83F3A098B8E");
 

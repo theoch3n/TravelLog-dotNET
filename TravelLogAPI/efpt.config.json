@@ -73,6 +73,10 @@
       {
          "Name": "[dbo].[Tour_Bundles]",
          "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[get_Location]",
+         "ObjectType": 1
       }
    ],
    "UiHint": null,

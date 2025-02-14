@@ -24,6 +24,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<TravelLogContextProcedures>();
+
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowVueApp",
         builder => builder
