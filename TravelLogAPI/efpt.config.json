@@ -15,7 +15,19 @@
    "T4TemplatePath": null,
    "Tables": [
       {
-         "Name": "[dbo].[Place]",
+         "Name": "[dbo].[Bill]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Bill_details]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Itinerary]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Itinerary_Detail]",
          "ObjectType": 0
       },
       {
@@ -51,27 +63,11 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[schedule]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[SerialBase]",
          "ObjectType": 0
       },
       {
          "Name": "[dbo].[Tickets]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Bill]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Bill_Details]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Place]",
          "ObjectType": 0
       },
       {

@@ -21,6 +21,4 @@ public partial class ProductTicket
     /// 商品 ID
     /// </summary>
     public int? ProductId { get; set; }
-
-    public virtual Order Order { get; set; }
 }

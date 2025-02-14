@@ -13,29 +13,29 @@ public partial class Payment
     public int PaymentId { get; set; }
 
     /// <summary>
-    /// 付款期限
-    /// </summary>
-    public DateTime PaymentDeadline { get; set; }
-
-    /// <summary>
-    /// 付款時間
+    /// 付款成功時間（成功付款才有值）
     /// </summary>
     public DateTime? PaymentTime { get; set; }
 
     /// <summary>
-    /// 連接付款方式 ID
+    /// 付款方式
     /// </summary>
-    public int? PaymentMethod { get; set; }
+    public int PaymentMethod { get; set; }
 
     /// <summary>
-    /// 連接訂單 ID
+    /// 關聯的訂單
     /// </summary>
-    public int? OrderId { get; set; }
+    public int OrderId { get; set; }
 
     /// <summary>
-    /// 連接付款狀態 ID
+    /// 付款狀態
     /// </summary>
-    public int? PaymentStatusId { get; set; }
+    public int PaymentStatusId { get; set; }
+
+    /// <summary>
+    /// 綠界交易編號
+    /// </summary>
+    public string EcpayTransactionId { get; set; }
 
     public virtual Order Order { get; set; }
 

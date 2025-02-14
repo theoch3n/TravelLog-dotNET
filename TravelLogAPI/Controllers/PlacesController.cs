@@ -60,11 +60,6 @@ namespace TravelLogAPI.Controllers
         }
 
 
-
-
-
-
-
         // GET: api/Places/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Place>> GetPlace(int id)
