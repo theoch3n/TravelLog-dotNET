@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TravelLogAPI.Hubs;
 using TravelLogAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,13 @@ builder.Services.AddCors(options => {
         name: PolicyName,
         policy => policy.WithOrigins("*").WithMethods("*").WithHeaders("*"));
 });
+
+
+
+
+
+// 註冊 SignalR
+builder.Services.AddSignalR();
 
 
 
@@ -38,6 +46,7 @@ builder.Services.AddCors(options => {
 });
 
 var app = builder.Build();
+app.UseCors();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -48,6 +57,11 @@ if (app.Environment.IsDevelopment())
 app.UseCors();
 
 
+// 設定 SignalR Hub 路由
+app.MapHub<ChatHub>("/ChatHub");
+
+
+
 // 啟用 CORS
 app.UseCors("AllowVueApp");
 
@@ -56,5 +70,4 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-app.UseCors();
 app.Run();
