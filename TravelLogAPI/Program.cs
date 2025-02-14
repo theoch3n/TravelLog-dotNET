@@ -28,7 +28,7 @@ builder.Services.AddScoped<TravelLogContextProcedures>();
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowVueApp",
         builder => builder
-            .WithOrigins("http://localhost:5173") // Vue project url
+            .WithOrigins("https://localhost:5173") // Vue project url
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials()
@@ -54,3 +54,14 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// 啟用 Vue Router History 模式的後端支援
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseEndpoints(endpoints => {
+    endpoints.MapControllers();
+    endpoints.MapFallbackToFile("/index.html"); // Vue history fallback
+});

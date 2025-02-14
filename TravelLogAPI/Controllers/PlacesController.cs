@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TravelLogAPI.Models;
 using System.Globalization; // 確保加上這個命名空間
+using TravelLog.Models;
 
 
 namespace TravelLogAPI.Controllers
@@ -110,7 +111,7 @@ namespace TravelLogAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Place>> PostPlace(Place place)
         {
-            
+
 
 
             // 新增 place

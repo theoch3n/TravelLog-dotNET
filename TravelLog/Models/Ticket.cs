@@ -7,34 +7,16 @@ namespace TravelLog.Models;
 
 public partial class Ticket
 {
-    /// <summary>
-    /// 票務 ID
-    /// </summary>
     public int TicketsId { get; set; }
 
-    /// <summary>
-    /// 票務名稱
-    /// </summary>
     public string TicketsName { get; set; }
 
-    /// <summary>
-    /// 票務種類
-    /// </summary>
     public string TicketsType { get; set; }
 
-    /// <summary>
-    /// 票務價格
-    /// </summary>
     public int Price { get; set; }
 
-    /// <summary>
-    /// 票務狀態
-    /// </summary>
     public bool IsAvailable { get; set; }
 
-    /// <summary>
-    /// 票務描述
-    /// </summary>
     public string Description { get; set; }
 
     /// <summary>

@@ -1,71 +1,155 @@
-﻿@model IEnumerable<TravelLog.Models.OrderWrap>
+﻿@using TravelLog.ViewModels
+@model OrderManageWrap
 
 @{
     ViewData["Title"] = "OrderManage";
 }
 
-    <div>
-        <h1>所有訂單</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="mb-4">訂單管理</h1>
 
-        <table class="table">
-            <thead>
-                <tr class="font-weight-bold">
-                    <th>
-                        訂單序號
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.UserId)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.OrderTime)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.OrderTotalAmount)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.OrderStatus)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.DeleteAt)
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    int serialNum = 0;
-                    foreach (var item in Model) {
-                        serialNum++;
+            <!-- 篩選表單 -->
+            <form asp-action="OrderManage" method="get" class="mb-4">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>訂單狀態</label>
+                        <select name="status" class="form-control">
+                            <option value="">全部狀態</option>
+                            @foreach(var status in Model.OrderStatuses){
+                                <option value="@status.OsId" selected="@(Model.FilterStatus == status.OsId)">
+                                    @status.OsOrderStatus
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>付款狀態</label>
+                        <select name="paymentStatus" class="form-control">
+                            <option value="">全部付款狀態</option>
+                            @foreach(var status in Model.PaymentStatuses){
+                                <option value="@status.PsId" selected="@(Model.FilterPaymentStatus == status.PsId)">
+                                    @status.PaymentStatus1
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>開始日期</label>
+                        <input type="date" name="startDate" class="form-control" value="@(Model.FilterStartDate?.ToString("yyyy-MM-dd"))" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>結束日期</label>
+                        <input type="date" name="endDate" class="form-control" value="@(Model.FilterEndDate?.ToString("yyyy-MM-dd"))" />
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary">篩選</button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- 訂單列表 -->
+                <table class="table table-striped table-hover">
+                    <thead>
                         <tr>
-                            <td>
-                                @serialNum
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.UserId)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.OrderTime)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.OrderTotalAmount)
-                            </td>
-                            <td id="order-status-@item.OrderId">
-                                @Html.DisplayFor(modelItem => item.OrderStatus)
-                            </td>
-                            <td id="cancel-at-@item.OrderId">
-                                @Html.DisplayFor(modelItem => item.DeleteAt)
-                        </td>
-                            <td>
-                                <a asp-controller="Order" asp-action="OrderDetail" asp-route-id="@item.OrderId" class="btn btn-outline-info">訂單詳情</a>
-                                <a asp-controller="Order" asp-action="OrderEdit" asp-route-id="@item.OrderId" class="btn btn-outline-warning">修改訂單</a>
-                            <button type="button" id="btnCancel" data-order-id="@item.OrderId" onclick="cancelOrder(this)" class="btn btn-outline-danger">取消訂單</button>
-                            </td>
+                            <th>訂單編號</th>
+                            <th>訂單建立時間</th>
+                            <th>總金額</th>
+                            <th>訂單狀態</th>
+                            <th>付款狀態</th>
                         </tr>
-                    }
-                }
-            </tbody>
-        </table>
-    </div>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Orders)
+                        {
+                            <tr>
+                                <td>@item.OrderId</td>
+                                <td>@item.OrderTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                <td>@item.OrderTotalAmount.ToString("C")</td>
 
-    <!-- Scripts -->
-    <script src="../js/Order/OrderManage.js"></script>
+                                <!-- 訂單狀態 -->
+                                <td>
+                                    <span id="order-status-@item.OrderId"
+                                          class="badge @(item.OrderStatus switch {
+                                              1 => "badge-warning",
+                                              2 => "badge-success",
+                                              3 => "badge-danger",
+                                              4 => "badge-primary",
+                                              _ => "badge-secondary"
+                                          })">
+                                        @item.StatusName
+                                    </span>
+                                </td>
+
+                                <!-- 付款狀態 -->
+                                <td>
+                                    <span id="payment-status-@item.OrderId"
+                                        class="badge @(item.OrderPaymentStatus switch {
+                                            1 => "badge-warning",
+                                            2 => "badge-success",
+                                            3 => "badge-danger",
+                                            4 => "badge-warning",
+                                            5 => "badge-success",
+                                            6 => "badge-info",
+                                            _ => "badge-secondary"
+                                        })">
+                                        @item.PaymentStatusName
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a asp-controller="Order" asp-action="OrderDetail" asp-route-id="@item.OrderId" class="btn btn-sm btn-info">詳情</a>
+                                        <a asp-controller="Order" asp-action="OrderEdit" asp-route-id="@item.OrderId" class="btn btn-sm btn-warning">編輯</a>
+
+                                        @if (item.OrderStatus != 3) // 只有「未取消」的訂單才顯示「取消」按鈕
+                                       {
+                                            <button type="button"
+                                                    id="cancel-btn-@item.OrderId"
+                                                    class="btn btn-sm btn-danger"
+                                                    onclick="cancelOrder(@item.OrderId)">
+                                                取消
+                                            </button>
+                                        }
+                                    </div>
+                                </td>
+
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </table>
+
+            <!-- 分頁控制項 -->
+            <nav aria-label="訂單分頁">
+                <ul class="pagination justify-content-center">
+                    @if (Model.CurrentPage > 1) {
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("OrderManage", new { page = Model.CurrentPage - 1 })">上一頁</a>
+                        </li>
+                    }
+
+                    @for (int i = 1; i <= Model.TotalPages; i++) {
+                        <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("OrderManage", new { page = i })">@i</a>
+                        </li>
+                    }
+
+                    @if (Model.CurrentPage < Model.TotalPages) {
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("OrderManage", new { page = Model.CurrentPage + 1 })">下一頁</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="../js/Order/OrderManage.js"></script>

@@ -13,7 +13,7 @@ public partial class OrderStatus
     public int OsId { get; set; }
 
     /// <summary>
-    /// 訂單狀態
+    /// 訂單狀態名稱（例：待付款、已付款、已取消）
     /// </summary>
     public string OsOrderStatus { get; set; }
 }

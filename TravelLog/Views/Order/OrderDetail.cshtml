@@ -1,48 +1,78 @@
 ﻿@model TravelLog.Models.OrderWrap
 
 @{
-    ViewData["Title"] = "OrderDetail";
+    ViewData["OrderDetail"] = "訂單詳細資料";
+
+    var order = Model.order;
+    var orderIndex = Model.OrderId;
 }
 
-<h1>詳細資料</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="mb-4">訂單詳細資料</h1>
 
-<div>
-    <h4>訂單</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OrderTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OrderTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OrderTotalAmount)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OrderTotalAmount)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DeleteAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DeleteAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OrderStatus)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OrderStatus)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-controller="Order" asp-action="OrderEdit" asp-route-id="@Model?.OrderId" class="btn btn-outline-warning">修改訂單</a>
-    <a asp-controller="Order" asp-action="OrderManage" class="btn btn-outline-danger">取消修改</a>
+            <div class="card">
+                <div class="card-header">
+                    <h4>訂單資料</h4>
+                </div>
+                <div class="card-body text-dark">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-4">訂單序號</dt>
+                                <dd class="col-sm-8">@orderIndex</dd>
+
+                                <dt class="col-sm-4">創建時間</dt>
+                                <dd class="col-sm-8">@order.OrderTime.ToString("yyyy-MM-dd HH:mm:ss")</dd>
+
+                                <dt class="col-sm-4">總金額</dt>
+                                <dd class="col-sm-8">@order.OrderTotalAmount.ToString("C")</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-4">用戶 ID</dt>
+                                <dd class="col-sm-8">@order.UserId</dd>
+
+                                <dt class="col-sm-4">訂單狀態</dt>
+                                <dd class="col-sm-8 text-white">
+                                    @switch (order.OrderStatus)
+                                    {
+                                        case 1:
+                                            <span class="badge bg-warning">待付款</span>
+                                            ; break;
+                                        case 2:
+                                            <span class="badge bg-info">已付款</span>
+                                            ; break;
+                                        case 3:
+                                            <span class="badge bg-danger text-white">已取消</span>
+                                            ; break;
+                                        case 4:
+                                            <span class="badge bg-success">已完成</span>
+                                            ; break;
+                                        default:
+                                            <span class="badge bg-secondary">未知</span>
+                                            ; break;
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-4">取消時間</dt>
+                                <dd class="col-sm-8">
+                                    @(order.DeleteAt.HasValue
+                                        ? order.DeleteAt.Value.ToString("yyyy-MM-dd HH:mm:ss")
+                                        : "未取消")
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <a asp-controller="Order" asp-action="OrderEdit" asp-route-id="@order.OrderId" class="btn btn-warning">修改訂單</a>
+                <a asp-controller="Order" asp-action="OrderManage" class="btn btn-secondary">返回列表</a>
+            </div>
+        </div>
+    </div>
 </div>
