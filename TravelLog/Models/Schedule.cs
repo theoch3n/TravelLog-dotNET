@@ -5,35 +5,35 @@ using System.Collections.Generic;
 
 namespace TravelLog.Models;
 
-public partial class Map
+public partial class Schedule
 {
     /// <summary>
-    /// ID
+    /// ScheduleID
     /// </summary>
-    public int MapId { get; set; }
+    public int Id { get; set; }
 
     /// <summary>
-    /// 地點名稱
+    /// 會員 ID
     /// </summary>
-    public string MapPlaceName { get; set; }
+    public int UserId { get; set; }
 
     /// <summary>
-    /// 地址
+    /// 行程名稱
     /// </summary>
-    public string MapAddress { get; set; }
+    public string Name { get; set; }
 
     /// <summary>
-    /// 經度
+    /// 目的地
     /// </summary>
-    public double MapLongitude { get; set; }
+    public string Destination { get; set; }
 
     /// <summary>
-    /// 緯度
+    /// 開始日期
     /// </summary>
-    public double MapLatitude { get; set; }
+    public DateOnly StartDate { get; set; }
 
     /// <summary>
-    /// 創建時間
+    /// 結束日期
     /// </summary>
-    public DateTime MapCreateDate { get; set; }
+    public DateOnly EndDate { get; set; }
 }

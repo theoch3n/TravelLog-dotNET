@@ -15,11 +15,23 @@
    "T4TemplatePath": null,
    "Tables": [
       {
+         "Name": "[dbo].[Bill]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Bill_details]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Itinerary]",
          "ObjectType": 0
       },
       {
          "Name": "[dbo].[Itinerary_Detail]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Location]",
          "ObjectType": 0
       },
       {
@@ -55,11 +67,11 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Schedule]",
+         "Name": "[dbo].[Product_Ticket]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Product_Ticket]",
+         "Name": "[dbo].[Schedule]",
          "ObjectType": 0
       },
       {
@@ -73,10 +85,6 @@
       {
          "Name": "[dbo].[Tour_Bundles]",
          "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[get_SerialNumber]",
-         "ObjectType": 1
       }
    ],
    "UiHint": null,

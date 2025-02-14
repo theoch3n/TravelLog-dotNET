@@ -16,4 +16,6 @@ public partial class OrderStatus
     /// 訂單狀態名稱（例：待付款、已付款、已取消）
     /// </summary>
     public string OsOrderStatus { get; set; }
+
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

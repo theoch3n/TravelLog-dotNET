@@ -49,5 +49,7 @@ public partial class Order
 
     public virtual PaymentStatus OrderPaymentStatusNavigation { get; set; }
 
+    public virtual OrderStatus OrderStatusNavigation { get; set; }
+
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 }
