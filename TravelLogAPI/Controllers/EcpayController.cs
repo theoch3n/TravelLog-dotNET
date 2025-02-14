@@ -79,7 +79,7 @@ namespace TravelLogAPI.Controllers {
         //    return checkValue.ToUpper();
         //}
         private string GetCheckMacValue(Dictionary<string, string> order) {
-            var param = order.Keys.OrderBy(x => x).Select(key => key + "=" + order[key]).ToList()
+            var param = order.Keys.OrderBy(x => x).Select(key => key + "=" + order[key]).ToList();
             var checkValue = string.Join("&", param);
             //測試用的 HashKey
             var hashKey = "5294y06JbISpM5x9";
