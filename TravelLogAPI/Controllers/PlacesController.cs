@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TravelLogAPI.Models;
 using System.Globalization; // 確保加上這個命名空間
-using TravelLog.Models;
+
 
 
 namespace TravelLogAPI.Controllers
