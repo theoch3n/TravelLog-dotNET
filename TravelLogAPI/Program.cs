@@ -16,6 +16,12 @@ builder.Services.AddCors(options => {
 });
 
 
+
+builder.Services.AddDbContext<TravelLogContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("TravelLog")));
+//¥²»Ýµ²§À
+
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
