@@ -52,8 +52,13 @@ namespace TravelLogAPI.Controllers {
         }
 
         private string GetCheckMacValue(Dictionary<string, string> order) {
-            var param = order.OrderBy(x => x.Key).Select(x => $"{x.Key}={x.Value}");
-            var checkValue = $"HashKey={HashKey}&{string.Join("&", param)}&HashIV={HashIV}";
+            var param = order.Keys.OrderBy(x => x).Select(key => key + "=" + order[key]).ToList();
+            var checkValue = string.Join("&", param);
+            //測試用的 HashKey
+            var hashKey = "5294y06JbISpM5x9";
+            //測試用的 HashIV
+            var HashIV = "v77hoKGq4kWxNNIS";
+            checkValue = $"HashKey={hashKey}" + "&" + checkValue + $"&HashIV={HashIV}";
             checkValue = HttpUtility.UrlEncode(checkValue).ToLower();
             checkValue = GetSHA256(checkValue);
             return checkValue.ToUpper();
