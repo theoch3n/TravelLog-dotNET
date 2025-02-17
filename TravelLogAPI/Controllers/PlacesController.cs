@@ -7,9 +7,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using TravelLogAPI.Models;
+//using TravelLogAPI.Models;
 using System.Globalization; // 確保加上這個命名空間
 using TravelLog.Models;
+using Humanizer;
 
 
 namespace TravelLogAPI.Controllers
@@ -49,7 +50,7 @@ namespace TravelLogAPI.Controllers
             }
 
             var places = await _context.Places
-                .Where(p => p.Date.Date == selectedDate.Date) // 確保比較時只使用日期部分
+                .Where(p => p.Date == selectedDate.Date) // 確保比較時只使用日期部分
                 .ToListAsync();
 
             if (!places.Any())
