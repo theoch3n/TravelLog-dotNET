@@ -60,28 +60,36 @@ namespace TravelLogAPI.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequest request)
         {
-            var userIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)
-                              ?? User.FindFirst(ClaimTypes.NameIdentifier);
-            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+            try
             {
-                return Unauthorized(new { message = "無法解析使用者ID" });
-            }
+                var userIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)
+                                  ?? User.FindFirst(ClaimTypes.NameIdentifier);
+                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    return Unauthorized(new { message = "無法解析使用者ID" });
+                }
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
-            if (user == null)
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+                if (user == null)
+                {
+                    return NotFound(new { message = "找不到使用者" });
+                }
+
+                // 更新資料
+                user.UserName = request.UserName;
+                user.UserEmail = request.UserEmail;
+                user.UserPhone = request.UserPhone;
+
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "個人資料更新成功", userId = user.UserId });
+            }
+            catch (Exception ex)
             {
-                return NotFound(new { message = "找不到使用者" });
+                return StatusCode(500, new { message = "伺服器錯誤", detail = ex.ToString() });
             }
-
-            // 更新資料
-            user.UserName = request.UserName;
-            user.UserEmail = request.UserEmail;
-            user.UserPhone = request.UserPhone;
-
-            await _context.SaveChangesAsync();
-
-            return Ok(new { message = "個人資料更新成功", userId = user.UserId });
         }
+
     }
 
     public class UpdateProfileRequest

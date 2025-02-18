@@ -18,9 +18,9 @@ namespace TravelLogAPI
         public void ConfigureServices(IServiceCollection services)
         {
             var jwtSection = Configuration.GetSection("Jwt");
-            var issuer = jwtSection["Issuer"]; // 例如 "MyAppIssuer"
-            var audience = jwtSection["Audience"]; // 例如 "MyAppAudience"
-            var secret = jwtSection["SecretKey"]; // 注意屬性名稱要與 appsettings.json 一致
+            var issuer = jwtSection["Issuer"] ?? "MyAppIssuer";
+            var audience = jwtSection["Audience"] ?? "MyAppAudience";
+            var secret = jwtSection["SecretKey"] ?? "G7$k2Lp@9n3fXrZ1G7$k2Lp@9n3fXrZ1";
 
 
             // 建立對稱安全金鑰
@@ -72,8 +72,7 @@ namespace TravelLogAPI
 
             app.UseRouting();
 
-            // 啟用認證與授權中間件
-            app.UseAuthentication();
+            app.UseAuthentication();  // 認證中間件必須在授權中間件之前
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
