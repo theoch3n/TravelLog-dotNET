@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace TravelLogAPI.Controllers
 {
+    [EnableCors("VueSinglePage")]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase

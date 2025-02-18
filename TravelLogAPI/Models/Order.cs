@@ -13,12 +13,7 @@ public partial class Order
     public int OrderId { get; set; }
 
     /// <summary>
-    /// 綠界訂單交易編號
-    /// </summary>
-    public string MerchantTradeNo { get; set; }
-
-    /// <summary>
-    /// 訂單建立時間
+    /// 下訂時間
     /// </summary>
     public DateTime OrderTime { get; set; }
 
@@ -28,26 +23,19 @@ public partial class Order
     public decimal OrderTotalAmount { get; set; }
 
     /// <summary>
-    /// 刪除時間（可為 NULL）
+    /// 取消訂單時間
     /// </summary>
     public DateTime? DeleteAt { get; set; }
 
     /// <summary>
-    /// 使用者 ID（未來可接 User 表）
+    /// 連接用戶 ID
     /// </summary>
     public int UserId { get; set; }
 
     /// <summary>
-    /// 訂單當前狀態
+    /// 連接訂單狀態 ID
     /// </summary>
-    public int OrderStatus { get; set; }
-
-    /// <summary>
-    /// 訂單付款狀態
-    /// </summary>
-    public int OrderPaymentStatus { get; set; }
-
-    public virtual PaymentStatus OrderPaymentStatusNavigation { get; set; }
+    public int? OrderStatus { get; set; }
 
     public virtual OrderStatus OrderStatusNavigation { get; set; }
 

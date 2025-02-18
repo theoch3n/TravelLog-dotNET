@@ -38,12 +38,12 @@ public partial class Ticket
     public string Description { get; set; }
 
     /// <summary>
-    /// 票務退款政策
+    /// 退款政策
     /// </summary>
     public string RefundPolicy { get; set; }
 
     /// <summary>
-    /// 票務創建日期
+    /// 創建日期
     /// </summary>
     public DateTime? CreatedAt { get; set; }
 }
