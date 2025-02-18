@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TravelLogAPI.Hubs;
 using TravelLogAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +20,16 @@ builder.Services.AddCors(options => {
 
 
 
+// 註冊 SignalR
+builder.Services.AddSignalR();
+
+
+
+builder.Services.AddDbContext<TravelLogContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("TravelLog")));
+//必需結尾
+
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -36,6 +47,7 @@ builder.Services.AddCors(options => {
 });
 
 var app = builder.Build();
+app.UseCors();
 
 // 如果處於開發環境，啟用 Swagger
 if (app.Environment.IsDevelopment())
@@ -44,7 +56,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// 啟用 CORS，請確保在 UseHttpsRedirection 與 UseAuthorization 之前呼叫
+
+// 設定 SignalR Hub 路由
+app.MapHub<ChatHub>("/ChatHub");
+
+
+
+// 啟用 CORS
 app.UseCors("AllowVueApp");
 
 app.UseHttpsRedirection();
@@ -52,7 +70,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.UseCors();
 app.Run();
 
 // 啟用 Vue Router History 模式的後端支援
