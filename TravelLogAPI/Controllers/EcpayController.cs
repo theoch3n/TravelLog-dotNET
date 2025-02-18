@@ -9,8 +9,14 @@ using TravelLog.Models;
 namespace TravelLogAPI.Controllers {
     [ApiController]
     [Route("api/[controller]")]
-    [EnableCors("AllowVueApp")]
+    [EnableCors("VueSinglePage")]
     public class EcpayController : Controller {
+
+        //private readonly TravelLogContext _dbContext;
+
+        //public EcpayController(TravelLogContext dbContext){
+        //    _dbContext = dbContext;
+        //}
 
         private readonly string HashKey = "5294y06JbISpM5x9";
         private readonly string HashIV = "v77hoKGq4kWxNNIS";
@@ -24,11 +30,10 @@ namespace TravelLogAPI.Controllers {
             try {
                 using (var dbContext = new TravelLogContext()) {
                     var merchantTradeNo = GenerateMerchantTradeNo();
-
                     var newOrder = new Order {
                         OrderTime = DateTime.Now,
                         OrderTotalAmount = request.TotalAmount,
-                        UserId = 1,
+                        UserId = request.UserId,
                         OrderStatus = 1,
                         OrderPaymentStatus = 1,
                         MerchantTradeNo = merchantTradeNo
@@ -37,35 +42,37 @@ namespace TravelLogAPI.Controllers {
                     dbContext.Orders.Add(newOrder);
                     await dbContext.SaveChangesAsync();
 
-                    var orderParams = new Dictionary<string, string>
-                    {
-                        { "MerchantTradeNo", newOrder.MerchantTradeNo },
+                    var orderParams = new Dictionary<string, string> {
+                        { "MerchantTradeNo", merchantTradeNo },
                         { "MerchantTradeDate", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") },
                         { "TotalAmount", request.TotalAmount.ToString() },
-                        { "TradeDesc", HttpUtility.UrlEncode(request.TradeDesc ?? "測試交易") },
+                        { "TradeDesc", HttpUtility.UrlEncode(request.TradeDesc ?? "測試交易", Encoding.UTF8) },
                         { "ItemName", request.ItemName },
                         { "MerchantID", MerchantID },
                         { "PaymentType", "aio" },
                         { "ChoosePayment", "ALL" },
                         { "EncryptType", "1" },
                         { "ReturnURL", $"{ApiAddress}/Ecpay/PaymentResult" },
-                        { "ClientBackURL", $"{VueAddress}/paymentResult" },
-                        { "OrderResultURL", $"{VueAddress}/paymentResult/{newOrder.MerchantTradeNo}" }
+                        //{ "OrderResultURL", $"{VueAddress}/paymentResult/{merchantTradeNo}" },
+                        { "ClientRedirectURL", $"{VueAddress}/paymentResult/{merchantTradeNo}" }
                     };
 
                     orderParams["CheckMacValue"] = GetCheckMacValue(orderParams);
 
                     return Ok(new {
                         orderId = newOrder.OrderId,
-                        merchantTradeNo = newOrder.MerchantTradeNo,
+                        merchantTradeNo = merchantTradeNo,
                         orderParams = orderParams
                     });
                 }
             }
             catch (Exception ex) {
-                return BadRequest(new { message = ex.Message });
+                // 錯誤日誌+
+                Console.WriteLine($"❌ 發生錯誤：{ex.Message}");
+                return StatusCode(500, new { message = $"CreateOrder 錯誤：{ex.Message}" });
             }
         }
+
 
         private string GenerateMerchantTradeNo() {
             return $"T{DateTime.Now:yyyyMMddHHmmss}{Guid.NewGuid().ToString("N").Substring(0, 5)}";
