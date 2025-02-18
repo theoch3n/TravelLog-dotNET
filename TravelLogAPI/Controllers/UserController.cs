@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using TravelLogAPI.Models;  // 反向工程生成的模型所在的命名空間
+using Microsoft.Extensions.Configuration;
 
 namespace TravelLogAPI.Controllers
 {
@@ -15,76 +16,93 @@ namespace TravelLogAPI.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-
         private readonly TravelLogContext _context;
+        private readonly IConfiguration _configuration;
 
-        public UserController(TravelLogContext context)
+        public UserController(TravelLogContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
-        // POST: api/User/login
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            // 檢查傳入資料是否完整
-            if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+            try
             {
-                return BadRequest(new { message = "請提供完整的登入資訊。" });
+                // 檢查傳入資料是否完整
+                if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+                {
+                    return BadRequest(new { message = "請提供完整的登入資訊。" });
+                }
+
+                // 根據 Email 從 Users 表中查詢使用者
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.UserEmail == request.Email);
+                if (user == null)
+                {
+                    return NotFound(new { message = "找不到該使用者。" });
+                }
+
+                // 根據使用者的 ID 從 UserPds 表中查詢密碼資訊
+                var userPd = await _context.UserPds.FirstOrDefaultAsync(pd => pd.UserId == user.UserId);
+                if (userPd == null)
+                {
+                    return Unauthorized(new { message = "使用者密碼資訊錯誤。" });
+                }
+
+                // 使用 PasswordHasher 驗證密碼
+                var passwordHasher = new PasswordHasher<User>();
+                var verifyResult = passwordHasher.VerifyHashedPassword(user, userPd.UserPdPasswordHash, request.Password);
+                if (verifyResult != PasswordVerificationResult.Success)
+                {
+                    return Unauthorized(new { message = "密碼不正確。" });
+                }
+
+                // 讀取 JWT 設定（請確保 appsettings.json 中的屬性名稱與這裡一致）
+                var jwtSettings = _configuration.GetSection("Jwt");
+                string secretKey = jwtSettings["SecretKey"] ?? "G7$k2Lp@9n3fXrZ1G7$k2Lp@9n3fXrZ1"; // 改成 SecretKey
+                string issuer = jwtSettings["Issuer"] ?? "MyAppIssuer";
+                string audience = jwtSettings["Audience"] ?? "MyAppAudience";
+
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                // 定義 Token 包含的 claims
+                var claims = new[]
+                {
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Email, user.UserEmail),
+                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                };
+
+                // 生成 JWT Token
+                var token = new JwtSecurityToken(
+                    issuer: issuer,
+                    audience: audience,
+                    claims: claims,
+                    expires: DateTime.UtcNow.AddHours(1),
+                    signingCredentials: creds
+                );
+
+                var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+                // 回傳 JWT Token 給前端
+                return Ok(new
+                {
+                    message = "登入成功！",
+                    token = tokenString
+                });
+
+            }
+            catch (Exception ex)
+            {
+                // 如果有注入 ILogger，請使用 _logger.LogError(ex, "登入時發生錯誤");
+                return StatusCode(500, new { message = "伺服器錯誤", detail = ex.ToString() });
             }
 
-            // 根據 Email 從 Users 表中查詢使用者
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserEmail == request.Email);
-            if (user == null)
-            {
-                return NotFound(new { message = "找不到該使用者。" });
-            }
-
-            // 根據使用者的 ID 從 UserPds 表中查詢密碼資訊
-            var userPd = await _context.UserPds.FirstOrDefaultAsync(pd => pd.UserId == user.UserId);
-            if (userPd == null)
-            {
-                return Unauthorized(new { message = "使用者密碼資訊錯誤。" });
-            }
-
-            // 使用 PasswordHasher 驗證密碼，避免直接比對明文
-            var passwordHasher = new PasswordHasher<User>();
-            var verifyResult = passwordHasher.VerifyHashedPassword(user, userPd.UserPdPasswordHash, request.Password);
-            if (verifyResult != PasswordVerificationResult.Success)
-            {
-                return Unauthorized(new { message = "密碼不正確。" });
-            }
-            var secretKey = "your_secret_key_here"; // 請確保此密鑰足夠複雜並保存在安全位置（例如 appsettings.json）
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            // 2. 定義 Token 所包含的 claims（這裡可以根據需求加入更多資訊）
-            var claims = new[]
-            {
-        new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
-        new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
-        new Claim(JwtRegisteredClaimNames.Email, user.UserEmail),
-        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-    };
-
-            // 3. 生成 JWT Token
-            var token = new JwtSecurityToken(
-                issuer: "MyAppIssuer",           // 發行者，請根據需求設定
-                audience: "MyAppAudience",       // 受眾，請根據需求設定
-                claims: claims,
-                expires: DateTime.UtcNow.AddHours(1), // Token 過期時間
-                signingCredentials: creds
-            );
-
-            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-
-            // 回傳 JWT Token 給前端
-            return Ok(new
-            {
-                message = "登入成功！",
-                token = tokenString
-            });
         }
+
 
         // POST: api/User/register
         [HttpPost("register")]
@@ -125,9 +143,9 @@ namespace TravelLogAPI.Controllers
             // 建立對應的 UserPd 資料
             var userPd = new UserPd
             {
-                UserId = user.UserId,   // 使用剛生成的 UserId
-                UserPdPasswordHash = hashedPassword, // 儲存雜湊後的密碼
-                UserPdToken = "",       // 預設空字串，可根據需求產生 Token
+                UserId = user.UserId,
+                UserPdPasswordHash = hashedPassword,
+                UserPdToken = "",
                 UserPdCreateDate = DateTime.Now
             };
 
@@ -151,15 +169,12 @@ namespace TravelLogAPI.Controllers
         public bool RememberMe { get; set; }
     }
 
+    // 用於註冊請求的資料傳輸物件
     public class RegisterRequest
     {
-        // 使用者名稱，例如 "TestUser"
         public string UserName { get; set; }
-        // 使用者電子郵件，例如 "Test@gmail.com"
         public string Email { get; set; }
-        // 使用者電話，若有需要
         public string Phone { get; set; }
-        // 密碼（注意：此處示範直接儲存明文，實際應使用安全的密碼雜湊）
         public string Password { get; set; }
     }
 }

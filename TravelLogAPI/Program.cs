@@ -37,7 +37,6 @@ builder.Services.AddScoped<TravelLogContextProcedures>();
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowVueApp",
         builder => builder
-            .WithOrigins("https://localhost:5173") // Vue project url
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials()
@@ -54,9 +53,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
-// 啟用 CORS
-app.UseCors("AllowVueApp");
+// 啟用 CORS，請確保在 UseHttpsRedirection 與 UseAuthorization 之前呼叫
+app.UseCors("VueSinglePage");
 
 app.UseHttpsRedirection();
 
