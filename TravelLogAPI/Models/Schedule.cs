@@ -5,20 +5,20 @@ using System.Collections.Generic;
 
 namespace TravelLogAPI.Models;
 
-public partial class ProductTicket
+public partial class Schedule
 {
     /// <summary>
-    /// 訂單 ID
+    /// 行程ID
     /// </summary>
-    public int? OrderId { get; set; }
+    public int Id { get; set; }
 
     /// <summary>
-    /// 票券 ID
+    /// 行程名稱
     /// </summary>
-    public int? TicketId { get; set; }
+    public string Name { get; set; }
 
     /// <summary>
-    /// 商品 ID
+    /// 使用者ID
     /// </summary>
-    public int? ProductId { get; set; }
+    public int UserId { get; set; }
 }
