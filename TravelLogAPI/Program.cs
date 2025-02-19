@@ -34,8 +34,7 @@ builder.Services.AddScoped<TravelLogContextProcedures>();
 var app = builder.Build();
 
 // 如果處於開發環境，啟用 Swagger
-if (app.Environment.IsDevelopment())
-{
+if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
 }

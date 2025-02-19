@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
-using TravelLog.Models;
+using TravelLogAPI.Models;
 
 namespace TravelLogAPI.Controllers {
     [ApiController]
@@ -29,20 +29,20 @@ namespace TravelLogAPI.Controllers {
         public async Task<IActionResult> CreateOrder([FromBody] OrderRequest request) {
             try {
                 //using (var dbContext = new TravelLogContext()) {
-                    var merchantTradeNo = GenerateMerchantTradeNo();
-                    var newOrder = new Order {
-                        OrderTime = DateTime.Now,
-                        OrderTotalAmount = request.TotalAmount,
-                        UserId = request.UserId,
-                        OrderStatus = 1,
-                        OrderPaymentStatus = 1,
-                        MerchantTradeNo = merchantTradeNo
-                    };
+                var merchantTradeNo = GenerateMerchantTradeNo();
+                var newOrder = new Order {
+                    OrderTime = DateTime.Now,
+                    OrderTotalAmount = request.TotalAmount,
+                    UserId = request.UserId,
+                    OrderStatus = 1,
+                    OrderPaymentStatus = 1,
+                    MerchantTradeNo = merchantTradeNo
+                };
 
-                    _dbContext.Orders.Add(newOrder);
-                    await _dbContext.SaveChangesAsync();
+                _dbContext.Orders.Add(newOrder);
+                await _dbContext.SaveChangesAsync();
 
-                    var orderParams = new Dictionary<string, string> {
+                var orderParams = new Dictionary<string, string> {
                         { "MerchantTradeNo", merchantTradeNo },
                         { "MerchantTradeDate", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") },
                         { "TotalAmount", request.TotalAmount.ToString() },
@@ -54,16 +54,17 @@ namespace TravelLogAPI.Controllers {
                         { "EncryptType", "1" },
                         { "ReturnURL", $"{ApiAddress}/Ecpay/PaymentResult" },
                         //{ "OrderResultURL", $"{VueAddress}/paymentResult/{merchantTradeNo}" },
-                        { "ClientRedirectURL", $"{VueAddress}/paymentResult/{merchantTradeNo}" }
+                        //{ "ClientRedirectURL", $"{VueAddress}/paymentResult/{merchantTradeNo}" },
+                        { "ClientBackURL", $"{VueAddress}/paymentResult/{merchantTradeNo}" }
                     };
 
-                    orderParams["CheckMacValue"] = GetCheckMacValue(orderParams);
+                orderParams["CheckMacValue"] = GetCheckMacValue(orderParams);
 
-                    return Ok(new {
-                        orderId = newOrder.OrderId,
-                        merchantTradeNo = merchantTradeNo,
-                        orderParams = orderParams
-                    });
+                return Ok(new {
+                    orderId = newOrder.OrderId,
+                    merchantTradeNo = merchantTradeNo,
+                    orderParams = orderParams
+                });
                 //}
             }
             catch (Exception ex) {
@@ -135,26 +136,45 @@ namespace TravelLogAPI.Controllers {
 
                 bool isSuccess = paymentStatus == "1";
 
-                using (var dbContext = new TravelLogContext()) {
-                    var order = await dbContext.Orders.FirstOrDefaultAsync(o => o.MerchantTradeNo == merchantTradeNo);
-                    if (order == null) {
-                        return NotFound(new { message = "找不到對應的訂單" });
-                    }
-
-                    var payment = new Payment {
-                        OrderId = order.OrderId,
-                        PaymentTime = isSuccess ? DateTime.Now : null,
-                        PaymentMethod = GetPaymentMethodId(paymentType),
-                        PaymentStatusId = isSuccess ? 2 : 3,
-                        EcpayTransactionId = ecpayTradeNo
-                    };
-
-                    dbContext.Payments.Add(payment);
-                    order.OrderPaymentStatus = payment.PaymentStatusId;
-                    await dbContext.SaveChangesAsync();
+                //using (var dbContext = new TravelLogContext()) {
+                var order = await _dbContext.Orders.FirstOrDefaultAsync(o => o.MerchantTradeNo == merchantTradeNo);
+                if (order == null) {
+                    return NotFound(new { message = "找不到對應的訂單" });
                 }
 
-                return Content("1|OK", "text/plain");
+                var payment = new Payment {
+                    OrderId = order.OrderId,
+                    PaymentTime = isSuccess ? DateTime.Now : null,
+                    PaymentMethod = GetPaymentMethodId(paymentType),
+                    PaymentStatusId = isSuccess ? 2 : 3,
+                    EcpayTransactionId = ecpayTradeNo
+                };
+
+                _dbContext.Payments.Add(payment);
+                order.OrderPaymentStatus = payment.PaymentStatusId;
+                await _dbContext.SaveChangesAsync();
+                //}
+
+                if (Request.Headers["Content-Type"] == "application/x-www-form-urlencoded") {
+                    // 綠界 Server 發來的通知
+                    return Content("1|OK", "text/plain");
+                }
+
+                // 改用 JavaScript 重定向
+                var html = $@"
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        window.location.href = '{VueAddress}/#/paymentResult/{formData["MerchantTradeNo"]}';
+    </script>
+</head>
+<body>
+    <p>付款處理中，請稍候...</p>
+</body>
+</html>";
+
+                return Content(html, "text/html");
             }
             catch (Exception ex) {
                 return BadRequest(new { message = $"處理付款結果時發生錯誤：{ex.Message}" });
@@ -175,33 +195,33 @@ namespace TravelLogAPI.Controllers {
 
         [HttpGet("GetOrder")]
         public async Task<IActionResult> GetOrder([FromQuery] string merchantTradeNo) {
-            using (var dbContext = new TravelLogContext()) {
-                var order = await dbContext.Orders
-                    .Where(o => o.MerchantTradeNo == merchantTradeNo)
-                    .Select(o => new {
-                        o.OrderId,
-                        o.MerchantTradeNo,
-                        TradeDate = o.OrderTime.ToString("yyyy/MM/dd HH:mm:ss"),
-                        o.OrderTotalAmount,
-                        o.OrderPaymentStatus,
-                        PaymentStatus = o.OrderPaymentStatusNavigation.PaymentStatus1,
-                        PaymentInfo = dbContext.Payments
-                            .Where(p => p.OrderId == o.OrderId)
-                            .Select(p => new {
-                                p.PaymentTime,
-                                p.EcpayTransactionId
-                            })
-                            .FirstOrDefault()
-                    })
-                    .FirstOrDefaultAsync();
+            //using (var dbContext = new TravelLogContext()) {
+            var order = await _dbContext.Orders
+                .Where(o => o.MerchantTradeNo == merchantTradeNo)
+                .Select(o => new {
+                    o.OrderId,
+                    o.MerchantTradeNo,
+                    TradeDate = o.OrderTime.ToString("yyyy/MM/dd HH:mm:ss"),
+                    o.OrderTotalAmount,
+                    o.OrderPaymentStatus,
+                    PaymentStatus = o.OrderPaymentStatusNavigation.PaymentStatus1,
+                    PaymentInfo = _dbContext.Payments
+                        .Where(p => p.OrderId == o.OrderId)
+                        .Select(p => new {
+                            p.PaymentTime,
+                            p.EcpayTransactionId
+                        })
+                        .FirstOrDefault()
+                })
+                .FirstOrDefaultAsync();
 
-                if (order == null) {
-                    return NotFound(new { message = "找不到訂單" });
-                }
-
-                return Ok(order);
+            if (order == null) {
+                return NotFound(new { message = "找不到訂單" });
             }
+
+            return Ok(order);
         }
+        //}
 
         private bool ValidateCheckMacValue(Dictionary<string, string> formData) {
             var validationDict = new Dictionary<string, string>(formData);
