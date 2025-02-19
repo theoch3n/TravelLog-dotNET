@@ -8,14 +8,9 @@ namespace TravelLog.Models;
 public partial class Schedule
 {
     /// <summary>
-    /// ScheduleID
+    /// 行程ID
     /// </summary>
     public int Id { get; set; }
-
-    /// <summary>
-    /// 會員 ID
-    /// </summary>
-    public int UserId { get; set; }
 
     /// <summary>
     /// 行程名稱
@@ -23,17 +18,7 @@ public partial class Schedule
     public string Name { get; set; }
 
     /// <summary>
-    /// 目的地
+    /// 使用者ID
     /// </summary>
-    public string Destination { get; set; }
-
-    /// <summary>
-    /// 開始日期
-    /// </summary>
-    public DateOnly StartDate { get; set; }
-
-    /// <summary>
-    /// 結束日期
-    /// </summary>
-    public DateOnly EndDate { get; set; }
+    public int UserId { get; set; }
 }
