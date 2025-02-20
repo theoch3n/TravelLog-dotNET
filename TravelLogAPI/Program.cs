@@ -80,10 +80,17 @@ app.UseRouting();
 // 啟用 CORS，請確保在 UseHttpsRedirection 與 UseAuthorization 之前呼叫
 app.UseCors("VueSinglePage");
 
+// 設定 SignalR Hub 路由
+app.MapHub<ChatHub>("/ChatHub");
+
+
+
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.MapControllers();
 app.UseCors();
 app.Run();
 
