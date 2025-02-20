@@ -159,13 +159,9 @@
                 <ul class="metismenu" id="menu">
                     <li class="nav-label first">Main Menu</li>
                     <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon icon-single-04"></i><span class="nav-text">Dashboard</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a asp-controller="Home" asp-action="Index">Dashboard 1</a></li>
-                            <li><a asp-controller="Template" asp-action="Index2">Dashboard 2</a></li>
-                        </ul>
+                    <a asp-controller="User" asp-action="Index">
+                        <i class="icon icon-app-store"></i><span class="nav-text">會員管理</span>
+                    </a>
                     </li>
                     <li>
                         <a asp-controller="Tickets" asp-action="List">
@@ -254,6 +250,7 @@
     <script src="../vendor/jquery.counterup/jquery.counterup.min.js"></script>
 
     <script src="../js/dashboard/dashboard-1.js"></script>
+
 
 </body>
 </html>
