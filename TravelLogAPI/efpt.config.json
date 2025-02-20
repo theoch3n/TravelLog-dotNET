@@ -31,6 +31,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Itinerary_Group]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[MemberInformation]",
          "ObjectType": 0
       },

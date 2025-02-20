@@ -58,7 +58,21 @@ namespace TravelLogAPI.Controllers
             return itinerarydetail;
         }
 
-        // POST api/Itinerary
+        // GET api/Itinerary/5
+        [HttpGet("ItineraryGroup/{id}")]
+        public async Task<ActionResult<ItineraryGroup>> GetItineraryGroup(int id)
+        {
+            var itinerarygroups = await _context.ItineraryGroups.FindAsync(id);
+
+            if (itinerarygroups == null)
+            {
+                return NotFound();
+            }
+
+            return itinerarygroups;
+        }
+
+        // POST api/Itinerary/Itinerary
         [HttpPost("Itinerary")]
         public async Task<ActionResult<Itinerary>> PostItinerary(Itinerary itinerary)
         {
@@ -68,7 +82,7 @@ namespace TravelLogAPI.Controllers
             return CreatedAtAction("GetItinerary", new { id = itinerary.ItineraryId }, itinerary);
         }
 
-        // POST api/ItineraryDetail
+        // POST api/Itinerary/ItineraryDetail
         [HttpPost("ItineraryDetail")]
         public async Task<ActionResult<ItineraryDetail>> PostItinerary(ItineraryDetail itinerarydetail)
         {
@@ -76,6 +90,16 @@ namespace TravelLogAPI.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetItineraryDetail", new { id = itinerarydetail.ItineraryId }, itinerarydetail);
+        }
+
+        // POST api/Itinerary/ItineraryGroup
+        [HttpPost("ItineraryGroup")]
+        public async Task<ActionResult<ItineraryGroup>> PostItinerarGroup(ItineraryGroup itinerarygroups)
+        {
+            _context.ItineraryGroups.Add(itinerarygroups);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetItineraryGroup", new { id = itinerarygroups.ItineraryGroupId }, itinerarygroups);
         }
 
         // PUT api/<ItineraryController>/5
@@ -106,7 +130,7 @@ namespace TravelLogAPI.Controllers
 
         // GET api/Itinerary/getitineraryData
         [HttpGet("getitineraryData")]
-        public async Task<ActionResult<IEnumerable<Itinerary>>> getitineraryData()
+        public async Task<ActionResult<IEnumerable<Itinerary>>> getitineraryData(int id)
         {
             var itineraries = await _context.Itineraries.ToListAsync();
 
@@ -114,6 +138,38 @@ namespace TravelLogAPI.Controllers
             {
                 return NotFound();
             }
+
+            return Ok(itineraries);
+        }
+
+        // GET api/Itinerary/ByUser/{uid}
+        [HttpGet("ByUser/{uid}")]
+        public async Task<ActionResult<IEnumerable<Itinerary>>> GetItinerariesByUser(int uid)
+        {
+            var itineraries = await _context.Itineraries
+                .Where(i => i.ItineraryCreateUser == uid)
+                .ToListAsync();
+
+            return Ok(itineraries);
+        }
+
+        // GET api/Itinerary/ByEmail/{email}
+        [HttpGet("ByEmail/{email}")]
+        public async Task<ActionResult<IEnumerable<Itinerary>>> GetItinerariesByEmail(string email)
+        {
+            var itineraryGroups = await _context.ItineraryGroups
+                .Where(ig => ig.ItineraryGroupUserEmail == email)
+                .ToListAsync();
+
+            if (itineraryGroups == null || !itineraryGroups.Any())
+            {
+                return Ok(new List<Itinerary>());
+            }
+
+            var itineraryIds = itineraryGroups.Select(ig => ig.ItineraryGroupItineraryId).ToList();
+            var itineraries = await _context.Itineraries
+                .Where(i => itineraryIds.Contains(i.ItineraryId))
+                .ToListAsync();
 
             return Ok(itineraries);
         }

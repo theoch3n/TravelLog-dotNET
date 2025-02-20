@@ -43,6 +43,11 @@ public partial class Itinerary
     public DateTime ItineraryEndDate { get; set; }
 
     /// <summary>
+    /// 創建使用者
+    /// </summary>
+    public int ItineraryCreateUser { get; set; }
+
+    /// <summary>
     /// 創建時間
     /// </summary>
     public DateTime? ItineraryCreateDate { get; set; }

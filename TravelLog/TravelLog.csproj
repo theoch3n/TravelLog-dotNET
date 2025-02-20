@@ -7,9 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="NewFolder\**" />
     <Compile Remove="Views\Template\TemplateHtml\**" />
+    <Content Remove="NewFolder\**" />
     <Content Remove="Views\Template\TemplateHtml\**" />
+    <EmbeddedResource Remove="NewFolder\**" />
     <EmbeddedResource Remove="Views\Template\TemplateHtml\**" />
+    <None Remove="NewFolder\**" />
     <None Remove="Views\Template\TemplateHtml\**" />
   </ItemGroup>
 
@@ -41,10 +45,6 @@
     <PackageReference Include="Microsoft.Owin.Security.Cookies" Version="4.2.2" />
     <PackageReference Include="Microsoft.Owin.Security.Google" Version="4.2.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="NewFolder\" />
   </ItemGroup>
 
 </Project>

@@ -21,6 +21,8 @@ public partial class TravelLogContext : DbContext
 
     public virtual DbSet<ItineraryDetail> ItineraryDetails { get; set; }
 
+    public virtual DbSet<ItineraryGroup> ItineraryGroups { get; set; }
+
     public virtual DbSet<MemberInformation> MemberInformations { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
@@ -108,6 +110,9 @@ public partial class TravelLogContext : DbContext
                 .HasComment("創建時間")
                 .HasColumnType("datetime")
                 .HasColumnName("Itinerary_CreateDate");
+            entity.Property(e => e.ItineraryCreateUser)
+                .HasComment("創建使用者")
+                .HasColumnName("Itinerary_CreateUser");
             entity.Property(e => e.ItineraryEndDate)
                 .HasComment("行程結束時間")
                 .HasColumnType("datetime")
@@ -183,6 +188,25 @@ public partial class TravelLogContext : DbContext
             entity.Property(e => e.ItineraryId)
                 .HasComment("外鍵")
                 .HasColumnName("Itinerary_ID");
+        });
+
+        modelBuilder.Entity<ItineraryGroup>(entity =>
+        {
+            entity.ToTable("Itinerary_Group");
+
+            entity.Property(e => e.ItineraryGroupId)
+                .HasComment("ID")
+                .HasColumnName("ItineraryGroup_ID");
+            entity.Property(e => e.ItineraryGroupItineraryId)
+                .HasComment("行程ID")
+                .HasColumnName("ItineraryGroup_ItineraryID");
+            entity.Property(e => e.ItineraryGroupUserEmail)
+                .IsRequired()
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasComment("使用者信箱")
+                .HasColumnName("ItineraryGroup_UserEmail");
         });
 
         modelBuilder.Entity<MemberInformation>(entity =>
