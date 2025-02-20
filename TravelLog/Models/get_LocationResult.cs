@@ -25,7 +25,7 @@ namespace TravelLog.Models
         [StringLength(500)]
         public string ItineraryDetail_Memo { get; set; }
         public int? Id { get; set; }
-        public DateOnly? date { get; set; }
+        public DateTime? date { get; set; }
         public int? scheduleId { get; set; }
         [StringLength(255)]
         public string Name { get; set; }

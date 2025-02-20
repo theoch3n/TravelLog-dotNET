@@ -14,6 +14,5 @@ namespace TravelLog.Models
     public partial interface ITravelLogContextProcedures
     {
         Task<List<get_LocationResult>> get_LocationAsync(int? Itinerary_ID, DateOnly? StartDate, DateOnly? EndDate, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default);
-        Task<List<get_SerialNumberResult>> get_SerialNumberAsync(string SystemCode, int? AddDay, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default);
     }
 }

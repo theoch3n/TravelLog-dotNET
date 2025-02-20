@@ -3,22 +3,22 @@
 using System;
 using System.Collections.Generic;
 
-namespace TravelLogAPI.Models;
+namespace TravelLog.Models;
 
-public partial class Schedule
+public partial class ItineraryGroup
 {
+    /// <summary>
+    /// ID
+    /// </summary>
+    public int ItineraryGroupId { get; set; }
+
     /// <summary>
     /// 行程ID
     /// </summary>
-    public int Id { get; set; }
+    public int ItineraryGroupItineraryId { get; set; }
 
     /// <summary>
-    /// 行程名稱
+    /// 使用者信箱
     /// </summary>
-    public string Name { get; set; }
-
-    /// <summary>
-    /// 使用者ID
-    /// </summary>
-    public int UserId { get; set; }
+    public string ItineraryGroupUserEmail { get; set; }
 }
