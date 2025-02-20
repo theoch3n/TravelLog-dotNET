@@ -19,6 +19,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Bill_details]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Itinerary]",
          "ObjectType": 0
       },

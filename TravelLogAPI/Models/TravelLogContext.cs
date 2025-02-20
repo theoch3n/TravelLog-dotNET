@@ -15,6 +15,8 @@ public partial class TravelLogContext : DbContext
 
     public virtual DbSet<Bill> Bills { get; set; }
 
+    public virtual DbSet<BillDetail> BillDetails { get; set; }
+
     public virtual DbSet<Itinerary> Itineraries { get; set; }
 
     public virtual DbSet<ItineraryDetail> ItineraryDetails { get; set; }
@@ -66,6 +68,25 @@ public partial class TravelLogContext : DbContext
             entity.Property(e => e.TotalAmount)
                 .HasColumnType("decimal(18, 0)")
                 .HasColumnName("Total_Amount");
+        });
+
+        modelBuilder.Entity<BillDetail>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Bill_det__3214EC078C9FA49F");
+
+            entity.ToTable("Bill_details");
+
+            entity.Property(e => e.Amount).HasColumnType("decimal(18, 0)");
+            entity.Property(e => e.BillId).HasColumnName("Bill_Id");
+            entity.Property(e => e.MemberName)
+                .IsRequired()
+                .HasMaxLength(20)
+                .HasColumnName("Member_Name");
+
+            entity.HasOne(d => d.Bill).WithMany(p => p.BillDetails)
+                .HasForeignKey(d => d.BillId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Bill_deta__Bill___2AD55B43");
         });
 
         modelBuilder.Entity<Itinerary>(entity =>
