@@ -49,11 +49,15 @@ public partial class TravelLogContext : DbContext
 
     public virtual DbSet<TourBundle> TourBundles { get; set; }
 
+    public virtual DbSet<User> Users { get; set; }
+
+    public virtual DbSet<UserPd> UserPds { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Bill>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Bill__3214EC07A4FDC07C");
+            entity.HasKey(e => e.Id).HasName("PK__Bill__3214EC07BC4757CA");
 
             entity.ToTable("Bill");
 
@@ -74,7 +78,7 @@ public partial class TravelLogContext : DbContext
 
         modelBuilder.Entity<BillDetail>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Bill_det__3214EC07786761D0");
+            entity.HasKey(e => e.Id).HasName("PK__Bill_det__3214EC07136548ED");
 
             entity.ToTable("Bill_details");
 
@@ -88,7 +92,7 @@ public partial class TravelLogContext : DbContext
             entity.HasOne(d => d.Bill).WithMany(p => p.BillDetails)
                 .HasForeignKey(d => d.BillId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Bill_deta__Bill___59C55456");
+                .HasConstraintName("FK__Bill_deta__Bill___2057CCD0");
         });
 
         modelBuilder.Entity<Itinerary>(entity =>
@@ -190,7 +194,7 @@ public partial class TravelLogContext : DbContext
 
         modelBuilder.Entity<Location>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Location__3213E83FE2E00163");
+            entity.HasKey(e => e.Id).HasName("PK__Location__3213E83F6A036692");
 
             entity.ToTable("Location");
 
@@ -247,11 +251,11 @@ public partial class TravelLogContext : DbContext
 
         modelBuilder.Entity<MemberInformation>(entity =>
         {
-            entity.HasKey(e => e.MiMemberId).HasName("PK__MemberIn__C80AA2627DCDB2DB");
+            entity.HasKey(e => e.MiMemberId).HasName("PK__MemberIn__C80AA262AE76BDFB");
 
             entity.ToTable("MemberInformation");
 
-            entity.HasIndex(e => e.MiEmail, "UQ__MemberIn__67B108C006593507").IsUnique();
+            entity.HasIndex(e => e.MiEmail, "UQ__MemberIn__67B108C0B9DE9B2C").IsUnique();
 
             entity.Property(e => e.MiMemberId).HasColumnName("MI_MemberID");
             entity.Property(e => e.MiAccountName)
@@ -278,47 +282,31 @@ public partial class TravelLogContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Order__46466601B3C76FD2");
+            entity.HasKey(e => e.OrderId).HasName("PK__Order__464666019EF8DB08");
 
             entity.ToTable("Order");
 
-            entity.HasIndex(e => e.OrderPaymentStatus, "IDX_Order_PaymentStatus");
+            entity.HasIndex(e => e.MerchantTradeNo, "UQ__Order__0528F4AE5EDCA506").IsUnique();
 
-            entity.HasIndex(e => e.OrderStatus, "IDX_Order_Status");
-
-            entity.HasIndex(e => e.MerchantTradeNo, "UQ__Order__0528F4AE5A88BB0F").IsUnique();
-
-            entity.Property(e => e.OrderId)
-                .HasComment("訂單 ID")
-                .HasColumnName("order_Id");
+            entity.Property(e => e.OrderId).HasColumnName("order_Id");
             entity.Property(e => e.DeleteAt)
-                .HasComment("刪除時間（可為 NULL）")
                 .HasColumnType("datetime")
                 .HasColumnName("delete_at");
             entity.Property(e => e.MerchantTradeNo)
                 .IsRequired()
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasComment("綠界訂單交易編號")
                 .HasColumnName("merchant_TradeNo");
-            entity.Property(e => e.OrderPaymentStatus)
-                .HasComment("訂單付款狀態")
-                .HasColumnName("order_PaymentStatus");
-            entity.Property(e => e.OrderStatus)
-                .HasComment("訂單當前狀態")
-                .HasColumnName("order_Status");
+            entity.Property(e => e.OrderPaymentStatus).HasColumnName("order_PaymentStatus");
+            entity.Property(e => e.OrderStatus).HasColumnName("order_Status");
             entity.Property(e => e.OrderTime)
                 .HasDefaultValueSql("(getdate())")
-                .HasComment("訂單建立時間")
                 .HasColumnType("datetime")
                 .HasColumnName("order_Time");
             entity.Property(e => e.OrderTotalAmount)
-                .HasComment("訂單總金額")
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("order_TotalAmount");
-            entity.Property(e => e.UserId)
-                .HasComment("使用者 ID（未來可接 User 表）")
-                .HasColumnName("user_Id");
+            entity.Property(e => e.UserId).HasColumnName("user_Id");
 
             entity.HasOne(d => d.OrderPaymentStatusNavigation).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.OrderPaymentStatus)
@@ -333,54 +321,31 @@ public partial class TravelLogContext : DbContext
 
         modelBuilder.Entity<OrderStatus>(entity =>
         {
-            entity.HasKey(e => e.OsId).HasName("PK__Order_St__85A5060D543260C4");
+            entity.HasKey(e => e.OsId).HasName("PK__Order_St__85A5060D08D82C99");
 
             entity.ToTable("Order_Status");
 
-            entity.Property(e => e.OsId)
-                .HasComment("訂單狀態 ID")
-                .HasColumnName("OS_Id");
+            entity.Property(e => e.OsId).HasColumnName("OS_Id");
             entity.Property(e => e.OsOrderStatus)
                 .IsRequired()
                 .HasMaxLength(20)
-                .HasComment("訂單狀態名稱（例：待付款、已付款、已取消）")
                 .HasColumnName("OS_OrderStatus");
         });
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.PaymentId).HasName("PK__Payment__ED10C462F33380F4");
+            entity.HasKey(e => e.PaymentId).HasName("PK__Payment__ED10C4620D85B6EA");
 
             entity.ToTable("Payment");
 
-            entity.HasIndex(e => e.PaymentMethod, "IDX_Payment_Method");
-
-            entity.HasIndex(e => e.OrderId, "IDX_Payment_Order");
-
-            entity.HasIndex(e => e.PaymentStatusId, "IDX_Payment_Status");
-
-            entity.HasIndex(e => e.EcpayTransactionId, "UQ_Payment_ECPay")
-                .IsUnique()
-                .HasFilter("([ECPay_TransactionId] IS NOT NULL)");
-
-            entity.Property(e => e.PaymentId)
-                .HasComment("付款 ID")
-                .HasColumnName("payment_Id");
+            entity.Property(e => e.PaymentId).HasColumnName("payment_Id");
             entity.Property(e => e.EcpayTransactionId)
                 .HasMaxLength(50)
-                .HasComment("綠界交易編號")
                 .HasColumnName("ECPay_TransactionId");
-            entity.Property(e => e.OrderId)
-                .HasComment("關聯的訂單")
-                .HasColumnName("order_Id");
-            entity.Property(e => e.PaymentMethod)
-                .HasComment("付款方式")
-                .HasColumnName("payment_Method");
-            entity.Property(e => e.PaymentStatusId)
-                .HasComment("付款狀態")
-                .HasColumnName("paymentStatus_Id");
+            entity.Property(e => e.OrderId).HasColumnName("order_Id");
+            entity.Property(e => e.PaymentMethod).HasColumnName("payment_Method");
+            entity.Property(e => e.PaymentStatusId).HasColumnName("paymentStatus_Id");
             entity.Property(e => e.PaymentTime)
-                .HasComment("付款成功時間（成功付款才有值）")
                 .HasColumnType("datetime")
                 .HasColumnName("payment_Time");
 
@@ -402,11 +367,9 @@ public partial class TravelLogContext : DbContext
 
         modelBuilder.Entity<PaymentMethod>(entity =>
         {
-            entity.HasKey(e => e.PmId).HasName("PK__Payment___8E8EC76BF7B88CEA");
+            entity.HasKey(e => e.PmId).HasName("PK__Payment___8E8EC76BEB527480");
 
             entity.ToTable("Payment_Method");
-
-            entity.HasIndex(e => e.PaymentMethodCode, "UQ__Payment___22287870EC3F95C1").IsUnique();
 
             entity.Property(e => e.PmId)
                 .HasComment("付款方式 ID")
@@ -414,18 +377,13 @@ public partial class TravelLogContext : DbContext
             entity.Property(e => e.PaymentMethod1)
                 .IsRequired()
                 .HasMaxLength(20)
-                .HasComment("付款方式名稱（例：信用卡、ATM 轉帳）")
+                .HasComment("付款方式")
                 .HasColumnName("payment_Method");
-            entity.Property(e => e.PaymentMethodCode)
-                .IsRequired()
-                .HasMaxLength(50)
-                .HasComment("綠界付款方式代碼（例：Credit、ATM、CVS）")
-                .HasColumnName("payment_MethodCode");
         });
 
         modelBuilder.Entity<PaymentStatus>(entity =>
         {
-            entity.HasKey(e => e.PsId).HasName("PK__Payment___011947ACFB44A620");
+            entity.HasKey(e => e.PsId).HasName("PK__Payment___011947AC54DD4722");
 
             entity.ToTable("Payment_Status");
 
@@ -435,13 +393,13 @@ public partial class TravelLogContext : DbContext
             entity.Property(e => e.PaymentStatus1)
                 .IsRequired()
                 .HasMaxLength(20)
-                .HasComment("付款狀態名稱（例：Pending、Paid、Refunded）")
+                .HasComment("付款狀態")
                 .HasColumnName("payment_Status");
         });
 
         modelBuilder.Entity<Place>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Place__3214EC0732C86D41");
+            entity.HasKey(e => e.Id).HasName("PK__Place__3214EC075A059774");
 
             entity.ToTable("Place");
 
@@ -470,14 +428,24 @@ public partial class TravelLogContext : DbContext
                 .HasNoKey()
                 .ToTable("Product_Ticket");
 
-            entity.Property(e => e.OrderId).HasColumnName("order_Id");
-            entity.Property(e => e.ProductId).HasColumnName("product_Id");
-            entity.Property(e => e.TicketId).HasColumnName("ticket_Id");
+            entity.Property(e => e.OrderId)
+                .HasComment("訂單 ID")
+                .HasColumnName("order_Id");
+            entity.Property(e => e.ProductId)
+                .HasComment("商品 ID")
+                .HasColumnName("product_Id");
+            entity.Property(e => e.TicketId)
+                .HasComment("票券 ID")
+                .HasColumnName("ticket_Id");
+
+            entity.HasOne(d => d.Order).WithMany()
+                .HasForeignKey(d => d.OrderId)
+                .HasConstraintName("FK__Product_T__order__7167D3BD");
         });
 
         modelBuilder.Entity<Schedule>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Schedule__3213E83FCD0BF39B");
+            entity.HasKey(e => e.Id).HasName("PK__Schedule__3213E83F8089B24C");
 
             entity.ToTable("Schedule");
 
@@ -545,27 +513,37 @@ public partial class TravelLogContext : DbContext
 
         modelBuilder.Entity<Ticket>(entity =>
         {
-            entity.HasKey(e => e.TicketsId).HasName("PK__Tickets__EE5BBABB8B79CF4A");
+            entity.HasKey(e => e.TicketsId).HasName("PK__Tickets__EE5BBABB9FE00CDF");
 
+            entity.Property(e => e.TicketsId).HasComment("票務 ID");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
+                .HasComment("票務創建日期")
                 .HasColumnType("datetime");
-            entity.Property(e => e.Description).HasMaxLength(255);
-            entity.Property(e => e.IsAvailable).HasDefaultValue(true);
+            entity.Property(e => e.Description)
+                .HasMaxLength(255)
+                .HasComment("票務描述");
+            entity.Property(e => e.IsAvailable)
+                .HasDefaultValue(true)
+                .HasComment("票務狀態");
+            entity.Property(e => e.Price).HasComment("票務價格");
             entity.Property(e => e.RefundPolicy)
                 .IsRequired()
-                .HasMaxLength(255);
+                .HasMaxLength(255)
+                .HasComment("票務退款政策");
             entity.Property(e => e.TicketsName)
                 .IsRequired()
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .HasComment("票務名稱");
             entity.Property(e => e.TicketsType)
                 .IsRequired()
-                .HasMaxLength(20);
+                .HasMaxLength(20)
+                .HasComment("票務種類");
         });
 
         modelBuilder.Entity<TourBundle>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tour_Bun__3213E83F80CF4716");
+            entity.HasKey(e => e.Id).HasName("PK__Tour_Bun__3213E83FCBE4659B");
 
             entity.ToTable("Tour_Bundles");
 
@@ -599,6 +577,77 @@ public partial class TravelLogContext : DbContext
                 .IsRequired()
                 .HasMaxLength(40)
                 .HasColumnName("startingPoint");
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.ToTable("User");
+
+            entity.Property(e => e.UserId)
+                .HasComment("ID")
+                .HasColumnName("User_ID");
+            entity.Property(e => e.UserCreateDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasComment("創建時間")
+                .HasColumnType("datetime")
+                .HasColumnName("User_CreateDate");
+            entity.Property(e => e.UserEmail)
+                .IsRequired()
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasComment("信箱")
+                .HasColumnName("User_Email");
+            entity.Property(e => e.UserEnabled)
+                .HasComment("啟用狀態  0 = 啟用, 1 = 關閉 ")
+                .HasColumnName("User_Enabled");
+            entity.Property(e => e.UserName)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasDefaultValue("")
+                .HasComment("使用者姓名")
+                .HasColumnName("User_Name");
+            entity.Property(e => e.UserPhone)
+                .IsRequired()
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasComment("手機")
+                .HasColumnName("User_Phone");
+        });
+
+        modelBuilder.Entity<UserPd>(entity =>
+        {
+            entity.ToTable("User_PD");
+
+            entity.Property(e => e.UserPdId)
+                .HasComment("ID")
+                .HasColumnName("UserPD_ID");
+            entity.Property(e => e.UserId)
+                .HasComment("外鍵")
+                .HasColumnName("User_ID");
+            entity.Property(e => e.UserPdCreateDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasComment("創建時間")
+                .HasColumnType("datetime")
+                .HasColumnName("UserPD_CreateDate");
+            entity.Property(e => e.UserPdPasswordHash)
+                .HasMaxLength(256)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasComment("密碼")
+                .HasColumnName("UserPD_PasswordHash");
+            entity.Property(e => e.UserPdToken)
+                .IsRequired()
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasComment("Token")
+                .HasColumnName("UserPD_Token");
+
+            entity.HasOne(d => d.User).WithMany(p => p.UserPds)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__User_ID");
         });
 
         OnModelCreatingPartial(modelBuilder);

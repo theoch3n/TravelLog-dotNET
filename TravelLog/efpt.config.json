@@ -85,6 +85,14 @@
       {
          "Name": "[dbo].[Tour_Bundles]",
          "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[User]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[User_PD]",
+         "ObjectType": 0
       }
    ],
    "UiHint": null,

@@ -7,34 +7,16 @@ namespace TravelLog.Models;
 
 public partial class Payment
 {
-    /// <summary>
-    /// 付款 ID
-    /// </summary>
     public int PaymentId { get; set; }
 
-    /// <summary>
-    /// 付款成功時間（成功付款才有值）
-    /// </summary>
     public DateTime? PaymentTime { get; set; }
 
-    /// <summary>
-    /// 付款方式
-    /// </summary>
     public int PaymentMethod { get; set; }
 
-    /// <summary>
-    /// 關聯的訂單
-    /// </summary>
     public int OrderId { get; set; }
 
-    /// <summary>
-    /// 付款狀態
-    /// </summary>
     public int PaymentStatusId { get; set; }
 
-    /// <summary>
-    /// 綠界交易編號
-    /// </summary>
     public string EcpayTransactionId { get; set; }
 
     public virtual Order Order { get; set; }
