@@ -399,27 +399,25 @@ public partial class TravelLogContext : DbContext
 
         modelBuilder.Entity<Place>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Place__3214EC075A059774");
+            entity.HasKey(e => e.Id).HasName("PK__Place__3214EC0715EC2AB4");
 
             entity.ToTable("Place");
 
-            entity.Property(e => e.Id).HasComment("地點ID");
             entity.Property(e => e.Address)
                 .IsRequired()
-                .HasMaxLength(255)
-                .HasComment("地址");
-            entity.Property(e => e.Date)
-                .HasComment("第幾天的行程")
-                .HasColumnName("date");
-            entity.Property(e => e.Latitude).HasComment("經度");
-            entity.Property(e => e.Longitude).HasComment("緯度");
+                .HasMaxLength(255);
+            entity.Property(e => e.Date).HasColumnName("date");
+            entity.Property(e => e.Img)
+                .IsRequired()
+                .HasColumnName("img");
             entity.Property(e => e.Name)
                 .IsRequired()
-                .HasMaxLength(255)
-                .HasComment("景點名稱");
-            entity.Property(e => e.ScheduleId)
-                .HasComment("連接行程id")
-                .HasColumnName("scheduleId");
+                .HasMaxLength(255);
+            entity.Property(e => e.Rating)
+                .IsRequired()
+                .HasMaxLength(10)
+                .HasColumnName("rating");
+            entity.Property(e => e.ScheduleId).HasColumnName("scheduleId");
         });
 
         modelBuilder.Entity<ProductTicket>(entity =>

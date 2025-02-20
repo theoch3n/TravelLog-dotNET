@@ -7,7 +7,7 @@ using TravelLogAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 註冊 DbContext，只需一次
+// 註冊 DbContext
 builder.Services.AddDbContext<TravelLogContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TravelLog")));
 
@@ -62,24 +62,20 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<TravelLogContextProcedures>();
 
-builder.Services.AddCors(options => {
-    options.AddPolicy("AllowVueApp",
-        builder => builder
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials()
-    );
-});
 
 var app = builder.Build();
 app.UseCors();
 
 // 如果處於開發環境，啟用 Swagger
-if (app.Environment.IsDevelopment())
-{
+if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// 啟用 Vue Router History 模式的後端支援
+app.UseDefaultFiles();
+app.UseStaticFiles();
+app.UseRouting();
 
 // 啟用 CORS，請確保在 UseHttpsRedirection 與 UseAuthorization 之前呼叫
 app.UseCors("VueSinglePage");
@@ -88,7 +84,6 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.MapControllers();
 app.UseCors();
 app.Run();
 
@@ -98,7 +93,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+
 app.UseEndpoints(endpoints => {
     endpoints.MapControllers();
     endpoints.MapFallbackToFile("/index.html"); // Vue history fallback
 });
+app.Run();
