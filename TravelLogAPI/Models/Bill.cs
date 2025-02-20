@@ -16,6 +16,4 @@ public partial class Bill
     public string PaidBy { get; set; }
 
     public DateTime? CreatedAt { get; set; }
-
-    public virtual ICollection<BillDetail> BillDetails { get; set; } = new List<BillDetail>();
 }
