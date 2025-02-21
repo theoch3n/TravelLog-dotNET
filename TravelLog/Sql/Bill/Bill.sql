@@ -1,7 +1,7 @@
 USE [TravelLog]
 GO
 
-/****** Object:  Table [dbo].[Bill]    Script Date: 2025/2/12 ¤U¤È 11:05:24 ******/
+/****** Object:  Table [dbo].[Bill]    Script Date: 2025/2/21 ¤W¤È 09:06:31 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -10,6 +10,7 @@ GO
 
 CREATE TABLE [dbo].[Bill](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Itinerary_Id] [int] NOT NULL,
 	[Title] [nvarchar](50) NOT NULL,
 	[Total_Amount] [decimal](18, 0) NOT NULL,
 	[PaidBy] [nvarchar](50) NOT NULL,

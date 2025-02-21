@@ -43,7 +43,7 @@ namespace TravelLogAPI.Models
             _context = context;
         }
 
-        public virtual async Task<List<get_LocationResult>> get_LocationAsync(int? Itinerary_ID, DateOnly? StartDate, DateOnly? EndDate, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default)
+        public virtual async Task<List<get_LocationResult>> get_LocationAsync(int? itinerary_ID, DateOnly? startDate, DateOnly? endDate, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default)
         {
             var parameterreturnValue = new SqlParameter
             {
@@ -57,19 +57,19 @@ namespace TravelLogAPI.Models
                 new SqlParameter
                 {
                     ParameterName = "Itinerary_ID",
-                    Value = Itinerary_ID ?? Convert.DBNull,
+                    Value = itinerary_ID ?? Convert.DBNull,
                     SqlDbType = System.Data.SqlDbType.Int,
                 },
                 new SqlParameter
                 {
                     ParameterName = "StartDate",
-                    Value = StartDate ?? Convert.DBNull,
+                    Value = startDate ?? Convert.DBNull,
                     SqlDbType = System.Data.SqlDbType.Date,
                 },
                 new SqlParameter
                 {
                     ParameterName = "EndDate",
-                    Value = EndDate ?? Convert.DBNull,
+                    Value = endDate ?? Convert.DBNull,
                     SqlDbType = System.Data.SqlDbType.Date,
                 },
                 parameterreturnValue,

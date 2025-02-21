@@ -23,6 +23,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[ExternalLogins]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Itinerary]",
          "ObjectType": 0
       },
@@ -63,6 +67,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Product_Ticket]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[SerialBase]",
          "ObjectType": 0
       },
@@ -100,6 +108,7 @@
    "UseHandleBars": false,
    "UseHierarchyId": false,
    "UseInflector": true,
+   "UseInternalAccessModifiersForSprocsAndFunctions": false,
    "UseLegacyPluralizer": false,
    "UseManyToManyEntity": false,
    "UseNoDefaultConstructor": false,

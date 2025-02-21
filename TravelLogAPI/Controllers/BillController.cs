@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TravelLogAPI.DTO;
 using TravelLogAPI.Models;
 
@@ -51,6 +52,26 @@ namespace TravelLogAPI.Controllers
                 // 返回錯誤訊息
                 return StatusCode(500, $"Internal Server Error: {ex.Message}\n{ex.StackTrace}");
             }
+        }
+        [HttpGet("[action]/{id}")]
+        public async Task<List<Bill>> GetBillWithDetailsByItineraryId(int id) 
+        {
+            var bills = await _context.Bills.Where(c => c.ItineraryId == id).ToListAsync();
+            //if (bills != null) 
+            //{
+            //    foreach (var bill in bills) 
+            //    { 
+            //        var billDetails = await _context.BillDetails.Where(c => c.BillId == bill.Id).ToListAsync();
+
+            //    }
+            
+            //}
+            //BillWithDetailsDto dto = new BillWithDetailsDto
+            //{
+            //    Bill = bills,
+            //    Details = billDetails
+            //};
+            return bills;
         }
     }
 }
