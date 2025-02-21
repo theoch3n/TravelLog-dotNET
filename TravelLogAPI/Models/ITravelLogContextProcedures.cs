@@ -13,7 +13,6 @@ namespace TravelLogAPI.Models
 {
     public partial interface ITravelLogContextProcedures
     {
-        Task<List<get_LocationResult>> get_LocationAsync(int? itinerary_ID, DateOnly? startDate, DateOnly? endDate, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default);
         Task<List<get_LocationResult>> get_LocationAsync(int? Itinerary_ID, DateOnly? StartDate, DateOnly? EndDate, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default);
     }
 }
