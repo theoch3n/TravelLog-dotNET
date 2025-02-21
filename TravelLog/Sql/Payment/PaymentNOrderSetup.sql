@@ -36,7 +36,7 @@ CREATE TABLE Payment (
     payment_Id INT IDENTITY(1,1) PRIMARY KEY,  -- 付款 ID (PK)
     payment_Time DATETIME NULL,  -- 付款成功時間 (成功付款才有值)
     payment_Method INT NOT NULL,  -- 付款方式
-    payment_MethodName INT NOT NULL,  -- 綠界回傳付款方式
+    payment_MethodName INT,  -- 綠界回傳付款方式
     order_Id INT NOT NULL,  -- 關聯的訂單 ID
     paymentStatus_Id INT NOT NULL,  -- 付款狀態
     ECPay_TransactionId NVARCHAR(50) NULL,  -- 綠界交易編號

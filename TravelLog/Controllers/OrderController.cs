@@ -167,7 +167,7 @@ namespace TravelLog.Controllers {
             if (ModelState.IsValid) {
                 var order = await _context.Orders.FindAsync(orderWrap.OrderId);
                 if (order == null) {
-                    return NotFound();
+                    return NotFound("訂單不存在");
                 }
 
                 // 更新付款狀態

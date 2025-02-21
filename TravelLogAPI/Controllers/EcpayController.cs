@@ -162,17 +162,17 @@ namespace TravelLogAPI.Controllers {
 
                 // 改用 JavaScript 重定向
                 var html = $@"
-<!DOCTYPE html>
-<html>
-<head>
-    <script>
-        window.location.href = '{VueAddress}/#/paymentResult/{formData["MerchantTradeNo"]}';
-    </script>
-</head>
-<body>
-    <p>付款處理中，請稍候...</p>
-</body>
-</html>";
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <script>
+                            window.location.href = '{VueAddress}/#/paymentResult/{formData["MerchantTradeNo"]}';
+                        </script>
+                    </head>
+                    <body>
+                        <p>付款處理中，請稍候...</p>
+                    </body>
+                    </html>";
 
                 return Content(html, "text/html");
             }
