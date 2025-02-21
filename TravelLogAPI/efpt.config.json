@@ -39,6 +39,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Location]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Map]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[MemberInformation]",
          "ObjectType": 0
       },
@@ -67,11 +75,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Product_Ticket]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[SerialBase]",
+         "Name": "[dbo].[Schedule]",
          "ObjectType": 0
       },
       {
@@ -108,7 +112,6 @@
    "UseHandleBars": false,
    "UseHierarchyId": false,
    "UseInflector": true,
-   "UseInternalAccessModifiersForSprocsAndFunctions": false,
    "UseLegacyPluralizer": false,
    "UseManyToManyEntity": false,
    "UseNoDefaultConstructor": false,
