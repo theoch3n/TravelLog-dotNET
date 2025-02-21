@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TravelLogAPI.DTO;
 using TravelLogAPI.Models;
 //using TravelLog.Models;
 
@@ -153,25 +154,29 @@ namespace TravelLogAPI.Controllers
             return Ok(itineraries);
         }
 
-        // GET api/Itinerary/ByEmail/{email}
-        [HttpGet("ByEmail/{email}")]
-        public async Task<ActionResult<IEnumerable<Itinerary>>> GetItinerariesByEmail(string email)
+        // POST api/Itinerary/CheckItineraryGroup
+        [HttpPost("CheckItineraryGroup")]
+        public async Task<ActionResult<IEnumerable<Itinerary>>> CheckItineraryGroup([FromBody] ItineraryGroupDTO dto)
         {
-            var itineraryGroups = await _context.ItineraryGroups
-                .Where(ig => ig.ItineraryGroupUserEmail == email)
-                .ToListAsync();
-
-            if (itineraryGroups == null || !itineraryGroups.Any())
+            if (dto == null || string.IsNullOrEmpty(dto.ItineraryGroupUserEmail))
             {
                 return Ok(new List<Itinerary>());
             }
 
-            var itineraryIds = itineraryGroups.Select(ig => ig.ItineraryGroupItineraryId).ToList();
-            var itineraries = await _context.Itineraries
-                .Where(i => itineraryIds.Contains(i.ItineraryId))
-                .ToListAsync();
+            var result = await _context.ItineraryGroups
+           .Where(ig => ig.ItineraryGroupUserEmail == dto.ItineraryGroupUserEmail)
+           .Join(
+               _context.Itineraries,
+               ig => ig.ItineraryGroupItineraryId,
+               i => i.ItineraryId,
+               (ig, i) => i).ToListAsync();
 
-            return Ok(itineraries);
+            if (result == null)
+            {
+                return Ok(new List<Itinerary>());
+            }
+
+            return Ok(result);
         }
     }
 }
