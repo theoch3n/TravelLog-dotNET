@@ -18,7 +18,7 @@ INSERT INTO [Order_Status] (OS_OrderStatus) VALUES
 INSERT INTO [Payment_Status] (payment_Status) VALUES
 (N'«Ý¥I´Ú'),
 (N'¤w¥I´Ú'),
-(N'Failed'),
+(N'¥I´Ú¥¢±Ñ'),
 (N'°h´Ú¤¤'),
 (N'¤w°h´Ú'),
 (N'¤w¹O´Á');

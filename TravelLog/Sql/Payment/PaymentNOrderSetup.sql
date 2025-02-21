@@ -1,3 +1,12 @@
+USE [TravelLog]
+GO
+
+DROP TABLE IF EXISTS Payment;
+DROP TABLE IF EXISTS Payment_Method;
+DROP TABLE IF EXISTS [Order];
+DROP TABLE IF EXISTS Payment_Status;
+DROP TABLE IF EXISTS Order_Status;
+
 -- ­q³æª¬ºAªí Order_Status
 CREATE TABLE Order_Status (
     OS_Id INT IDENTITY(1,1) PRIMARY KEY,  -- ­q³æª¬ºA ID (PK)
