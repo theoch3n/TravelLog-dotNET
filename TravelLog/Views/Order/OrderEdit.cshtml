@@ -3,9 +3,8 @@
 @{
     ViewData["Title"] = "編輯訂單";
 
-    if (Model == null || Model.order == null)
-    {
-        <h3 class="text-danger">找不到訂單資料</h3>
+    if (Model == null || Model.order == null) {
+                                        <h3 class="text-danger">找不到訂單資料</h3>
         return;
     }
 
@@ -22,7 +21,7 @@
                     <h4>訂單資料</h4>
                 </div>
                 <div class="card-body text-dark">
-                    <form id="orderEditForm" asp-action="SaveEdit" method="post">
+                    <form id="orderEditForm" asp-action="SaveEdit" method="post" novalidate>
                         @Html.AntiForgeryToken()
 
                         <!-- 隱藏訂單 ID -->
@@ -45,15 +44,14 @@
 
                         <div class="form-group">
                             <label asp-for="UserId" class="control-label"></label>
-                            <input asp-for="UserId" class="form-control" />
+                            <input asp-for="UserId" class="form-control" required />
                             <span asp-validation-for="UserId" class="text-danger"></span>
                         </div>
 
                         <div class="form-group">
                             <label asp-for="OrderStatus" class="control-label"></label>
-                            <select asp-for="OrderStatus" class="form-control">
-                                @foreach (var status in Model.OrderStatuses)
-                                {
+                            <select asp-for="OrderStatus" class="form-control" required>
+                                @foreach (var status in Model.OrderStatuses) {
                                     <option value="@status.OsId" selected="@(status.OsId == Model.OrderStatus ? "selected" : null)">
                                         @status.OsOrderStatus
                                     </option>
@@ -64,9 +62,8 @@
 
                         <div class="form-group">
                             <label asp-for="OrderPaymentStatus" class="control-label"></label>
-                            <select asp-for="OrderPaymentStatus" class="form-control">
-                                @foreach (var status in Model.PaymentStatuses)
-                                {
+                            <select asp-for="OrderPaymentStatus" class="form-control" required>
+                                @foreach (var status in Model.PaymentStatuses) {
                                     <option value="@status.PsId" selected="@(status.PsId == Model.OrderPaymentStatus ? "selected" : null)">
                                         @status.PaymentStatus1
                                     </option>
@@ -87,39 +84,39 @@
 </div>
 
 @section Scripts {
-    @await Html.PartialAsync("_ValidationScriptsPartial")
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $("#orderEditForm").on("submit", function (e) {
-                e.preventDefault(); // 阻止表單默認提交
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("orderEditForm").addEventListener("submit", async function (event) {
+                event.preventDefault();
 
-                // 進行客戶端驗證
-                if (!$(this).valid()) {
-                    return; // 如果驗證失敗，停止提交
-                }
+                const formData = new FormData(this);
+                const orderWrap = {
+                    OrderId: parseInt(formData.get("OrderId")),
+                    UserId: parseInt(formData.get("UserId")),
+                    OrderStatus: parseInt(formData.get("OrderStatus")),
+                    OrderPaymentStatus: parseInt(formData.get("OrderPaymentStatus")),
+                };
 
-                $.ajax({
-                    url: '@Url.Action("SaveEdit", "Order")',
-                    type: 'POST',
-                    data: $(this).serialize(), // 序列化表單數據
-                    headers: {
-                        "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() // 手動添加防偽令牌
-                    },
-                    success: function (response) {
-                        if (response.success) {
-                            // 顯示成功訊息並跳轉
-                            alert(response.message);
-                            window.location.href = '@Url.Action("OrderManage", "Order")';
-                        } else {
-                            alert("儲存失敗，請檢查輸入資料");
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        alert("發生錯誤，請稍後再試");
-                        console.log("錯誤詳情: " + xhr.responseText);
+                try {
+                    const response = await fetch("@Url.Action("SaveEdit", "Order")", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(orderWrap)
+                    });
+
+                    const result = await response.json();
+                    if (result.success) {
+                        alert("修改成功");
+                        window.location.href = "@Url.Action("OrderManage", "Order")";
+                    } else {
+                        alert("修改失敗：" + result.message);
                     }
-                });
+                } catch (error) {
+                    console.error("發生錯誤:", error);
+                    alert("發生錯誤，請稍後再試");
+                }
             });
         });
     </script>

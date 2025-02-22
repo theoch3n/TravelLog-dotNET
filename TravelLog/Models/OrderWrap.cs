@@ -20,7 +20,7 @@ namespace TravelLog.Models {
         }
 
         [DisplayName("綠界訂單交易編號")]
-        public string MerchantTradeNo {
+        public string? MerchantTradeNo {
             get { return _order.MerchantTradeNo; }
             set { _order.MerchantTradeNo = value; }
         }
