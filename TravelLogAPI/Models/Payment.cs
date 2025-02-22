@@ -23,11 +23,6 @@ public partial class Payment
     public int PaymentMethod { get; set; }
 
     /// <summary>
-    /// 綠界回傳付款方式
-    /// </summary>
-    public int PaymentMethodName { get; set; }
-
-    /// <summary>
     /// 關聯的訂單
     /// </summary>
     public int OrderId { get; set; }
