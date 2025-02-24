@@ -64,7 +64,7 @@ builder.Services.AddScoped<TravelLogContextProcedures>();
 
 
 var app = builder.Build();
-app.UseCors();
+//app.UseCors();
 
 // 如果處於開發環境，啟用 Swagger
 if (app.Environment.IsDevelopment()) {
@@ -91,7 +91,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-app.UseCors();
+//app.UseCors();
 app.Run();
 
 // 啟用 Vue Router History 模式的後端支援

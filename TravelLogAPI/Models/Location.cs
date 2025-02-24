@@ -5,32 +5,34 @@ using System.Collections.Generic;
 
 namespace TravelLogAPI.Models;
 
-public partial class BillDetail
+public partial class Location
 {
     /// <summary>
-    /// 帳單明細 ID
+    /// 地點 ID
     /// </summary>
     public int Id { get; set; }
 
     /// <summary>
-    /// 關聯的帳單 ID
+    /// 會員 ID
     /// </summary>
-    public int BillId { get; set; }
+    public int UserId { get; set; }
 
     /// <summary>
-    /// 成員名稱
+    /// 關聯的行程 ID
     /// </summary>
-    public string MemberName { get; set; }
+    public int ScheduleId { get; set; }
 
     /// <summary>
-    /// 分擔金額
+    /// 景點
     /// </summary>
-    public decimal Amount { get; set; }
+    public string Attraction { get; set; }
 
     /// <summary>
-    /// 是否已付款（0 = 未付款，1 = 已付款）
+    /// 日期
     /// </summary>
-    public bool Paid { get; set; }
+    public DateOnly Date { get; set; }
 
-    public virtual Bill Bill { get; set; }
+    public virtual Schedule Schedule { get; set; }
+
+    public virtual User User { get; set; }
 }

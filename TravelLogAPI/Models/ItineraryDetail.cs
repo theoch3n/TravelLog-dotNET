@@ -8,12 +8,12 @@ namespace TravelLogAPI.Models;
 public partial class ItineraryDetail
 {
     /// <summary>
-    /// ID
+    /// 行程明細 ID
     /// </summary>
     public int ItineraryDetailId { get; set; }
 
     /// <summary>
-    /// 外鍵
+    /// 關聯的行程 ID
     /// </summary>
     public int ItineraryId { get; set; }
 
@@ -23,17 +23,17 @@ public partial class ItineraryDetail
     public int ItineraryDetailDay { get; set; }
 
     /// <summary>
-    /// 住宿 關聯 ProductType_ID
+    /// 住宿 (關聯 ProductType_ID)
     /// </summary>
     public int ItineraryDetailAccommodation { get; set; }
 
     /// <summary>
-    /// 商品類別 關聯 ProductType_ID
+    /// 商品類別 (關聯 ProductType_ID)
     /// </summary>
     public int ItineraryDetailProductTypeId { get; set; }
 
     /// <summary>
-    /// 地點 關聯 Map_ID
+    /// 地點 (關聯 Map_ID)
     /// </summary>
     public int ItineraryDetailMapId { get; set; }
 
@@ -60,5 +60,9 @@ public partial class ItineraryDetail
     /// <summary>
     /// 創建時間
     /// </summary>
-    public DateTime? ItineraryDetailCreateDate { get; set; }
+    public DateTime ItineraryDetailCreateDate { get; set; }
+
+    public virtual Itinerary Itinerary { get; set; }
+
+    public virtual Map ItineraryDetailMap { get; set; }
 }

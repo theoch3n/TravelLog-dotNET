@@ -8,7 +8,7 @@ namespace TravelLogAPI.Models;
 public partial class Itinerary
 {
     /// <summary>
-    /// ID
+    /// 行程 ID
     /// </summary>
     public int ItineraryId { get; set; }
 
@@ -50,5 +50,11 @@ public partial class Itinerary
     /// <summary>
     /// 創建時間
     /// </summary>
-    public DateTime? ItineraryCreateDate { get; set; }
+    public DateTime ItineraryCreateDate { get; set; }
+
+    public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
+
+    public virtual ICollection<ItineraryDetail> ItineraryDetails { get; set; } = new List<ItineraryDetail>();
+
+    public virtual ICollection<ItineraryGroup> ItineraryGroups { get; set; } = new List<ItineraryGroup>();
 }
