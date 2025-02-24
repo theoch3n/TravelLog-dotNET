@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TravelLogAPI.Hubs;
 using TravelLogAPI.Models;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,11 +14,20 @@ builder.Services.AddDbContext<TravelLogContext>(options =>
 
 //CORS
 string PolicyName = "VueSinglePage";
-builder.Services.AddCors(options => {
-    options.AddPolicy(
-        name: PolicyName,
-        policy => policy.WithOrigins("*").WithMethods("*").WithHeaders("*"));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(PolicyName, policy =>
+        policy.WithOrigins("https://localhost:5173")
+              .AllowCredentials()
+              .AllowAnyMethod()
+              .WithHeaders("Content-Type", "Authorization", "x-requested-with", "x-signalr-user-agent") // 指定允許的標頭
+    );
 });
+
+
+
+
+
 
 var jwtSection = builder.Configuration.GetSection("Jwt");
 var issuer = jwtSection["Issuer"] ?? "MyAppIssuer";
@@ -64,7 +74,6 @@ builder.Services.AddScoped<TravelLogContextProcedures>();
 
 
 var app = builder.Build();
-app.UseCors();
 
 // 如果處於開發環境，啟用 Swagger
 if (app.Environment.IsDevelopment()) {
