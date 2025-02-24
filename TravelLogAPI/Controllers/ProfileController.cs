@@ -53,7 +53,7 @@ namespace TravelLogAPI.Controllers
             {
                 return StatusCode(500, new { message = "伺服器錯誤", detail = ex.ToString() });
             }
-            
+
         }
 
         // PUT: api/Profile

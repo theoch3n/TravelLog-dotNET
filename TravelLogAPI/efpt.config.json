@@ -23,6 +23,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[ExternalLogins]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Itinerary]",
          "ObjectType": 0
       },
@@ -96,6 +100,10 @@
       },
       {
          "Name": "[dbo].[get_Location]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[get_SerialNumber]",
          "ObjectType": 1
       }
    ],

@@ -163,25 +163,35 @@ namespace TravelLog.Controllers {
         // 儲存編輯的訂單
         // POST: Order/SaveEdit
         [HttpPost]
-        public async Task<IActionResult> SaveEdit(OrderWrap orderWrap) {
-            if (ModelState.IsValid) {
-                var order = await _context.Orders.FindAsync(orderWrap.OrderId);
-                if (order == null) {
-                    return NotFound();
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveEdit([FromBody] OrderWrap orderWrap) {
+            try {
+                if (orderWrap == null) {
+                    return Json(new { success = false, message = "無效的訂單資料" });
                 }
 
-                // 更新付款狀態
-                order.OrderPaymentStatus = orderWrap.OrderPaymentStatus;
-                // 更新訂單狀態
+                if (orderWrap.OrderId <= 0) {
+                    return Json(new { success = false, message = "無效的訂單ID" });
+                }
+
+                var order = await _context.Orders.FindAsync(orderWrap.OrderId);
+                if (order == null) {
+                    return Json(new { success = false, message = "找不到訂單" });
+                }
+
+                order.UserId = orderWrap.UserId;
                 order.OrderStatus = orderWrap.OrderStatus;
+                order.OrderPaymentStatus = orderWrap.OrderPaymentStatus;
 
                 _context.Update(order);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("OrderManage");
-            }
-            return View(orderWrap);
-        }
 
+                return Json(new { success = true, message = "訂單更新成功" });
+            }
+            catch (Exception ex) {
+                return Json(new { success = false, message = $"更新失敗: {ex.Message}" });
+            }
+        }
 
         // 取消訂單
         // POST: Order/Cancel
