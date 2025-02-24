@@ -35,6 +35,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Location]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Map]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[MemberInformation]",
          "ObjectType": 0
       },
@@ -63,7 +71,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Product_Ticket]",
+         "Name": "[dbo].[Schedule]",
          "ObjectType": 0
       },
       {

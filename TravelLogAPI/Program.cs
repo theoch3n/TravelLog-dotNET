@@ -92,7 +92,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.UseCors();
-app.Run();
+//app.Run();
 
 // 啟用 Vue Router History 模式的後端支援
 app.UseDefaultFiles();

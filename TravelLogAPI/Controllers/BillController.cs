@@ -54,24 +54,37 @@ namespace TravelLogAPI.Controllers
             }
         }
         [HttpGet("[action]/{id}")]
-        public async Task<List<Bill>> GetBillWithDetailsByItineraryId(int id) 
+        public async Task<List<BillWithDetailsDto>> GetBillWithDetailsByItineraryId(int id)
         {
-            var bills = await _context.Bills.Where(c => c.ItineraryId == id).ToListAsync();
-            //if (bills != null) 
-            //{
-            //    foreach (var bill in bills) 
-            //    { 
-            //        var billDetails = await _context.BillDetails.Where(c => c.BillId == bill.Id).ToListAsync();
+            // 查詢符合條件的 Bills 和其相關的 BillDetails
+            var bills = await _context.Bills
+                .Where(c => c.ItineraryId == id)
+                .Include(b => b.BillDetails)  // 載入關聯的 BillDetails
+                .ToListAsync();
 
-            //    }
-            
-            //}
-            //BillWithDetailsDto dto = new BillWithDetailsDto
-            //{
-            //    Bill = bills,
-            //    Details = billDetails
-            //};
-            return bills;
+            // 使用 Select 將每個 Bill 轉換成 BillWithDetailsDto
+            var billWithDetailsDtos = bills.Select(b => new BillWithDetailsDto
+            {
+                Bill = new Bill  
+                {
+                    Id = b.Id,
+                    ItineraryId = b.ItineraryId,
+                    Title = b.Title,
+                    TotalAmount = b.TotalAmount,
+                    PaidBy = b.PaidBy,
+                    CreatedAt = b.CreatedAt,
+                    BillDetails = b.BillDetails.Select(d => new BillDetail
+                    {
+                        Id = d.Id,
+                        BillId = d.BillId,
+                        MemberName = d.MemberName,
+                        Amount = d.Amount,
+                        Paid = d.Paid
+                    }).ToList()
+                },
+            }).ToList();
+
+            return billWithDetailsDtos;
         }
     }
 }

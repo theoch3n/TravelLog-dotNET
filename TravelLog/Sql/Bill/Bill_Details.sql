@@ -12,7 +12,7 @@ CREATE TABLE [dbo].[Bill_details](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Bill_Id] [int] NOT NULL,
 	[Member_Name] [nvarchar](20) NOT NULL,
-	[Amount] [decimal](18, 0) NOT NULL,
+	[Amount] [decimal](18, 2) NOT NULL,
 	[Paid] [bit] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (

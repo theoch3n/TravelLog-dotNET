@@ -12,7 +12,7 @@ CREATE TABLE [dbo].[Bill](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Itinerary_Id] [int] NOT NULL,
 	[Title] [nvarchar](50) NOT NULL,
-	[Total_Amount] [decimal](18, 0) NOT NULL,
+	[Total_Amount] [decimal](18, 2) NOT NULL,
 	[PaidBy] [nvarchar](50) NOT NULL,
 	[Created_At] [datetime] NULL,
 PRIMARY KEY CLUSTERED 
