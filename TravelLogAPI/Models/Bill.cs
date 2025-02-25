@@ -13,7 +13,7 @@ public partial class Bill
     public int Id { get; set; }
 
     /// <summary>
-    /// 行程 ID
+    /// 行程 ID（未來可接 Itinerary 表）
     /// </summary>
     public int ItineraryId { get; set; }
 
@@ -38,6 +38,4 @@ public partial class Bill
     public DateTime CreatedAt { get; set; }
 
     public virtual ICollection<BillDetail> BillDetails { get; set; } = new List<BillDetail>();
-
-    public virtual Itinerary Itinerary { get; set; }
 }

@@ -75,38 +75,5 @@ namespace TravelLogAPI.Models
 
             return _;
         }
-
-        public virtual async Task<List<get_SerialNumberResult>> get_SerialNumberAsync(string SystemCode, int? AddDay, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default)
-        {
-            var parameterreturnValue = new SqlParameter
-            {
-                ParameterName = "returnValue",
-                Direction = System.Data.ParameterDirection.Output,
-                SqlDbType = System.Data.SqlDbType.Int,
-            };
-
-            var sqlParameters = new []
-            {
-                new SqlParameter
-                {
-                    ParameterName = "SystemCode",
-                    Size = 10,
-                    Value = SystemCode ?? Convert.DBNull,
-                    SqlDbType = System.Data.SqlDbType.VarChar,
-                },
-                new SqlParameter
-                {
-                    ParameterName = "AddDay",
-                    Value = AddDay ?? Convert.DBNull,
-                    SqlDbType = System.Data.SqlDbType.Int,
-                },
-                parameterreturnValue,
-            };
-            var _ = await _context.SqlQueryAsync<get_SerialNumberResult>("EXEC @returnValue = [dbo].[get_SerialNumber] @SystemCode = @SystemCode, @AddDay = @AddDay", sqlParameters, cancellationToken);
-
-            returnValue?.SetValue(parameterreturnValue.Value);
-
-            return _;
-        }
     }
 }
