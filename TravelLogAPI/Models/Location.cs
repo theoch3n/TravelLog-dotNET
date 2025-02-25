@@ -5,34 +5,30 @@ using System.Collections.Generic;
 
 namespace TravelLogAPI.Models;
 
-public partial class UserPd
+public partial class Location
 {
     /// <summary>
-    /// ID
+    /// 地點ID
     /// </summary>
-    public int UserPdId { get; set; }
+    public int Id { get; set; }
 
     /// <summary>
-    /// 外鍵
+    /// 會員 ID
     /// </summary>
     public int UserId { get; set; }
 
     /// <summary>
-    /// 密碼
+    /// 行程 ID
     /// </summary>
-    public string UserPdPasswordHash { get; set; }
+    public int ScheduleId { get; set; }
 
     /// <summary>
-    /// Token
+    /// 景點
     /// </summary>
-    public string UserPdToken { get; set; }
+    public string Attraction { get; set; }
 
     /// <summary>
-    /// 創建時間
+    /// 日期
     /// </summary>
-    public DateTime UserPdCreateDate { get; set; }
-
-    public DateTime TokenCreateDate { get; set; }
-
-    public virtual User User { get; set; }
+    public DateOnly Date { get; set; }
 }

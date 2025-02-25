@@ -20,4 +20,6 @@ public partial class MemberInformation
     public bool? MiIsActive { get; set; }
 
     public string MiEmailConfirmationToken { get; set; }
+
+    public virtual ICollection<ExternalLogin> ExternalLogins { get; set; } = new List<ExternalLogin>();
 }

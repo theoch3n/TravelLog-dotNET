@@ -7,21 +7,38 @@ namespace TravelLogAPI.Models;
 
 public partial class Place
 {
+    /// <summary>
+    /// 地點ID
+    /// </summary>
     public int Id { get; set; }
 
-    public DateTime Date { get; set; }
+    /// <summary>
+    /// 第幾天的行程
+    /// </summary>
+    public int Date { get; set; }
 
+    /// <summary>
+    /// 連接行程id
+    /// </summary>
     public int ScheduleId { get; set; }
 
+    /// <summary>
+    /// 景點名稱
+    /// </summary>
     public string Name { get; set; }
 
+    /// <summary>
+    /// 地址
+    /// </summary>
     public string Address { get; set; }
 
+    /// <summary>
+    /// 經度
+    /// </summary>
     public double Latitude { get; set; }
 
+    /// <summary>
+    /// 緯度
+    /// </summary>
     public double Longitude { get; set; }
-
-    public string Img { get; set; }
-
-    public string Rating { get; set; }
 }
