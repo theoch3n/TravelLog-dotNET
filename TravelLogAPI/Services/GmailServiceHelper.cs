@@ -29,46 +29,46 @@ namespace TravelLogAPI.Helpers
         {
             try
             {
-                // 取得 GmailService 實例
                 var service = GetGmailService();
 
-                // 使用 MimeKit 建立郵件內容
                 var mimeMessage = new MimeMessage();
-                // 設定寄件人，這裡的郵箱應與 Gmail API 認證時的帳戶相同
-                mimeMessage.From.Add(new MailboxAddress("Your App Name", "yourapp@gmail.com"));
-                // 設定收件人
+                mimeMessage.From.Add(new MailboxAddress("TravelLog", "david39128332@gmail.com"));
                 mimeMessage.To.Add(new MailboxAddress("", toEmail));
-                // 設定郵件主旨
                 mimeMessage.Subject = subject;
-                // 設定郵件內容（這裡採用純文字格式）
-                mimeMessage.Body = new TextPart("plain") { Text = body };
 
-                // 將 MIME 郵件寫入 MemoryStream
+                // 使用 MultipartAlternative 同時提供純文字與 HTML 版本
+                var plainText = new TextPart("plain") { Text = body };
+                var htmlText = new TextPart("html")
+                {
+                    Text = $@"
+                    <html>
+                      <body>
+                        <h2>{subject}</h2>
+                        <p>{body}</p>
+                        <p>感謝您的使用，<br/>TravelLog 團隊</p>
+                      </body>
+                    </html>"
+                };
+
+                mimeMessage.Body = new MultipartAlternative { plainText, htmlText };
+
                 using (var stream = new MemoryStream())
                 {
                     mimeMessage.WriteTo(stream);
-                    // 將資料轉為 Base64Url 格式
                     var rawMessage = Convert.ToBase64String(stream.ToArray())
                         .Replace('+', '-')
                         .Replace('/', '_')
                         .Replace("=", "");
 
-                    // 建立 Gmail API Message 物件，並設定 Raw 屬性
-                    var message = new Message
-                    {
-                        Raw = rawMessage
-                    };
-
-                    // 使用 Gmail API 的 Users.Messages.Send 方法發送郵件
-                    // "me" 表示發送者為已認證的使用者
+                    var message = new Message { Raw = rawMessage };
                     service.Users.Messages.Send(message, "me").Execute();
                 }
             }
             catch (Exception ex)
             {
-                // 這裡可根據需求記錄錯誤或進行其他處理
                 throw new Exception("寄送郵件發生錯誤：" + ex.Message);
             }
         }
+
     }
 }
