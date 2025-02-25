@@ -13,7 +13,7 @@ public partial class PaymentStatus
     public int PsId { get; set; }
 
     /// <summary>
-    /// 付款狀態名稱（例：Pending、Paid、Refunded）
+    /// 付款狀態
     /// </summary>
     public string PaymentStatus1 { get; set; }
 

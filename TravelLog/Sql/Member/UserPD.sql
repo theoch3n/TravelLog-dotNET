@@ -1,7 +1,7 @@
 USE [TravelLog]
 GO
 
-/****** Object:  Table [dbo].[User_PD]    Script Date: 2025/2/11 ¤U¤È 12:09:46 ******/
+/****** Object:  Table [dbo].[User_PD]    Script Date: 2025/2/25 ¤U¤È 02:00:36 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -11,9 +11,10 @@ GO
 CREATE TABLE [dbo].[User_PD](
 	[UserPD_ID] [int] IDENTITY(1,1) NOT NULL,
 	[User_ID] [int] NOT NULL,
-	[UserPD_PasswordHash] varchar(256) NULL,
-	[UserPD_Token] varchar(max) NOT NULL,
+	[UserPD_PasswordHash] [varchar](256) NULL,
+	[UserPD_Token] [varchar](max) NOT NULL,
 	[UserPD_CreateDate] [datetime] NOT NULL,
+	[TokenCreateDate] [datetime] NOT NULL,
  CONSTRAINT [PK_User_PD] PRIMARY KEY CLUSTERED 
 (
 	[UserPD_ID] ASC
@@ -28,6 +29,9 @@ ALTER TABLE [dbo].[User_PD] ADD  CONSTRAINT [DF_User_PD_UserPD_Token]  DEFAULT (
 GO
 
 ALTER TABLE [dbo].[User_PD] ADD  CONSTRAINT [DF_User_PD_UserPD_CreateDate]  DEFAULT (getdate()) FOR [UserPD_CreateDate]
+GO
+
+ALTER TABLE [dbo].[User_PD] ADD  CONSTRAINT [DF_User_PD_TokenCreateDate]  DEFAULT (getdate()) FOR [TokenCreateDate]
 GO
 
 ALTER TABLE [dbo].[User_PD]  WITH CHECK ADD  CONSTRAINT [FK__User_ID] FOREIGN KEY([User_ID])

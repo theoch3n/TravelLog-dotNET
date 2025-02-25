@@ -7,14 +7,8 @@ namespace TravelLog.Models;
 
 public partial class OrderStatus
 {
-    /// <summary>
-    /// 訂單狀態 ID
-    /// </summary>
     public int OsId { get; set; }
 
-    /// <summary>
-    /// 訂單狀態名稱（例：待付款、已付款、已取消）
-    /// </summary>
     public string OsOrderStatus { get; set; }
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
