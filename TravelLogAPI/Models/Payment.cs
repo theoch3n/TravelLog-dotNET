@@ -18,9 +18,6 @@ public partial class Payment
     /// </summary>
     public int? PaymentMethodName { get; set; }
 
-    /// <summary>
-    /// 關聯的訂單
-    /// </summary>
     public int OrderId { get; set; }
 
     public int PaymentStatusId { get; set; }
