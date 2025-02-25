@@ -48,7 +48,7 @@ namespace TravelLogAPI.Controllers
                         UserId = user.UserId,
                         UserPdToken = token,
                         UserPdCreateDate = now,
-                        //UserPdTokenCreateTime = now,
+                        TokenCreateDate = now,
                         UserPdPasswordHash = "" // 先保持空字串
                     };
                     _context.UserPds.Add(userPd);
@@ -57,7 +57,7 @@ namespace TravelLogAPI.Controllers
                 {
                     userPd.UserPdToken = token;
                     userPd.UserPdCreateDate = now;
-                    //userPd.UserPdTokenCreateTime = now;
+                    userPd.TokenCreateDate = now;
                 }
                 await _context.SaveChangesAsync();
 
@@ -85,13 +85,13 @@ namespace TravelLogAPI.Controllers
                 return View("Error");
             }
 
-            //// 根據 token 查詢 UserPd 記錄，並檢查是否在 1 小時內
-            //var userPd = await _context.UserPds.FirstOrDefaultAsync(pd => pd.UserPdToken == token);
-            //if (userPd == null || userPd.UserPdTokenCreateTime.AddHours(1) < DateTime.Now)
-            //{
-            //    ViewBag.Error = "此連結已失效或不正確。";
-            //    return View("Error");
-            //}
+            // 根據 token 查詢 UserPd 記錄，並檢查是否在 1 小時內
+            var userPd = await _context.UserPds.FirstOrDefaultAsync(pd => pd.UserPdToken == token);
+            if (userPd == null || userPd.TokenCreateDate.AddHours(1) < DateTime.Now)
+            {
+                ViewBag.Error = "此連結已失效或不正確。";
+                return View("Error");
+            }
 
             ViewBag.Token = token;
             return View();
@@ -110,11 +110,11 @@ namespace TravelLogAPI.Controllers
 
             // 根據 token 查詢使用者密碼記錄
             var userPd = await _context.UserPds.FirstOrDefaultAsync(pd => pd.UserPdToken == token);
-            //if (userPd == null || userPd.UserPdTokenCreateTime.AddHours(1) < DateTime.Now)
-            //{
-            //    ViewBag.Error = "此連結已失效或不正確。";
-            //    return View("Error");
-            //}
+            if (userPd == null || userPd.TokenCreateDate.AddHours(1) < DateTime.Now)
+            {
+                ViewBag.Error = "此連結已失效或不正確。";
+                return View("Error");
+            }
 
             // 根據 UserId 取得使用者資訊
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userPd.UserId);
