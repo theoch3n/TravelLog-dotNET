@@ -7,58 +7,25 @@ namespace TravelLogAPI.Models;
 
 public partial class TourBundle
 {
-    /// <summary>
-    /// 套裝行程 ID
-    /// </summary>
     public int Id { get; set; }
 
-    /// <summary>
-    /// 活動名稱
-    /// </summary>
     public string EventName { get; set; }
 
-    /// <summary>
-    /// 起始地
-    /// </summary>
     public string StartingPoint { get; set; }
 
-    /// <summary>
-    /// 目的地
-    /// </summary>
     public string Destination { get; set; }
 
-    /// <summary>
-    /// 開始日期
-    /// </summary>
     public DateTime FirstDate { get; set; }
 
-    /// <summary>
-    /// 結束日期
-    /// </summary>
     public DateTime LastDate { get; set; }
 
-    /// <summary>
-    /// 天數
-    /// </summary>
     public int Duration { get; set; }
 
-    /// <summary>
-    /// 價格
-    /// </summary>
     public int Price { get; set; }
 
-    /// <summary>
-    /// 描述
-    /// </summary>
     public string EventDescription { get; set; }
 
-    /// <summary>
-    /// 評分
-    /// </summary>
     public int? Ratings { get; set; }
 
-    /// <summary>
-    /// 聯絡方式
-    /// </summary>
     public string ContactInfo { get; set; }
 }

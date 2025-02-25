@@ -7,29 +7,14 @@ namespace TravelLogAPI.Models;
 
 public partial class BillDetail
 {
-    /// <summary>
-    /// 帳單明細 ID
-    /// </summary>
     public int Id { get; set; }
 
-    /// <summary>
-    /// 關聯的帳單 ID
-    /// </summary>
     public int BillId { get; set; }
 
-    /// <summary>
-    /// 成員名稱
-    /// </summary>
     public string MemberName { get; set; }
 
-    /// <summary>
-    /// 分擔金額
-    /// </summary>
     public decimal Amount { get; set; }
 
-    /// <summary>
-    /// 是否已付款（0 = 未付款，1 = 已付款）
-    /// </summary>
     public bool Paid { get; set; }
 
     public virtual Bill Bill { get; set; }

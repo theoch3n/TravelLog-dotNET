@@ -3,12 +3,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace TravelLogAPI.Models;
+namespace TravelLog.Models;
 
-public partial class Location
+public partial class Schedule
 {
     /// <summary>
-    /// 地點ID
+    /// ScheduleID
     /// </summary>
     public int Id { get; set; }
 
@@ -18,17 +18,22 @@ public partial class Location
     public int UserId { get; set; }
 
     /// <summary>
-    /// 行程 ID
+    /// 行程名稱
     /// </summary>
-    public int ScheduleId { get; set; }
+    public string Name { get; set; }
 
     /// <summary>
-    /// 景點
+    /// 目的地
     /// </summary>
-    public string Attraction { get; set; }
+    public string Destination { get; set; }
 
     /// <summary>
-    /// 日期
+    /// 開始日期
     /// </summary>
-    public DateOnly Date { get; set; }
+    public DateOnly StartDate { get; set; }
+
+    /// <summary>
+    /// 結束日期
+    /// </summary>
+    public DateOnly EndDate { get; set; }
 }

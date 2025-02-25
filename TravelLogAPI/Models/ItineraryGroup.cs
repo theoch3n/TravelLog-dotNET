@@ -8,12 +8,12 @@ namespace TravelLogAPI.Models;
 public partial class ItineraryGroup
 {
     /// <summary>
-    /// 群組 ID
+    /// ID
     /// </summary>
     public int ItineraryGroupId { get; set; }
 
     /// <summary>
-    /// 關聯的行程 ID
+    /// 行程ID
     /// </summary>
     public int ItineraryGroupItineraryId { get; set; }
 
@@ -21,6 +21,4 @@ public partial class ItineraryGroup
     /// 使用者信箱
     /// </summary>
     public string ItineraryGroupUserEmail { get; set; }
-
-    public virtual Itinerary ItineraryGroupItinerary { get; set; }
 }

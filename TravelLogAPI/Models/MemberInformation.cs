@@ -7,39 +7,18 @@ namespace TravelLogAPI.Models;
 
 public partial class MemberInformation
 {
-    /// <summary>
-    /// 會員 ID
-    /// </summary>
     public int MiMemberId { get; set; }
 
-    /// <summary>
-    /// 帳戶名稱
-    /// </summary>
     public string MiAccountName { get; set; }
 
-    /// <summary>
-    /// 電子郵件
-    /// </summary>
     public string MiEmail { get; set; }
 
-    /// <summary>
-    /// 密碼雜湊
-    /// </summary>
     public string MiPasswordHash { get; set; }
 
-    /// <summary>
-    /// 註冊時間
-    /// </summary>
-    public DateTime MiRegistrationDate { get; set; }
+    public DateTime? MiRegistrationDate { get; set; }
 
-    /// <summary>
-    /// 是否啟用 (0 = 未啟用, 1 = 啟用)
-    /// </summary>
-    public bool MiIsActive { get; set; }
+    public bool? MiIsActive { get; set; }
 
-    /// <summary>
-    /// 電子郵件確認令牌
-    /// </summary>
     public string MiEmailConfirmationToken { get; set; }
 
     public virtual ICollection<ExternalLogin> ExternalLogins { get; set; } = new List<ExternalLogin>();

@@ -8,17 +8,17 @@ namespace TravelLogAPI.Models;
 public partial class UserPd
 {
     /// <summary>
-    /// 使用者密碼資料 ID
+    /// ID
     /// </summary>
     public int UserPdId { get; set; }
 
     /// <summary>
-    /// 關聯的 User ID
+    /// 外鍵
     /// </summary>
     public int UserId { get; set; }
 
     /// <summary>
-    /// 密碼雜湊
+    /// 密碼
     /// </summary>
     public string UserPdPasswordHash { get; set; }
 
