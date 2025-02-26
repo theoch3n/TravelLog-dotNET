@@ -29,8 +29,10 @@ CREATE TABLE [Order] (
     user_Id INT NOT NULL,  -- 使用者 ID
     order_Status INT NOT NULL,  -- 訂單狀態
     order_PaymentStatus INT NOT NULL,  -- 訂單付款狀態
+    product_Id INT NOT NULL, -- 商品 ID
     CONSTRAINT FK_Order_OrderStatus FOREIGN KEY (order_Status) REFERENCES Order_Status(OS_Id),
-    CONSTRAINT FK_Order_PaymentStatus FOREIGN KEY (order_PaymentStatus) REFERENCES Payment_Status(PS_Id)
+    CONSTRAINT FK_Order_PaymentStatus FOREIGN KEY (order_PaymentStatus) REFERENCES Payment_Status(PS_Id),
+    CONSTRAINT FK_product_Id FOREIGN KEY (product_Id) REFERENCES Tour_Bundles(id),
 );
 
 -- 付款方式表 Payment_Method
