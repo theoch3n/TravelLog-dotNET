@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// µù¥U DbContext
+// è¨»å†Š DbContext
 builder.Services.AddDbContext<TravelLogContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TravelLog")));
 
@@ -17,10 +17,10 @@ string PolicyName = "VueSinglePage";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(PolicyName, policy =>
-        policy.WithOrigins("https://localhost:5173")
+        policy.WithOrigins("https://localhost:5173", "https://localhost:7206")
               .AllowCredentials()
               .AllowAnyMethod()
-              .WithHeaders("Content-Type", "Authorization", "x-requested-with", "x-signalr-user-agent") // «ü©w¤¹³\ªº¼ĞÀY
+              .WithHeaders("Content-Type", "Authorization", "x-requested-with", "x-signalr-user-agent") // æŒ‡å®šå…è¨±çš„æ¨™é ­
     );
 });
 
@@ -32,7 +32,7 @@ builder.Services.AddCors(options =>
 var jwtSection = builder.Configuration.GetSection("Jwt");
 var issuer = jwtSection["Issuer"] ?? "MyAppIssuer";
 var audience = jwtSection["Audience"] ?? "MyAppAudience";
-var secret = jwtSection["SecretKey"] ?? "G7$k2Lp@9n3fXrZ1G7$k2Lp@9n3fXrZ1"; // 32 ­Ó¦r¤¸¥H¤W
+var secret = jwtSection["SecretKey"] ?? "G7$k2Lp@9n3fXrZ1G7$k2Lp@9n3fXrZ1"; // 32 å€‹å­—å…ƒä»¥ä¸Š
 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
 
 builder.Services.AddAuthentication(options =>
@@ -58,7 +58,7 @@ builder.Services.AddAuthentication(options =>
 
 
 
-// µù¥U SignalR
+// è¨»å†Š SignalR
 builder.Services.AddSignalR();
 
 
@@ -76,21 +76,21 @@ builder.Services.AddScoped<TravelLogContextProcedures>();
 var app = builder.Build();
 //app.UseCors();
 
-// ¦pªG³B©ó¶}µoÀô¹Ò¡A±Ò¥Î Swagger
+// å¦‚æœè™•æ–¼é–‹ç™¼ç’°å¢ƒï¼Œå•Ÿç”¨ Swagger
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// ±Ò¥Î Vue Router History ¼Ò¦¡ªº«áºİ¤ä´©
+// å•Ÿç”¨ Vue Router History æ¨¡å¼çš„å¾Œç«¯æ”¯æ´
 app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseRouting();
 
-// ±Ò¥Î CORS¡A½Ğ½T«O¦b UseHttpsRedirection »P UseAuthorization ¤§«e©I¥s
+// å•Ÿç”¨ CORSï¼Œè«‹ç¢ºä¿åœ¨ UseHttpsRedirection èˆ‡ UseAuthorization ä¹‹å‰å‘¼å«
 app.UseCors("VueSinglePage");
 
-// ³]©w SignalR Hub ¸ô¥Ñ
+// è¨­å®š SignalR Hub è·¯ç”±
 app.MapHub<ChatHub>("/ChatHub");
 
 
@@ -104,7 +104,7 @@ app.MapControllers();
 //app.UseCors();
 app.Run();
 
-// ±Ò¥Î Vue Router History ¼Ò¦¡ªº«áºİ¤ä´©
+// å•Ÿç”¨ Vue Router History æ¨¡å¼çš„å¾Œç«¯æ”¯æ´
 app.UseDefaultFiles();
 app.UseStaticFiles();
 

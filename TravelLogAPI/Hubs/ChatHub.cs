@@ -15,7 +15,8 @@ namespace TravelLogAPI.Hubs
         // 工作人員回覆訊息
         public async Task SendReply(string user, string reply)
         {
-            await Clients.User(user).SendAsync("ReceiveReply", reply);
+            //await Clients.User(user).SendAsync("ReceiveReply", reply);
+            await Clients.All.SendAsync("ReceiveReply", user, reply);
         }
         
     }

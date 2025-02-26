@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+    <title>SignalR 聊天室</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+</head>
+
+<body>
+    <h2>SignalR 聊天室</h2>
+    <div>
+        <input type="text" id="userId" placeholder="輸入使用者 ID">
+        <input type="text" id="message" placeholder="輸入訊息">
+        <button onclick="sendMessage()">發送訊息</button>
+    </div>
+    <ul id="messagesList"></ul>
+
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("https://localhost:7092/chatHub")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        connection.start().then(() => {
+            console.log("SignalR 連線成功");
+        }).catch(err => console.error("SignalR 連線失敗", err));
+
+        // 當接收到訊息時，將訊息顯示在畫面上
+        connection.on("ReceiveMessage", (user, message) => {
+            let li = document.createElement("li");
+            li.textContent = `${user}: ${message}`;
+            document.getElementById("messagesList").appendChild(li);
+        });
+        connection.on();
+
+        // 發送訊息到 SignalR
+        async function sendMessage() {
+            let userId = document.getElementById("userId").value;
+            let message = document.getElementById("message").value;
+            if (!userId || !message) return;
+
+            try {
+                await connection.invoke("SendMessage", userId, message);
+                document.getElementById("message").value = ""; // 清空訊息輸入框
+            } catch (error) {
+                console.error("發送訊息錯誤", error);
+            }
+        }
+    </script>
+</body>
+
+</html>
