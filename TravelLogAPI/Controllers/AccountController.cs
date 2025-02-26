@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using TravelLogAPI.Models;
 using TravelLogAPI.Helpers;
+using TravelLogAPI.Services;
+using Microsoft.Extensions.Configuration;  // 確保加入這個 using
 
 namespace TravelLogAPI.Controllers
 {
@@ -14,10 +16,13 @@ namespace TravelLogAPI.Controllers
     {
         private readonly TravelLogContext _context;
         private readonly PasswordHasher<User> _passwordHasher;
+        private readonly IConfiguration _configuration;
 
-        public AccountController(TravelLogContext context)
+        // 合併建構子，同時注入 TravelLogContext 與 IConfiguration
+        public AccountController(TravelLogContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
             _passwordHasher = new PasswordHasher<User>();
         }
 
@@ -60,13 +65,13 @@ namespace TravelLogAPI.Controllers
                 }
                 await _context.SaveChangesAsync();
 
-                // 組成重設密碼連結，假設 ResetPassword 動作會處理重設密碼（可回傳前端供顯示提示）
+                // 組成重設密碼連結
                 string resetLink = Url.Action("ResetPassword", "Account", new { token = token }, Request.Scheme);
                 string subject = "密碼重置通知";
                 string body = $"請點擊以下連結來重設您的密碼：{resetLink}\n此連結有效 1 小時。";
 
-                // 呼叫 Gmail API 發送郵件
-                GmailServiceHelper.SendEmail(user.UserEmail, subject, body);
+                // 呼叫 Gmail API 發送郵件 (傳入 _configuration)
+                await GmailServiceHelper.SendEmailAsync(_configuration, user.UserEmail, "david39128332@gmail.com", subject, body);
             }
 
             // 統一回覆訊息，避免洩漏使用者資訊

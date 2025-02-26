@@ -3,8 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 using TravelLogAPI.Models;
-using TravelLogAPI.Helpers;
-using TravelLogAPI.DTOs;
+using TravelLogAPI.Services; // 加入 GmailServiceHelper 的命名空間
+using Microsoft.Extensions.Configuration;  // 確保加入這個 using
+
 
 namespace TravelLogAPI.Controllers
 {
@@ -13,12 +14,13 @@ namespace TravelLogAPI.Controllers
     public class ForgotPasswordController : ControllerBase
     {
         private readonly TravelLogContext _context;
+        private readonly IConfiguration _configuration;
 
-        public ForgotPasswordController(TravelLogContext context)
+        public ForgotPasswordController(TravelLogContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
-
         // POST: api/ForgotPassword
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ForgotPasswordRequest request)
@@ -63,7 +65,9 @@ namespace TravelLogAPI.Controllers
                 string body = $"請點擊以下連結來重設您的密碼：{resetLink}\n注意：此連結有效 1 小時。";
 
                 // 呼叫 Gmail API 發送郵件
-                GmailServiceHelper.SendEmail(user.UserEmail, subject, body);
+                await GmailServiceHelper.SendEmailAsync(_configuration, user.UserEmail, "david39128332@gmail.com", subject, body);
+
+
             }
 
             // 統一回覆訊息，避免洩漏使用者是否存在的資訊

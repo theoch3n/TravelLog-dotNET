@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TravelLogAPI.Hubs;
 using TravelLogAPI.Models;
+using TravelLogAPI.Helpers;
 using Google.Apis.Gmail.v1; // 引用 GmailService
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +27,16 @@ builder.Services.AddCors(options =>
               .WithHeaders("Content-Type", "Authorization", "x-requested-with", "x-signalr-user-agent"));
 });
 
+builder.Services.AddDistributedMemoryCache(); // Session 需要記憶體快取
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+});
+
 // JWT 驗證設定
 var jwtSection = builder.Configuration.GetSection("Jwt");
 var issuer = jwtSection["Issuer"] ?? "MyAppIssuer";
@@ -35,16 +46,18 @@ var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
 
 builder.Services.AddAuthentication(options =>
 {
-    // 若你同時使用 Google OAuth 與 JWT，此處可以設定預設方案為 Cookie 或根據需求調整
     options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
 })
-.AddCookie()
+.AddCookie(options =>
+{
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+})
 .AddGoogle(googleOptions =>
 {
     googleOptions.ClientId = builder.Configuration["Gmail:ClientId"];
     googleOptions.ClientSecret = builder.Configuration["Gmail:ClientSecret"];
-    // 指定 OAuth 回調路徑，完整 redirect URI 會是 https://localhost:7092/authorize/
     googleOptions.CallbackPath = "/authorize/";
 })
 .AddJwtBearer(options =>
@@ -65,8 +78,7 @@ builder.Services.AddAuthentication(options =>
 // 註冊 GmailService 為 Singleton，啟動時初始化一次
 builder.Services.AddSingleton<Google.Apis.Gmail.v1.GmailService>(provider =>
 {
-    // 這裡會調用 GmailApiProvider.GetGmailService()，請確保 GmailApiProvider 已加上同步鎖與單例處理
-    return TravelLogAPI.Helpers.GmailApiProvider.GetGmailService();
+    return TravelLogAPI.Helpers.GmailApiProvider.GetGmailService(builder.Configuration);
 });
 
 // 註冊 SignalR
@@ -81,6 +93,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<TravelLogContextProcedures>();
 
 var app = builder.Build();
+var configuration = builder.Configuration;
+var gmailService = GmailApiProvider.GetGmailService(builder.Configuration); // 這裡傳入 IConfiguration
 
 // 如果處於開發環境，啟用 Swagger
 if (app.Environment.IsDevelopment())
@@ -93,7 +107,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseCors(PolicyName);
-
+app.UseSession(); // 確保 Session 在 Authentication 之前
 app.UseAuthentication();
 app.UseAuthorization();
 
