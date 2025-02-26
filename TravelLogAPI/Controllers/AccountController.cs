@@ -6,10 +6,11 @@ using Microsoft.AspNetCore.Identity;
 using TravelLogAPI.Models;
 using TravelLogAPI.Helpers;
 
-
 namespace TravelLogAPI.Controllers
 {
-    public class AccountController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AccountController : ControllerBase
     {
         private readonly TravelLogContext _context;
         private readonly PasswordHasher<User> _passwordHasher;
@@ -20,19 +21,17 @@ namespace TravelLogAPI.Controllers
             _passwordHasher = new PasswordHasher<User>();
         }
 
-        // GET: /Account/ForgotPassword
-        [HttpGet]
-        public IActionResult ForgotPassword()
+        // POST: api/Account/ForgotPassword
+        [HttpPost("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
         {
-            return View();
-        }
+            if (string.IsNullOrWhiteSpace(request.Email))
+            {
+                return BadRequest(new { message = "Email 不可為空" });
+            }
 
-        // POST: /Account/ForgotPassword
-        [HttpPost]
-        public async Task<IActionResult> ForgotPassword(string email)
-        {
-            // 依 Email 查詢使用者
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserEmail == email);
+            // 根據 Email 查詢使用者
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserEmail == request.Email);
             if (user != null)
             {
                 // 產生 token 與記錄建立時間
@@ -49,7 +48,7 @@ namespace TravelLogAPI.Controllers
                         UserPdToken = token,
                         UserPdCreateDate = now,
                         TokenCreateDate = now,
-                        UserPdPasswordHash = "" // 先保持空字串
+                        UserPdPasswordHash = "" // 初始保持空字串
                     };
                     _context.UserPds.Add(userPd);
                 }
@@ -61,7 +60,7 @@ namespace TravelLogAPI.Controllers
                 }
                 await _context.SaveChangesAsync();
 
-                // 組成重設密碼連結，假設 ResetPassword 動作會處理重設頁面
+                // 組成重設密碼連結，假設 ResetPassword 動作會處理重設密碼（可回傳前端供顯示提示）
                 string resetLink = Url.Action("ResetPassword", "Account", new { token = token }, Request.Scheme);
                 string subject = "密碼重置通知";
                 string body = $"請點擊以下連結來重設您的密碼：{resetLink}\n此連結有效 1 小時。";
@@ -71,67 +70,73 @@ namespace TravelLogAPI.Controllers
             }
 
             // 統一回覆訊息，避免洩漏使用者資訊
-            ViewBag.Message = "如果該 Email 已註冊，我們將發送重置連結。";
-            return View();
+            return Ok(new { message = "如果該 Email 已註冊，我們將發送重置連結。" });
         }
 
-        // GET: /Account/ResetPassword?token=xxx
-        [HttpGet]
-        public async Task<IActionResult> ResetPassword(string token)
+        // GET: api/Account/ResetPassword?token=xxx
+        [HttpGet("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromQuery] string token)
         {
             if (string.IsNullOrEmpty(token))
             {
-                ViewBag.Error = "無效的連結";
-                return View("Error");
+                return BadRequest(new { message = "無效的連結" });
             }
 
-            // 根據 token 查詢 UserPd 記錄，並檢查是否在 1 小時內
+            // 根據 token 查詢 UserPd 記錄，並檢查是否在 1 小時內有效
             var userPd = await _context.UserPds.FirstOrDefaultAsync(pd => pd.UserPdToken == token);
             if (userPd == null || userPd.TokenCreateDate.AddHours(1) < DateTime.Now)
             {
-                ViewBag.Error = "此連結已失效或不正確。";
-                return View("Error");
+                return BadRequest(new { message = "此連結已失效或不正確。" });
             }
 
-            ViewBag.Token = token;
-            return View();
+            // 將 token 回傳給前端，前端可利用此 token 進行重設密碼動作
+            return Ok(new { token = token });
         }
 
-        // POST: /Account/ResetPassword
-        [HttpPost]
-        public async Task<IActionResult> ResetPassword(string token, string newPassword, string confirmPassword)
+        // POST: api/Account/ResetPassword
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
         {
-            if (newPassword != confirmPassword)
+            if (request.NewPassword != request.ConfirmPassword)
             {
-                ViewBag.Error = "密碼與確認密碼不一致";
-                ViewBag.Token = token;
-                return View();
+                return BadRequest(new { message = "密碼與確認密碼不一致" });
             }
 
             // 根據 token 查詢使用者密碼記錄
-            var userPd = await _context.UserPds.FirstOrDefaultAsync(pd => pd.UserPdToken == token);
+            var userPd = await _context.UserPds.FirstOrDefaultAsync(pd => pd.UserPdToken == request.Token);
             if (userPd == null || userPd.TokenCreateDate.AddHours(1) < DateTime.Now)
             {
-                ViewBag.Error = "此連結已失效或不正確。";
-                return View("Error");
+                return BadRequest(new { message = "此連結已失效或不正確。" });
             }
 
             // 根據 UserId 取得使用者資訊
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userPd.UserId);
             if (user == null)
             {
-                ViewBag.Error = "找不到使用者";
-                return View("Error");
+                return NotFound(new { message = "找不到使用者" });
             }
 
             // 使用 PasswordHasher 加密新密碼並更新
-            userPd.UserPdPasswordHash = _passwordHasher.HashPassword(user, newPassword);
+            userPd.UserPdPasswordHash = _passwordHasher.HashPassword(user, request.NewPassword);
             // 清除 token 以防重複使用
             userPd.UserPdToken = null;
             await _context.SaveChangesAsync();
 
-            ViewBag.Message = "密碼重置成功，請使用新密碼登入。";
-            return View("Success");
+            return Ok(new { message = "密碼重置成功，請使用新密碼登入。" });
         }
+    }
+
+    // 忘記密碼請求資料傳輸物件
+    public class ForgotPasswordRequest
+    {
+        public string Email { get; set; }
+    }
+
+    // 重設密碼請求資料傳輸物件
+    public class ResetPasswordRequest
+    {
+        public string Token { get; set; }
+        public string NewPassword { get; set; }
+        public string ConfirmPassword { get; set; }
     }
 }
