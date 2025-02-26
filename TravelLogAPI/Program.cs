@@ -7,11 +7,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TravelLogAPI.Hubs;
 using TravelLogAPI.Models;
+using Google.Apis.Gmail.v1; // 引用 GmailService
 
 var builder = WebApplication.CreateBuilder(args);
-
-// 固定後端運行的 URL（例如 https://localhost:7092）
-builder.WebHost.UseUrls("https://localhost:7092");
 
 // 註冊 DbContext
 builder.Services.AddDbContext<TravelLogContext>(options =>
@@ -62,6 +60,13 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true,
         ClockSkew = TimeSpan.FromMinutes(5)
     };
+});
+
+// 註冊 GmailService 為 Singleton，啟動時初始化一次
+builder.Services.AddSingleton<Google.Apis.Gmail.v1.GmailService>(provider =>
+{
+    // 這裡會調用 GmailApiProvider.GetGmailService()，請確保 GmailApiProvider 已加上同步鎖與單例處理
+    return TravelLogAPI.Helpers.GmailApiProvider.GetGmailService();
 });
 
 // 註冊 SignalR
