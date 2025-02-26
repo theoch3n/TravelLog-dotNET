@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using TravelLogAPI.Models;
-using TravelLogAPI.Helpers;
-using TravelLogAPI.Services;
-using Microsoft.Extensions.Configuration;  // 確保加入這個 using
+using TravelLogAPI.Services; // 假設 GmailServiceHelper 在此命名空間
 
 namespace TravelLogAPI.Controllers
 {
@@ -15,18 +14,16 @@ namespace TravelLogAPI.Controllers
     public class AccountController : ControllerBase
     {
         private readonly TravelLogContext _context;
-        private readonly PasswordHasher<User> _passwordHasher;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<AccountController> _logger;
 
-        // 合併建構子，同時注入 TravelLogContext 與 IConfiguration
-        public AccountController(TravelLogContext context, IConfiguration configuration)
+        public AccountController(TravelLogContext context, IConfiguration configuration, ILogger<AccountController> logger)
         {
             _context = context;
             _configuration = configuration;
-            _passwordHasher = new PasswordHasher<User>();
+            _logger = logger;
         }
 
-        // POST: api/Account/ForgotPassword
         [HttpPost("ForgotPassword")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
         {
@@ -35,15 +32,12 @@ namespace TravelLogAPI.Controllers
                 return BadRequest(new { message = "Email 不可為空" });
             }
 
-            // 根據 Email 查詢使用者
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserEmail == request.Email);
             if (user != null)
             {
-                // 產生 token 與記錄建立時間
                 string token = Guid.NewGuid().ToString();
                 DateTime now = DateTime.Now;
 
-                // 取得或建立使用者密碼相關記錄 (存放在 UserPds 表)
                 var userPd = await _context.UserPds.FirstOrDefaultAsync(pd => pd.UserId == user.UserId);
                 if (userPd == null)
                 {
@@ -53,7 +47,7 @@ namespace TravelLogAPI.Controllers
                         UserPdToken = token,
                         UserPdCreateDate = now,
                         TokenCreateDate = now,
-                        UserPdPasswordHash = "" // 初始保持空字串
+                        UserPdPasswordHash = ""
                     };
                     _context.UserPds.Add(userPd);
                 }
@@ -65,21 +59,37 @@ namespace TravelLogAPI.Controllers
                 }
                 await _context.SaveChangesAsync();
 
-                // 組成重設密碼連結
-                string resetLink = Url.Action("ResetPassword", "Account", new { token = token }, Request.Scheme);
-                string subject = "密碼重置通知";
-                string body = $"請點擊以下連結來重設您的密碼：{resetLink}\n此連結有效 1 小時。";
+                string resetLink = "";
+                try
+                {
+                    _logger.LogInformation("Request.Scheme: {Scheme}, Request.Host: {Host}", Request.Scheme, Request.Host);
+                    resetLink = Url.Action("ResetPasswordGet", "Account", new { token = token }, Request.Scheme);
+                    if (string.IsNullOrEmpty(resetLink))
+                    {
+                        _logger.LogWarning("Url.Action returned null, falling back to manual URL generation.");
+                        resetLink = $"{Request.Scheme}://{Request.Host}/api/Account/ResetPassword?token={token}";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to generate reset link for token: {Token}", token);
+                    resetLink = "ERROR: Unable to generate reset link. Please contact support.";
+                }
 
-                // 呼叫 Gmail API 發送郵件 (傳入 _configuration)
+                string subject = "密碼重置通知";
+                // 使用 HTML 格式包裝連結
+                string body = $"<p>請點擊以下連結來重設您的密碼：</p><p><a href=\"{resetLink}\">{resetLink}</a></p><p>注意：此連結有效 1 小時。</p>";
+
                 await GmailServiceHelper.SendEmailAsync(_configuration, user.UserEmail, "david39128332@gmail.com", subject, body);
             }
 
-            // 統一回覆訊息，避免洩漏使用者資訊
             return Ok(new { message = "如果該 Email 已註冊，我們將發送重置連結。" });
         }
 
-        // GET: api/Account/ResetPassword?token=xxx
-        [HttpGet("ResetPassword")]
+
+
+        // 為 GET ResetPassword 動作加上命名路由，避免歧義
+        [HttpGet("ResetPassword", Name = "ResetPasswordGet")]
         public async Task<IActionResult> ResetPassword([FromQuery] string token)
         {
             if (string.IsNullOrEmpty(token))
@@ -87,57 +97,21 @@ namespace TravelLogAPI.Controllers
                 return BadRequest(new { message = "無效的連結" });
             }
 
-            // 根據 token 查詢 UserPd 記錄，並檢查是否在 1 小時內有效
             var userPd = await _context.UserPds.FirstOrDefaultAsync(pd => pd.UserPdToken == token);
             if (userPd == null || userPd.TokenCreateDate.AddHours(1) < DateTime.Now)
             {
                 return BadRequest(new { message = "此連結已失效或不正確。" });
             }
 
-            // 將 token 回傳給前端，前端可利用此 token 進行重設密碼動作
             return Ok(new { token = token });
-        }
-
-        // POST: api/Account/ResetPassword
-        [HttpPost("ResetPassword")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
-        {
-            if (request.NewPassword != request.ConfirmPassword)
-            {
-                return BadRequest(new { message = "密碼與確認密碼不一致" });
-            }
-
-            // 根據 token 查詢使用者密碼記錄
-            var userPd = await _context.UserPds.FirstOrDefaultAsync(pd => pd.UserPdToken == request.Token);
-            if (userPd == null || userPd.TokenCreateDate.AddHours(1) < DateTime.Now)
-            {
-                return BadRequest(new { message = "此連結已失效或不正確。" });
-            }
-
-            // 根據 UserId 取得使用者資訊
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userPd.UserId);
-            if (user == null)
-            {
-                return NotFound(new { message = "找不到使用者" });
-            }
-
-            // 使用 PasswordHasher 加密新密碼並更新
-            userPd.UserPdPasswordHash = _passwordHasher.HashPassword(user, request.NewPassword);
-            // 清除 token 以防重複使用
-            userPd.UserPdToken = null;
-            await _context.SaveChangesAsync();
-
-            return Ok(new { message = "密碼重置成功，請使用新密碼登入。" });
         }
     }
 
-    // 忘記密碼請求資料傳輸物件
     public class ForgotPasswordRequest
     {
         public string Email { get; set; }
     }
 
-    // 重設密碼請求資料傳輸物件
     public class ResetPasswordRequest
     {
         public string Token { get; set; }

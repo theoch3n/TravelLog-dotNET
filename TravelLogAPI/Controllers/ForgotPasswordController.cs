@@ -60,16 +60,13 @@ namespace TravelLogAPI.Controllers
                 await _context.SaveChangesAsync();
 
                 // 組成重設密碼連結 (請確保 ResetPasswordController 中的路由與此相符)
-                string resetLink = Url.Action("Index", "ResetPassword", new { token = token }, Request.Scheme);
+                string resetLink = Url.Action("Index", "ResetPassword",new { token = token }, Request.Scheme);
                 string subject = "密碼重置通知";
                 string body = $"請點擊以下連結來重設您的密碼：{resetLink}\n注意：此連結有效 1 小時。";
 
                 // 呼叫 Gmail API 發送郵件
                 await GmailServiceHelper.SendEmailAsync(_configuration, user.UserEmail, "david39128332@gmail.com", subject, body);
-
-
             }
-
             // 統一回覆訊息，避免洩漏使用者是否存在的資訊
             return Ok(new { message = "如果該 Email 已註冊，我們將發送重置連結。" });
         }
