@@ -47,9 +47,13 @@ public partial class Order
     /// </summary>
     public int OrderPaymentStatus { get; set; }
 
+    public int ProductId { get; set; }
+
     public virtual PaymentStatus OrderPaymentStatusNavigation { get; set; }
 
     public virtual OrderStatus OrderStatusNavigation { get; set; }
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+
+    public virtual TourBundle Product { get; set; }
 }

@@ -28,4 +28,6 @@ public partial class TourBundle
     public int? Ratings { get; set; }
 
     public string ContactInfo { get; set; }
+
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

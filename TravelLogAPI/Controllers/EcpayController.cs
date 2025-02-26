@@ -37,7 +37,8 @@ namespace TravelLogAPI.Controllers {
                     UserId = request.UserId,
                     OrderStatus = 1,
                     OrderPaymentStatus = 1,
-                    MerchantTradeNo = merchantTradeNo
+                    MerchantTradeNo = merchantTradeNo,
+                    ProductId = request.ProductId
                 };
 
                 _dbContext.Orders.Add(newOrder);
@@ -199,7 +200,7 @@ namespace TravelLogAPI.Controllers {
         // 取得 User 所有訂單
         // GET: /api/Ecpay/GetOrdersByUser/x
         [HttpGet("GetOrdersByUser/{userId}")]
-        public async Task<IActionResult> GetOrdersByUser(int userId){
+        public async Task<IActionResult> GetOrdersByUser(int userId) {
             var orders = await _dbContext.Orders
                 .Where(o => o.UserId == userId)
                 .Select(o => new {
@@ -215,11 +216,18 @@ namespace TravelLogAPI.Controllers {
                             p.PaymentTime,
                             p.EcpayTransactionId
                         })
+                        .FirstOrDefault(),
+                    Product = _dbContext.TourBundles
+                        .Where(p => p.Id == o.ProductId)
+                        .Select(p => new {
+                            p.Id,
+                            p.EventName
+                        })
                         .FirstOrDefault()
                 })
                 .ToListAsync();
 
-            if(orders == null || !orders.Any()) {
+            if (orders == null || !orders.Any()) {
                 return NotFound(new { message = "找不到訂單" });
             }
             return Ok(orders);
@@ -250,5 +258,6 @@ namespace TravelLogAPI.Controllers {
         public string ItemName { get; set; }
         public string TradeDesc { get; set; }
         public int UserId { get; set; }
+        public int ProductId { get; set; }
     }
 }
