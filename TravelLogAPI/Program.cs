@@ -1,18 +1,23 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TravelLogAPI.Hubs;
 using TravelLogAPI.Models;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// 固定後端運行的 URL（例如 https://localhost:7092）
+builder.WebHost.UseUrls("https://localhost:7092");
 
 // 註冊 DbContext
 builder.Services.AddDbContext<TravelLogContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TravelLog")));
 
-//CORS
+// CORS 設定
 string PolicyName = "VueSinglePage";
 builder.Services.AddCors(options =>
 {
@@ -20,25 +25,29 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("https://localhost:5173")
               .AllowCredentials()
               .AllowAnyMethod()
-              .WithHeaders("Content-Type", "Authorization", "x-requested-with", "x-signalr-user-agent") // 指定允許的標頭
-    );
+              .WithHeaders("Content-Type", "Authorization", "x-requested-with", "x-signalr-user-agent"));
 });
 
-
-
-
-
-
+// JWT 驗證設定
 var jwtSection = builder.Configuration.GetSection("Jwt");
 var issuer = jwtSection["Issuer"] ?? "MyAppIssuer";
 var audience = jwtSection["Audience"] ?? "MyAppAudience";
-var secret = jwtSection["SecretKey"] ?? "G7$k2Lp@9n3fXrZ1G7$k2Lp@9n3fXrZ1"; // 32 個字元以上
+var secret = jwtSection["SecretKey"] ?? "G7$k2Lp@9n3fXrZ1G7$k2Lp@9n3fXrZ1";
 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
 
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    // 若你同時使用 Google OAuth 與 JWT，此處可以設定預設方案為 Cookie 或根據需求調整
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+})
+.AddCookie()
+.AddGoogle(googleOptions =>
+{
+    googleOptions.ClientId = builder.Configuration["Gmail:ClientId"];
+    googleOptions.ClientSecret = builder.Configuration["Gmail:ClientSecret"];
+    // 指定 OAuth 回調路徑，完整 redirect URI 會是 https://localhost:7092/authorize/
+    googleOptions.CallbackPath = "/authorize/";
 })
 .AddJwtBearer(options =>
 {
@@ -55,64 +64,36 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
-
-
 // 註冊 SignalR
 builder.Services.AddSignalR();
 
-
-
-
-
-
+// 註冊 Controllers 與 Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// 其他服務
 builder.Services.AddScoped<TravelLogContextProcedures>();
 
-
 var app = builder.Build();
-//app.UseCors();
 
 // 如果處於開發環境，啟用 Swagger
-if (app.Environment.IsDevelopment()) {
+if (app.Environment.IsDevelopment())
+{
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// 啟用 Vue Router History 模式的後端支援
-app.UseDefaultFiles();
+app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseCors(PolicyName);
 
-// 啟用 CORS，請確保在 UseHttpsRedirection 與 UseAuthorization 之前呼叫
-app.UseCors("VueSinglePage");
-
-// 設定 SignalR Hub 路由
-app.MapHub<ChatHub>("/ChatHub");
-
-
-
-
-app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-//app.UseCors();
-app.Run();
+app.MapHub<ChatHub>("/ChatHub");
+app.MapFallbackToFile("/index.html");
 
-// 啟用 Vue Router History 模式的後端支援
-app.UseDefaultFiles();
-app.UseStaticFiles();
-
-app.UseRouting();
-
-
-app.UseEndpoints(endpoints => {
-    endpoints.MapControllers();
-    endpoints.MapFallbackToFile("/index.html"); // Vue history fallback
-});
 app.Run();
