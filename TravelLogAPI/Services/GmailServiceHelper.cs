@@ -37,12 +37,30 @@ namespace TravelLogAPI.Services
             }
         }
 
-        public static async Task<Message> SendEmailAsync(IConfiguration configuration, string to, string from, string subject, string body)
+        public static async Task<Message> SendEmailAsync(IConfiguration configuration, string to, string from, string subject, string body, ILogger logger = null)
         {
-            // 傳入 configuration 參數
+            // 傳入 configuration 參數取得 GmailService
             var gmailService = GmailApiProvider.GetGmailService(configuration);
+            // 建立郵件訊息
             var message = CreateEmailMessage(to, from, subject, body);
-            return await gmailService.Users.Messages.Send(message, "me").ExecuteAsync();
+
+            // 日誌：印出 Raw 內容，注意這通常是 Base64Url 編碼的字串
+            logger?.LogInformation("Generated email Raw content: {RawContent}", message.Raw);
+
+            try
+            {
+                var response = await gmailService.Users.Messages.Send(message, "me").ExecuteAsync();
+
+                // 日誌：印出回傳訊息 (例如訊息 ID)
+                logger?.LogInformation("Email sent successfully. Message ID: {MessageId}", response.Id);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                logger?.LogError(ex, "Failed to send email.");
+                throw; // 根據需求拋出或處理錯誤
+            }
         }
+
     }
 }
