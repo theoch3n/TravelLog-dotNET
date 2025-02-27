@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -62,13 +63,9 @@ namespace TravelLogAPI.Controllers
                 string resetLink = "";
                 try
                 {
-                    _logger.LogInformation("Request.Scheme: {Scheme}, Request.Host: {Host}", Request.Scheme, Request.Host);
-                    resetLink = Url.Action("ResetPasswordGet", "Account", new { token = token }, Request.Scheme);
-                    if (string.IsNullOrEmpty(resetLink))
-                    {
-                        _logger.LogWarning("Url.Action returned null, falling back to manual URL generation.");
-                        resetLink = $"{Request.Scheme}://{Request.Host}/api/Account/ResetPassword?token={token}";
-                    }
+                    // 這裡將重設連結直接指向前端 URL (例如 Vue 應用中的 /reset-password 路由)
+                    resetLink = $"{Request.Scheme}://localhost:5173/reset-password?token={token}";
+                    _logger.LogInformation("Manual reset link generated: {ResetLink}", resetLink);
                 }
                 catch (Exception ex)
                 {
@@ -87,8 +84,6 @@ namespace TravelLogAPI.Controllers
         }
 
 
-
-        // 為 GET ResetPassword 動作加上命名路由，避免歧義
         [HttpGet("ResetPassword", Name = "ResetPasswordGet")]
         public async Task<IActionResult> ResetPassword([FromQuery] string token)
         {
@@ -103,8 +98,47 @@ namespace TravelLogAPI.Controllers
                 return BadRequest(new { message = "此連結已失效或不正確。" });
             }
 
+            // 此處可回傳 token 供前端重設密碼表單使用
             return Ok(new { token = token });
         }
+
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            try
+            {
+                if (request.NewPassword != request.ConfirmPassword)
+                {
+                    return BadRequest(new { message = "密碼與確認密碼不一致" });
+                }
+
+                var userPd = await _context.UserPds.FirstOrDefaultAsync(pd => pd.UserPdToken == request.Token);
+                if (userPd == null || userPd.TokenCreateDate.AddHours(1) < DateTime.Now)
+                {
+                    return BadRequest(new { message = "此連結已失效或不正確。" });
+                }
+
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userPd.UserId);
+                if (user == null)
+                {
+                    return NotFound(new { message = "找不到使用者" });
+                }
+
+                var passwordHasher = new PasswordHasher<User>();
+                userPd.UserPdPasswordHash = passwordHasher.HashPassword(user, request.NewPassword);
+                userPd.UserPdToken = "";
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "密碼重置成功，請使用新密碼登入。" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while resetting password for token: {Token}", request.Token);
+                return StatusCode(500, new { message = "重設密碼失敗，請稍後再試。" });
+            }
+        }
+        
+
     }
 
     public class ForgotPasswordRequest
