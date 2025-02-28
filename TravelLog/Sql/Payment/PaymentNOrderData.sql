@@ -24,10 +24,11 @@ INSERT INTO [Payment_Status] (payment_Status) VALUES
 (N'已逾期');
 
 -- 插入 Payment_Method（付款方式）
-INSERT INTO [Payment_Method] (payment_Method, payment_MethodCode) VALUES
+INSERT INTO [Payment_Method] (payment_Method, payment_Method_Name) VALUES
 (N'信用卡', 'Credit'),
 (N'ATM 轉帳', 'ATM'),
-(N'超商代碼', 'CVS');
+(N'超商代碼', 'CVS'),
+(N'其他', 'Other');
 
 -- 插入 Order（訂單）
 INSERT INTO [Order] (merchant_TradeNo, order_Time, order_TotalAmount, delete_at, user_Id, order_Status, order_PaymentStatus, product_Id) VALUES

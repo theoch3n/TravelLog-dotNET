@@ -39,7 +39,7 @@ CREATE TABLE [Order] (
 CREATE TABLE Payment_Method (
     PM_Id INT IDENTITY(1,1) PRIMARY KEY,  -- 付款方式 ID (PK)
     payment_Method NVARCHAR(20) NOT NULL,  -- 付款方式名稱
-    payment_MethodCode NVARCHAR(50) NOT NULL UNIQUE  -- 綠界付款方式代碼 (唯一)
+    payment_Method_Name NVARCHAR(50) NOT NULL UNIQUE  -- 綠界付款方式代碼 (唯一)
 );
 
 -- 付款表 Payment
@@ -47,7 +47,7 @@ CREATE TABLE Payment (
     payment_Id INT IDENTITY(1,1) PRIMARY KEY,  -- 付款 ID (PK)
     payment_Time DATETIME NULL,  -- 付款成功時間 (成功付款才有值)
     payment_Method INT NOT NULL,  -- 付款方式
-    payment_MethodName INT,  -- 綠界回傳付款方式
+    payment_MethodName NVARCHAR(50),  -- 綠界回傳付款方式
     order_Id INT NOT NULL,  -- 關聯的訂單 ID
     paymentStatus_Id INT NOT NULL,  -- 付款狀態
     ECPay_TransactionId NVARCHAR(50) NULL,  -- 綠界交易編號
@@ -84,7 +84,7 @@ EXEC sp_addextendedproperty 'MS_Description', '付款狀態名稱（例：Pending、Paid、
 
 EXEC sp_addextendedproperty 'MS_Description', '付款方式 ID', 'SCHEMA', 'dbo', 'TABLE', 'Payment_Method', 'COLUMN', 'PM_Id';
 EXEC sp_addextendedproperty 'MS_Description', '付款方式名稱（例：信用卡、ATM 轉帳）', 'SCHEMA', 'dbo', 'TABLE', 'Payment_Method', 'COLUMN', 'payment_Method';
-EXEC sp_addextendedproperty 'MS_Description', '綠界付款方式代碼（例：Credit、ATM、CVS）', 'SCHEMA', 'dbo', 'TABLE', 'Payment_Method', 'COLUMN', 'payment_MethodCode';
+EXEC sp_addextendedproperty 'MS_Description', '綠界付款方式代碼（例：Credit、ATM、CVS）', 'SCHEMA', 'dbo', 'TABLE', 'Payment_Method', 'COLUMN', 'payment_Method_Name';
 
 EXEC sp_addextendedproperty 'MS_Description', '付款 ID', 'SCHEMA', 'dbo', 'TABLE', 'Payment', 'COLUMN', 'payment_Id';
 EXEC sp_addextendedproperty 'MS_Description', '付款成功時間（成功付款才有值）', 'SCHEMA', 'dbo', 'TABLE', 'Payment', 'COLUMN', 'payment_Time';

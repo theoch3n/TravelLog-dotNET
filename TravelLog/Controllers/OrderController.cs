@@ -164,7 +164,7 @@ namespace TravelLog.Controllers {
         // POST: Order/SaveEdit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SaveEdit([FromBody] OrderWrap orderWrap) {
+        public async Task<IActionResult> SaveEdit([FromBody]OrderWrap orderWrap) {
             try {
                 if (orderWrap == null) {
                     return Json(new { success = false, message = "無效的訂單資料" });

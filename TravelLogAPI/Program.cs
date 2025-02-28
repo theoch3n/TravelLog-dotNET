@@ -7,7 +7,7 @@ using TravelLogAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// µù¥U DbContext
+// ï¿½ï¿½ï¿½U DbContext
 builder.Services.AddDbContext<TravelLogContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TravelLog")));
 
@@ -22,7 +22,7 @@ builder.Services.AddCors(options => {
 var jwtSection = builder.Configuration.GetSection("Jwt");
 var issuer = jwtSection["Issuer"] ?? "MyAppIssuer";
 var audience = jwtSection["Audience"] ?? "MyAppAudience";
-var secret = jwtSection["SecretKey"] ?? "G7$k2Lp@9n3fXrZ1G7$k2Lp@9n3fXrZ1"; // 32 ­Ó¦r¤¸¥H¤W
+var secret = jwtSection["SecretKey"] ?? "G7$k2Lp@9n3fXrZ1G7$k2Lp@9n3fXrZ1"; // 32 ï¿½Ó¦rï¿½ï¿½ï¿½Hï¿½W
 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
 
 builder.Services.AddAuthentication(options =>
@@ -48,13 +48,13 @@ builder.Services.AddAuthentication(options =>
 
 
 
-// µù¥U SignalR
+// ï¿½ï¿½ï¿½U SignalR
 builder.Services.AddSignalR();
 
 
 
 
-
+builder.Services.AddMemoryCache();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -66,21 +66,21 @@ builder.Services.AddScoped<TravelLogContextProcedures>();
 var app = builder.Build();
 //app.UseCors();
 
-// ¦pªG³B©ó¶}µoÀô¹Ò¡A±Ò¥Î Swagger
+// ï¿½pï¿½Gï¿½Bï¿½ï¿½}ï¿½oï¿½ï¿½ï¿½Ò¡Aï¿½Ò¥ï¿½ Swagger
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// ±Ò¥Î Vue Router History ¼Ò¦¡ªº«áºÝ¤ä´©
+// ï¿½Ò¥ï¿½ Vue Router History ï¿½Ò¦ï¿½ï¿½ï¿½ï¿½ï¿½Ý¤ä´©
 app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseRouting();
 
-// ±Ò¥Î CORS¡A½Ð½T«O¦b UseHttpsRedirection »P UseAuthorization ¤§«e©I¥s
+// ï¿½Ò¥ï¿½ CORSï¿½Aï¿½Ð½Tï¿½Oï¿½b UseHttpsRedirection ï¿½P UseAuthorization ï¿½ï¿½ï¿½eï¿½Iï¿½s
 app.UseCors("VueSinglePage");
 
-// ³]©w SignalR Hub ¸ô¥Ñ
+// ï¿½]ï¿½w SignalR Hub ï¿½ï¿½ï¿½ï¿½
 app.MapHub<ChatHub>("/ChatHub");
 
 
@@ -94,7 +94,7 @@ app.MapControllers();
 //app.UseCors();
 app.Run();
 
-// ±Ò¥Î Vue Router History ¼Ò¦¡ªº«áºÝ¤ä´©
+// ï¿½Ò¥ï¿½ Vue Router History ï¿½Ò¦ï¿½ï¿½ï¿½ï¿½ï¿½Ý¤ä´©
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
