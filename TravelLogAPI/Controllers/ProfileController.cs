@@ -21,9 +21,10 @@ namespace TravelLogAPI.Controllers
             _context = context;
         }
 
+
         // GET: api/Profile
         [HttpGet]
-        public async Task<IActionResult> GetProfile()
+        public async Task<IActionResult> GetProfile(bool isEmailVerified)
         {
             try
             {
@@ -47,8 +48,10 @@ namespace TravelLogAPI.Controllers
                     userId = user.UserId,
                     userName = user.UserName,
                     userEmail = user.UserEmail,
-                    userPhone = user.UserPhone
+                    userPhone = user.UserPhone,
+                    IsEmailVerified = user.IsEmailVerified  // 加上這一行
                 });
+
             }
             catch (Exception ex)
             {
@@ -80,6 +83,7 @@ namespace TravelLogAPI.Controllers
                 user.UserName = request.UserName;
                 user.UserEmail = request.UserEmail;
                 user.UserPhone = request.UserPhone;
+          
 
                 await _context.SaveChangesAsync();
 
@@ -90,6 +94,26 @@ namespace TravelLogAPI.Controllers
                 return StatusCode(500, new { message = "伺服器錯誤", detail = ex.ToString() });
             }
         }
+        [HttpGet("email-verified")]
+        public async Task<IActionResult> GetIsEmailVerified()
+        {
+            var userIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)
+                              ?? User.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+            {
+                return Unauthorized(new { message = "無法解析使用者ID" });
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (user == null)
+            {
+                return NotFound(new { message = "找不到使用者" });
+            }
+
+            return Ok(new { IsEmailVerified = user.IsEmailVerified });
+        }
+
 
     }
 

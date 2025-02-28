@@ -151,6 +151,71 @@ namespace TravelLogAPI.Controllers
         }
 
 
+        [HttpPost("ResendVerificationEmail")]
+        public async Task<IActionResult> ResendVerificationEmail([FromBody] ResendVerificationRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Email))
+            {
+                return BadRequest(new { message = "Email 不可為空" });
+            }
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserEmail == request.Email);
+            if (user == null)
+            {
+                return NotFound(new { message = "找不到使用者" });
+            }
+            if (user.IsEmailVerified)
+            {
+                return BadRequest(new { message = "您的 Email 已經驗證過了" });
+            }
+
+            // 重新產生驗證 token（例如 GUID 或六位數驗證碼）
+            user.EmailVerificationToken = Guid.NewGuid().ToString(); // 或改用 new Random().Next(100000, 1000000).ToString();
+            user.EmailVerificationSentDate = DateTime.Now;
+            await _context.SaveChangesAsync();
+
+            string verificationLink = $"{Request.Scheme}://localhost:5173/verify-email?token={user.EmailVerificationToken}";
+            string subject = "Email 驗證通知";
+            string body = $"<p>您好，請點擊以下連結以驗證您的 Email：</p>" +
+                          $"<p><a href=\"{verificationLink}\">{verificationLink}</a></p>" +
+                          $"<p>注意：此連結有效 1 小時。</p>";
+
+            await GmailServiceHelper.SendEmailAsync(_configuration, user.UserEmail, "david39128332@gmail.com", subject, body);
+
+            return Ok(new { message = "驗證信已重新寄出，請檢查您的信箱。" });
+        }
+
+        public class ResendVerificationRequest
+        {
+            public string Email { get; set; }
+        }
+
+        [HttpGet("VerifyEmail")]
+        public async Task<IActionResult> VerifyEmail([FromQuery] string token)
+        {
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new { message = "無效的驗證連結" });
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.EmailVerificationToken == token);
+            if (user == null)
+            {
+                return BadRequest(new { message = "驗證連結無效" });
+            }
+
+            if (user.EmailVerificationSentDate == null || user.EmailVerificationSentDate.Value.AddHours(1) < DateTime.Now)
+            {
+                return BadRequest(new { message = "驗證連結已過期" });
+            }
+
+            user.IsEmailVerified = true;
+            user.EmailVerificationToken = null;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Email 驗證成功，您現在可以登入。" });
+        }
+
+
 
     }
 
