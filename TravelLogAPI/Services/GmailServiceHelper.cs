@@ -6,6 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using TravelLogAPI.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace TravelLogAPI.Services
 {
@@ -13,13 +14,28 @@ namespace TravelLogAPI.Services
     {
         public static Message CreateEmailMessage(string to, string from, string subject, string body)
         {
+            // 這裡我們把傳入的 body 包在一個固定的 HTML 模板中
+            string htmlTemplate = $@"
+                <html>
+                  <head>
+                    <meta charset=""UTF-8"">
+                    <style>
+                      body {{ font-family: Arial, sans-serif; font-size: 14px; }}
+                      .highlight {{ color: blue; font-weight: bold; }}
+                    </style>
+                  </head>
+                  <body>
+                    {body}
+                  </body>
+                </html>";
+
             var emailMessage = new MimeMessage();
             emailMessage.From.Add(new MailboxAddress("", from));
             emailMessage.To.Add(new MailboxAddress("", to));
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart("html")
             {
-                Text = body
+                Text = htmlTemplate
             };
 
             using (var stream = new MemoryStream())
@@ -44,7 +60,7 @@ namespace TravelLogAPI.Services
             // 建立郵件訊息
             var message = CreateEmailMessage(to, from, subject, body);
 
-            // 日誌：印出 Raw 內容，注意這通常是 Base64Url 編碼的字串
+            // 日誌：印出 Raw 內容
             logger?.LogInformation("Generated email Raw content: {RawContent}", message.Raw);
 
             try
@@ -58,9 +74,8 @@ namespace TravelLogAPI.Services
             catch (Exception ex)
             {
                 logger?.LogError(ex, "Failed to send email.");
-                throw; // 根據需求拋出或處理錯誤
+                throw;
             }
         }
-
     }
 }
