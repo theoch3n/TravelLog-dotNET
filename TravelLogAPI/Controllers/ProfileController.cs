@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,7 +11,7 @@ namespace TravelLogAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]  // 確保只有已登入的使用者可以存取
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]  // 確保只有已登入的使用者可以存取
     public class ProfileController : ControllerBase
     {
         private readonly TravelLogContext _context;
