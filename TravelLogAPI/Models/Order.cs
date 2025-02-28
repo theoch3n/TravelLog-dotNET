@@ -33,7 +33,7 @@ public partial class Order
     public DateTime? DeleteAt { get; set; }
 
     /// <summary>
-    /// 使用者 ID
+    /// 使用者 ID（未來可接 User 表）
     /// </summary>
     public int UserId { get; set; }
 
@@ -52,6 +52,4 @@ public partial class Order
     public virtual OrderStatus OrderStatusNavigation { get; set; }
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
-
-    public virtual User User { get; set; }
 }

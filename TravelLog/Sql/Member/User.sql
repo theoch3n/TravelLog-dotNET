@@ -1,7 +1,7 @@
 USE [TravelLog]
 GO
 
-/****** Object:  Table [dbo].[User]    Script Date: 2025/2/4 ¤U¤È 04:27:43 ******/
+/****** Object:  Table [dbo].[User]    Script Date: 2025/2/28 ¤U¤È 10:33:58 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -15,6 +15,10 @@ CREATE TABLE [dbo].[User](
 	[User_Phone] [varchar](10) NOT NULL,
 	[User_Enabled] [bit] NOT NULL,
 	[User_CreateDate] [datetime] NOT NULL,
+	[IsEmailVerified] [bit] NOT NULL,
+	[EmailVerificationToken] [nvarchar](50) NULL,
+	[EmailVerificationSentDate] [datetime] NULL,
+	[User_Role] [int] NOT NULL,
  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
 (
 	[User_ID] ASC
@@ -35,6 +39,9 @@ ALTER TABLE [dbo].[User] ADD  CONSTRAINT [DF_User_User_Enabled]  DEFAULT ((0)) F
 GO
 
 ALTER TABLE [dbo].[User] ADD  CONSTRAINT [DF_User_User_CreateDate]  DEFAULT (getdate()) FOR [User_CreateDate]
+GO
+
+ALTER TABLE [dbo].[User] ADD  CONSTRAINT [DF_User_IsEmailVerified]  DEFAULT ((0)) FOR [IsEmailVerified]
 GO
 
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'ID' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'User', @level2type=N'COLUMN',@level2name=N'User_ID'

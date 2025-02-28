@@ -52,6 +52,8 @@ public partial class Itinerary
     /// </summary>
     public DateTime ItineraryCreateDate { get; set; }
 
+    public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
+
     public virtual ICollection<ItineraryDetail> ItineraryDetails { get; set; } = new List<ItineraryDetail>();
 
     public virtual ICollection<ItineraryGroup> ItineraryGroups { get; set; } = new List<ItineraryGroup>();

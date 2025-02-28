@@ -8,7 +8,7 @@ namespace TravelLogAPI.Models;
 public partial class Location
 {
     /// <summary>
-    /// 地點 ID
+    /// 地點ID
     /// </summary>
     public int Id { get; set; }
 
@@ -18,7 +18,7 @@ public partial class Location
     public int UserId { get; set; }
 
     /// <summary>
-    /// 關聯的行程 ID
+    /// 行程 ID
     /// </summary>
     public int ScheduleId { get; set; }
 
@@ -31,8 +31,4 @@ public partial class Location
     /// 日期
     /// </summary>
     public DateOnly Date { get; set; }
-
-    public virtual Schedule Schedule { get; set; }
-
-    public virtual User User { get; set; }
 }

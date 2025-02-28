@@ -8,7 +8,7 @@ namespace TravelLogAPI.Models;
 public partial class User
 {
     /// <summary>
-    /// 使用者 ID
+    /// ID
     /// </summary>
     public int UserId { get; set; }
 
@@ -28,7 +28,7 @@ public partial class User
     public string UserPhone { get; set; }
 
     /// <summary>
-    /// 啟用狀態 (0 = 未啟用, 1 = 啟用)
+    /// 啟用狀態  0 = 啟用, 1 = 關閉 
     /// </summary>
     public bool UserEnabled { get; set; }
 
@@ -37,9 +37,13 @@ public partial class User
     /// </summary>
     public DateTime UserCreateDate { get; set; }
 
-    public virtual ICollection<Location> Locations { get; set; } = new List<Location>();
+    public bool IsEmailVerified { get; set; }
 
-    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+    public string EmailVerificationToken { get; set; }
+
+    public DateTime? EmailVerificationSentDate { get; set; }
+
+    public int UserRole { get; set; }
 
     public virtual ICollection<UserPd> UserPds { get; set; } = new List<UserPd>();
 }
