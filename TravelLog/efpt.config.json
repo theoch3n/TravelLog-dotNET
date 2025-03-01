@@ -27,10 +27,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[itineraries]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[Itinerary]",
          "ObjectType": 0
       },
@@ -39,11 +35,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Location]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Map]",
+         "Name": "[dbo].[Itinerary_Group]",
          "ObjectType": 0
       },
       {
@@ -107,7 +99,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[get_SerialNumber]",
+         "Name": "[dbo].[get_Location]",
          "ObjectType": 1
       },
       {

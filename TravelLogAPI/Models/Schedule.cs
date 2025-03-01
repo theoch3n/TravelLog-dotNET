@@ -36,8 +36,4 @@ public partial class Schedule
     /// 結束日期
     /// </summary>
     public DateOnly EndDate { get; set; }
-
-    public virtual ICollection<Location> Locations { get; set; } = new List<Location>();
-
-    public virtual ICollection<Place> Places { get; set; } = new List<Place>();
 }
