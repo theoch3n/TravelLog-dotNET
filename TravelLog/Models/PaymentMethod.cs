@@ -13,7 +13,7 @@ public partial class PaymentMethod
     public int PmId { get; set; }
 
     /// <summary>
-    /// 付款方式名稱（例：信用卡、ATM 轉帳）
+    /// 付款方式
     /// </summary>
     public string PaymentMethod1 { get; set; }
 

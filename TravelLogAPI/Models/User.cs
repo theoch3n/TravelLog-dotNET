@@ -37,5 +37,13 @@ public partial class User
     /// </summary>
     public DateTime UserCreateDate { get; set; }
 
+    public bool IsEmailVerified { get; set; }
+
+    public string EmailVerificationToken { get; set; }
+
+    public DateTime? EmailVerificationSentDate { get; set; }
+
+    public int UserRole { get; set; }
+
     public virtual ICollection<UserPd> UserPds { get; set; } = new List<UserPd>();
 }

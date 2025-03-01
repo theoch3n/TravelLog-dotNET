@@ -7,48 +7,15 @@ namespace TravelLog.Models;
 
 public partial class Itinerary
 {
-    /// <summary>
-    /// ID
-    /// </summary>
-    public int ItineraryId { get; set; }
+    public int Id { get; set; }
 
-    /// <summary>
-    /// 行程名稱
-    /// </summary>
-    public string ItineraryTitle { get; set; }
+    public string Name { get; set; }
 
-    /// <summary>
-    /// 行程地點
-    /// </summary>
-    public string ItineraryLocation { get; set; }
+    public string Address { get; set; }
 
-    /// <summary>
-    /// 行程座標
-    /// </summary>
-    public string ItineraryCoordinate { get; set; }
+    public double Latitude { get; set; }
 
-    /// <summary>
-    /// 行程圖片
-    /// </summary>
-    public string ItineraryImage { get; set; }
+    public double Longitude { get; set; }
 
-    /// <summary>
-    /// 行程起始時間
-    /// </summary>
-    public DateTime ItineraryStartDate { get; set; }
-
-    /// <summary>
-    /// 行程結束時間
-    /// </summary>
-    public DateTime ItineraryEndDate { get; set; }
-
-    /// <summary>
-    /// 創建使用者
-    /// </summary>
-    public int ItineraryCreateUser { get; set; }
-
-    /// <summary>
-    /// 創建時間
-    /// </summary>
-    public DateTime? ItineraryCreateDate { get; set; }
+    public DateTime? CreatedAt { get; set; }
 }

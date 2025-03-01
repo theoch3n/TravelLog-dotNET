@@ -5,12 +5,13 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using TravelLogAPI.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace TravelLogAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize] // 只有已登入使用者可以呼叫
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] // 只有已登入使用者可以呼叫
     public class ChangePasswordController : ControllerBase
     {
         private readonly TravelLogContext _context;

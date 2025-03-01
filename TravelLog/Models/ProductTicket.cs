@@ -5,20 +5,22 @@ using System.Collections.Generic;
 
 namespace TravelLog.Models;
 
-public partial class ItineraryGroup
+public partial class ProductTicket
 {
     /// <summary>
-    /// ID
+    /// 訂單 ID
     /// </summary>
-    public int ItineraryGroupId { get; set; }
+    public int? OrderId { get; set; }
 
     /// <summary>
-    /// 行程ID
+    /// 票券 ID
     /// </summary>
-    public int ItineraryGroupItineraryId { get; set; }
+    public int? TicketId { get; set; }
 
     /// <summary>
-    /// 使用者信箱
+    /// 商品 ID
     /// </summary>
-    public string ItineraryGroupUserEmail { get; set; }
+    public int? ProductId { get; set; }
+
+    public virtual Order Order { get; set; }
 }

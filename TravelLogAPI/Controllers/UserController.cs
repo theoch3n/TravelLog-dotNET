@@ -7,6 +7,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using TravelLogAPI.Models;  // 反向工程生成的模型所在的命名空間
+using Microsoft.Extensions.Configuration;
+using TravelLogAPI.Services;
 
 namespace TravelLogAPI.Controllers {
     [EnableCors("VueSinglePage")]
@@ -108,13 +110,20 @@ namespace TravelLogAPI.Controllers {
                 return BadRequest(new { message = "此電子郵件已被使用。" });
             }
 
-            // 建立新的 User 資料
-            var user = new User {
+            // 建立新的 User 資料，設定 IsEmailVerified 為 false，
+            // EmailVerificationToken 為一個新生成的 GUID（你也可以改成六位數）
+            // 並設定 EmailVerificationSentDate 為現在
+            var user = new User
+            {
                 UserName = request.UserName,
                 UserEmail = request.Email,
                 UserPhone = request.Phone,  // 若沒有提供可以為 null 或空字串
                 UserEnabled = true,
-                UserCreateDate = DateTime.Now
+                UserCreateDate = DateTime.Now,
+                // 新增的 Email 驗證欄位
+                IsEmailVerified = false,
+                EmailVerificationToken = Guid.NewGuid().ToString(),  // 或者用六位數：new Random().Next(100000,1000000).ToString()
+                EmailVerificationSentDate = DateTime.Now
             };
 
             _context.Users.Add(user);
@@ -124,23 +133,32 @@ namespace TravelLogAPI.Controllers {
             var passwordHasher = new PasswordHasher<User>();
             string hashedPassword = passwordHasher.HashPassword(user, request.Password);
 
-            // 建立對應的 UserPd 資料
-            var userPd = new UserPd {
+            // 建立對應的 UserPd 資料（用於密碼重置等）
+            var userPd = new UserPd
+            {
                 UserId = user.UserId,
                 UserPdPasswordHash = hashedPassword,
-                UserPdToken = "",
+                UserPdToken = "",  // 這裡用於重設密碼的 token，初始可為空
                 UserPdCreateDate = DateTime.Now
             };
 
             _context.UserPds.Add(userPd);
             await _context.SaveChangesAsync();
 
-            return Ok(new {
-                message = "註冊成功！",
-                userId = user.UserId,
-                userName = user.UserName
-            });
+            // 生成驗證連結，指向前端的驗證頁面（例如 /verify-email），並傳遞驗證 token
+            string verificationLink = $"{Request.Scheme}://localhost:5173/verify-email?token={user.EmailVerificationToken}";
+            string subject = "Email 驗證通知";
+            string body = $"<p>您好，請點擊以下連結以驗證您的 Email：</p>" +
+                          $"<p><a href=\"{verificationLink}\">{verificationLink}</a></p>" +
+                          $"<p>注意：此連結有效 1 小時。</p>";
+
+            // 呼叫 Gmail API 發送驗證信
+            await GmailServiceHelper.SendEmailAsync(_configuration, user.UserEmail, "david39128332@gmail.com", subject, body);
+
+            // 回傳訊息給前端，通知使用者檢查 Email 完成驗證
+            return Ok(new { message = "註冊成功！請檢查您的 Email 以完成驗證。" });
         }
+
     }
 
     // 用於登入請求的資料傳輸物件

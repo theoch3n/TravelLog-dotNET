@@ -297,63 +297,6 @@ public partial class TravelLogContext : DbContext
                 .HasColumnName("Map_PlaceName");
         });
 
-        modelBuilder.Entity<Location>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Location__3213E83F8EA59C4C");
-
-            entity.ToTable("Location");
-
-            entity.Property(e => e.Id)
-                .HasComment("地點ID")
-                .HasColumnName("id");
-            entity.Property(e => e.Attraction)
-                .IsRequired()
-                .HasMaxLength(100)
-                .HasComment("景點")
-                .HasColumnName("attraction");
-            entity.Property(e => e.Date)
-                .HasComment("日期")
-                .HasColumnName("date");
-            entity.Property(e => e.ScheduleId)
-                .HasComment("行程 ID")
-                .HasColumnName("schedule_id");
-            entity.Property(e => e.UserId)
-                .HasComment("會員 ID")
-                .HasColumnName("user_id");
-        });
-
-        modelBuilder.Entity<Map>(entity =>
-        {
-            entity.ToTable("Map");
-
-            entity.Property(e => e.MapId)
-                .HasComment("ID")
-                .HasColumnName("Map_ID");
-            entity.Property(e => e.MapAddress)
-                .IsRequired()
-                .HasMaxLength(200)
-                .HasDefaultValue("")
-                .HasComment("地址")
-                .HasColumnName("Map_Address");
-            entity.Property(e => e.MapCreateDate)
-                .HasDefaultValueSql("(getdate())")
-                .HasComment("創建時間")
-                .HasColumnType("datetime")
-                .HasColumnName("Map_CreateDate");
-            entity.Property(e => e.MapLatitude)
-                .HasComment("緯度")
-                .HasColumnName("Map_Latitude");
-            entity.Property(e => e.MapLongitude)
-                .HasComment("經度")
-                .HasColumnName("Map_Longitude");
-            entity.Property(e => e.MapPlaceName)
-                .IsRequired()
-                .HasMaxLength(50)
-                .HasDefaultValue("")
-                .HasComment("地點名稱")
-                .HasColumnName("Map_PlaceName");
-        });
-
         modelBuilder.Entity<MemberInformation>(entity =>
         {
             entity.HasKey(e => e.MiMemberId).HasName("PK__MemberIn__C80AA262589C00D2");
@@ -724,6 +667,8 @@ public partial class TravelLogContext : DbContext
             entity.Property(e => e.UserId)
                 .HasComment("ID")
                 .HasColumnName("User_ID");
+            entity.Property(e => e.EmailVerificationSentDate).HasColumnType("datetime");
+            entity.Property(e => e.EmailVerificationToken).HasMaxLength(50);
             entity.Property(e => e.UserCreateDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasComment("創建時間")
@@ -752,6 +697,7 @@ public partial class TravelLogContext : DbContext
                 .HasDefaultValue("")
                 .HasComment("手機")
                 .HasColumnName("User_Phone");
+            entity.Property(e => e.UserRole).HasColumnName("User_Role");
         });
 
         modelBuilder.Entity<UserPd>(entity =>
@@ -761,6 +707,9 @@ public partial class TravelLogContext : DbContext
             entity.Property(e => e.UserPdId)
                 .HasComment("ID")
                 .HasColumnName("UserPD_ID");
+            entity.Property(e => e.TokenCreateDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
             entity.Property(e => e.UserId)
                 .HasComment("外鍵")
                 .HasColumnName("User_ID");

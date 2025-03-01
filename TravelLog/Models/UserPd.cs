@@ -32,5 +32,7 @@ public partial class UserPd
     /// </summary>
     public DateTime UserPdCreateDate { get; set; }
 
+    public DateTime TokenCreateDate { get; set; }
+
     public virtual User User { get; set; }
 }
