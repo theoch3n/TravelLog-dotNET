@@ -1,7 +1,8 @@
 ﻿@model TravelLog.Models.MemberInformation
+
 @{
     ViewData["Title"] = "Login";
-    Layout= null;
+    Layout = null;
 }
 
 <head>
@@ -13,8 +14,8 @@
     <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon.png">
     <link href="./css/style.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" /> 
-     <style> 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
         .btn-primary {
             color: #fff;
             background-color: #593bdb;
@@ -52,14 +53,10 @@
                 .show > .btn-primary.dropdown-toggle:focus {
                     box-shadow: 0 0 0 0.2rem rgba(114, 88, 224, 0.5);
                 }
-
-
         /* 輸入框樣式 */
         .input-group .form-control {
             border: 1px solid #eaeaea;
-            /* 與按鈕邊框一致 */
             border-radius: 0.25rem;
-            /* 左右圓角統一 */
             padding: 0.5rem;
             font-size: 1rem;
         }
@@ -69,11 +66,9 @@
             align-items: center;
             justify-content: center;
             height: calc(1.5em + 0.75rem + 2px);
-            /* 與輸入框高度一致 */
             padding: 0 0.75rem;
             font-size: 1rem;
             color: #495057;
-            /* 與輸入框文字顏色一致 */
             background-color: #fff;
             border: 1px solid #eaeaea;
             border-left-color: #eaeaea;
@@ -84,40 +79,30 @@
 
         .input-group .form-control {
             border-radius: 0.25rem 0 0 0.25rem;
-            /* 輸入框左側圓角 */
         }
 
             .input-group .form-control:focus {
                 z-index: 2;
-                /* 確保輸入框焦點效果位於按鈕之上 */
             }
 
         .btn-merge-input:hover {
             background-color: #f8f9fa;
-            /* 按鈕懸停背景色 */
             border-color: #b4a7ef;
-            /* 按鈕懸停邊框色 */
         }
 
         .btn-merge-input:focus {
             outline: none;
-            /* 移除按鈕的焦點邊框 */
             box-shadow: 0 0 0 0.2rem rgba(89, 59, 219, 0.25);
-            /* 焦點效果 */
         }
 
         .btn-merge-input:disabled {
             background-color: #e9ecef;
-            /* 禁用狀態背景色 */
             color: #6c757d;
-            /* 禁用狀態文字色 */
             cursor: not-allowed;
-            /* 禁用狀態鼠標效果 */
         }
 
         .spacer {
             height: 30px;
-            /* 設置空白高度 */
         }
 
         .authincation-content {
@@ -134,7 +119,6 @@
         }
     </style>
 </head>
-
 
 @if (TempData["SuccessMessage"] != null)
 {
@@ -160,20 +144,20 @@
                                         <!-- Email -->
                                         <div class="mb-3">
                                             <label for="loginEmail" class="form-label"><strong>Email</strong></label>
-                                            <input type="email" class="form-control" id="loginEmail" name="MiEmail"  value="Test@gmail.com" required />
-                                            @Html.ValidationMessage("MiEmail", "", new { @class = "text-danger" })
+                                            <input type="email" class="form-control" id="loginEmail" name="Email" value="Test@gmail.com" required />
+                                            @Html.ValidationMessage("Email", "", new { @class = "text-danger" })
                                         </div>
 
                                         <!-- 密碼 -->
                                         <div class="mb-3">
                                             <label for="loginPassword" class="form-label"><strong>密碼</strong></label>
                                             <div class="input-group">
-                                                <input type="password" class="form-control" id="loginPassword" name="MiPassword" value="T123456" required />
+                                                <input type="password" class="form-control" id="loginPassword" name="Password" value="T123456" required />
                                                 <button type="button" class="btn-merge-input" id="togglePassword">
                                                     <i class="bi bi-eye-slash" id="passwordIcon"></i>
                                                 </button>
                                             </div>
-                                            @Html.ValidationMessage("MiPassword", "", new { @class = "text-danger" })
+                                            @Html.ValidationMessage("Password", "", new { @class = "text-danger" })
                                         </div>
 
                                         <!-- Remember Me and Forgot Password -->
@@ -193,22 +177,23 @@
                                         <div class="text-center">
                                             <button type="submit" class="btn btn-primary btn-block">登入</button>
                                         </div>
-                                    }
 
-                                    <!-- Register Link -->
-                                    <div class="new-account mt-3">
-                                        <p>還沒有帳號嗎？
-                                            <a asp-controller="Member" asp-action="Register" class="text-primary">註冊</a>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                                        <!-- Register Link -->
+                                        <div class="new-account mt-3">
+                                            <p>
+                                                還沒有帳號嗎？
+                                                <a asp-controller="Member" asp-action="Register" class="text-primary">註冊</a>
+                                            </p>
+                                        </div>
+                                    } <!-- 結束 BeginForm 區塊 -->
+                                </div> <!-- end auth-form -->
+                            </div> <!-- end col-xl-12 -->
+                        </div> <!-- end row no-gutters -->
+                    </div> <!-- end authincation-content -->
+                </div> <!-- end col-md-6 -->
+            </div> <!-- end row -->
+        </div> <!-- end container-fluid -->
+    </div> <!-- end authincation -->
 
     <script>
         const passwordInput = document.getElementById('loginPassword');
@@ -223,28 +208,3 @@
         });
     </script>
 </body>
-
-
-    <!--**********************************
-        Scripts
-    ***********************************-->
-    <!-- Required vendors -->
-    <script src="./vendor/global/global.min.js"></script>
-    <script src="./js/quixnav-init.js"></script>
-    <script src="./js/custom.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const passwordInput = document.getElementById('registerPassword');
-        const togglePasswordButton = document.getElementById('togglePassword');
-        const passwordIcon = document.getElementById('passwordIcon');
-
-        // 密碼切換顯示/隱藏邏輯
-        togglePasswordButton.addEventListener('click', () => {
-            const isPasswordHidden = passwordInput.type === 'password';
-            passwordInput.type = isPasswordHidden ? 'text' : 'password';
-            passwordIcon.classList.toggle('bi-eye', !isPasswordHidden);
-            passwordIcon.classList.toggle('bi-eye-slash', isPasswordHidden);
-        });
-    </script>
-
-

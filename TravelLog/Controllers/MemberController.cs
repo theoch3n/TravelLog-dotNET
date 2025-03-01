@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TravelLog.Models;
+using System;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-
 namespace TravelLog.Controllers
 {
-    public class MemberController : LockController
+    public class MemberController : Controller
     {
         private readonly TravelLogContext _context;
 
@@ -26,49 +26,66 @@ namespace TravelLog.Controllers
         // 處理註冊請求
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Register(MemberInformation member, string confirmPassword)
+        public IActionResult Register(TravelLog.ViewModels.UserRegisterViewModel model)
         {
-            if (member.MiPasswordHash != confirmPassword)
+            // 檢查密碼與確認密碼是否一致
+            if (model.Password != model.ConfirmPassword)
             {
-                ModelState.AddModelError("PasswordMismatch", "Password and Confirm Password do not match.");
-                return View(member);
+                ModelState.AddModelError("PasswordMismatch", "密碼與確認密碼不符。");
+                return View(model);
             }
 
             // 驗證 Email 是否唯一
-            if (_context.MemberInformations.Any(m => m.MiEmail == member.MiEmail))
+            if (_context.Users.Any(u => u.UserEmail == model.Email))
             {
-                ModelState.AddModelError("EmailExists", "This email is already registered.");
-                return View(member);
+                ModelState.AddModelError("EmailExists", "此 Email 已經註冊。");
+                return View(model);
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    // 設置默認值
-                    member.MiPasswordHash = HashPassword(member.MiPasswordHash); // 密碼加密
-                    member.MiRegistrationDate = DateTime.Now; // 註冊日期
-                    member.MiIsActive = true; // 默認啟用
+                    // 將 ViewModel 的資料映射到 User 資料庫實體
+                    var newUser = new User
+                    {
+                        UserName = model.Name,
+                        UserEmail = model.Email,
+                        UserPhone = model.Phone,
+                        UserEnabled = true,
+                        UserCreateDate = DateTime.Now,
+                        IsEmailVerified = false,
+                        UserRole = model.Role
+                    };
 
-                    // 新增會員
-                    _context.MemberInformations.Add(member);
+                    // 建立並設定密碼資料，這裡我們透過 HashPassword 將密碼加密後儲存
+                    var newUserPd = new UserPd
+                    {
+                        UserPdPasswordHash = HashPassword(model.Password),
+                        UserPdCreateDate = DateTime.Now,
+                        TokenCreateDate = DateTime.MinValue
+                    };
+
+                    // 將密碼資料加入到 User 的關聯集合中
+                    newUser.UserPds.Add(newUserPd);
+
+                    // 將 User 實體加入到資料庫上下文中
+                    _context.Users.Add(newUser);
+                    // 儲存變更，資料就會被寫入資料庫
                     _context.SaveChanges();
 
-                    // 註冊成功提示
-                    TempData["SuccessMessage"] = "Registration successful! You can now log in.";
+                    TempData["SuccessMessage"] = "註冊成功！您現在可以登入。";
                     return RedirectToAction("Login");
                 }
                 catch (Exception ex)
                 {
-                    // 處理異常
-                    ModelState.AddModelError("DatabaseError", "An error occurred while processing your request.");
-                    Console.WriteLine(ex.Message); // 日誌記錄
+                    ModelState.AddModelError("DatabaseError", "處理您的請求時發生錯誤。");
+                    Console.WriteLine(ex.Message);
                 }
             }
-
-            // 返回包含錯誤的表單
-            return View(member);
+            return View(model);
         }
+
 
         // 顯示登入頁面
         [HttpGet]
@@ -80,66 +97,52 @@ namespace TravelLog.Controllers
         // 處理登入請求
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(string MiEmail, string MiPassword)
+        public IActionResult Login(string userEmail, string password)
         {
-            // 檢查輸入字段
-            if (string.IsNullOrEmpty(MiEmail) || string.IsNullOrEmpty(MiPassword))
+            if (string.IsNullOrEmpty(userEmail) || string.IsNullOrEmpty(password))
             {
-                ModelState.AddModelError("EmptyFields", "Email and Password are required.");
+                ModelState.AddModelError("EmptyFields", "Email 與密碼為必填項目。");
                 return View();
             }
 
-            // 驗證用戶憑據
-            var hashedPassword = HashPassword(MiPassword);
-            var member = _context.MemberInformations
-                .FirstOrDefault(m => m.MiEmail == MiEmail && m.MiPasswordHash == hashedPassword && m.MiIsActive == true);
+            var hashedPassword = HashPassword(password);
 
-            if (member == null)
+            // 先依 Email 找出啟用的使用者
+            var user = _context.Users.FirstOrDefault(u => u.UserEmail == userEmail && u.UserEnabled);
+            if (user == null || !user.UserPds.Any(pd => pd.UserPdPasswordHash == hashedPassword))
             {
-                ModelState.AddModelError("InvalidCredentials", "Invalid email or password.");
+                ModelState.AddModelError("InvalidCredentials", "Email 或密碼錯誤。");
                 return View();
             }
 
-            // 登入成功，設置 Session
-            HttpContext.Session.SetString(CDictionary.SK_LOINGED_USER, member.MiMemberId.ToString()); // ID
-            HttpContext.Session.SetString("UserName", member.MiAccountName); // 使用者名稱（可選）
-            HttpContext.Session.SetString("UserId", member.MiMemberId.ToString());// 這行不可以刪
+            // 設定 Session
+            HttpContext.Session.SetString("LoggedUserId", user.UserId.ToString());
+            HttpContext.Session.SetString("UserName", user.UserName);
 
-            // 重定向至 Profile 頁面
-            TempData["SuccessMessage"] = "Welcome back, " + member.MiAccountName + "!";
+            TempData["SuccessMessage"] = $"歡迎回來，{user.UserName}！";
             return RedirectToAction("Profile");
         }
 
-        // 顯示用戶資料頁面
+        // 顯示個人資料頁面
         [HttpGet]
         public IActionResult Profile()
         {
-            if (!HttpContext.Session.TryGetValue("UserId", out var userIdBytes))
+            if (!HttpContext.Session.TryGetValue("LoggedUserId", out var userIdBytes))
             {
                 return RedirectToAction("Login");
             }
 
             var userId = int.Parse(Encoding.UTF8.GetString(userIdBytes));
-            var member = _context.MemberInformations.FirstOrDefault(m => m.MiMemberId == userId);
+            var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
 
-            if (member == null)
+            if (user == null)
             {
                 return RedirectToAction("Login");
             }
 
-            return View(member);
+            return View(user);
         }
 
-        // 密碼加密方法
-        private string HashPassword(string password)
-        {
-            using (var sha256 = SHA256.Create())
-            {
-                var bytes = Encoding.UTF8.GetBytes(password);
-                var hash = sha256.ComputeHash(bytes);
-                return BitConverter.ToString(hash).Replace("-", "").ToLower();
-            }
-        }
         // 顯示重設密碼請求頁面
         [HttpGet]
         public IActionResult ResetPasswordRequest()
@@ -152,24 +155,30 @@ namespace TravelLog.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ResetPasswordRequest(string email)
         {
-            // 檢查 Email 是否存在
-            var member = _context.MemberInformations.FirstOrDefault(m => m.MiEmail == email);
-            if (member == null)
+            var user = _context.Users.FirstOrDefault(u => u.UserEmail == email);
+            if (user == null)
             {
-                TempData["ErrorMessage"] = "No account is associated with this email.";
+                TempData["ErrorMessage"] = "沒有帳號與此 Email 綁定。";
                 return View();
             }
 
-            // 生成唯一的 Token，並保存到模型中
+            // 取得使用者的 UserPd，如果不存在則建立新的
+            var userPd = user.UserPds.FirstOrDefault();
+            if (userPd == null)
+            {
+                userPd = new UserPd();
+                user.UserPds.Add(userPd);
+            }
             var resetToken = Guid.NewGuid().ToString();
-            member.MiEmailConfirmationToken = resetToken;
+            userPd.UserPdToken = resetToken;
+            userPd.TokenCreateDate = DateTime.Now;
             _context.SaveChanges();
 
-            // 將 Email 和 Token 存入 Session
+            // 將 Email 與 Token 存入 Session（實際上您也可改成寄信機制）
             HttpContext.Session.SetString("Email", email);
             HttpContext.Session.SetString("Token", resetToken);
 
-            TempData["SuccessMessage"] = "A password reset link has been sent to your email.";
+            TempData["SuccessMessage"] = "密碼重設連結已寄至您的信箱。";
             return RedirectToAction("ResetPassword");
         }
 
@@ -177,63 +186,69 @@ namespace TravelLog.Controllers
         [HttpGet]
         public IActionResult ResetPassword()
         {
-            // 從 Session 中檢索 Email 和 Token
             string email = HttpContext.Session.GetString("Email");
             string token = HttpContext.Session.GetString("Token");
 
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
             {
-                TempData["ErrorMessage"] = "Reset password link is invalid or expired.";
+                TempData["ErrorMessage"] = "重設密碼連結無效或已過期。";
                 return RedirectToAction("ResetPasswordRequest");
             }
 
-            // 驗證 Email 和 Token 是否有效
-            var member = _context.MemberInformations
-                .FirstOrDefault(m => m.MiEmail == email && m.MiEmailConfirmationToken == token);
-
-            if (member == null)
+            // 驗證 Email 與 Token 是否存在
+            var user = _context.Users.FirstOrDefault(u => u.UserEmail == email && u.UserPds.Any(pd => pd.UserPdToken == token));
+            if (user == null)
             {
-                TempData["ErrorMessage"] = "Invalid or expired password reset link.";
+                TempData["ErrorMessage"] = "無效或過期的重設密碼連結。";
                 return RedirectToAction("ResetPasswordRequest");
             }
 
-            return View(member);
+            return View(user);
         }
 
         // 處理重設密碼提交
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ResetPassword(MemberInformation member, string newPassword, string confirmPassword)
+        public IActionResult ResetPassword(string email, string token, string newPassword, string confirmPassword)
         {
             if (string.IsNullOrEmpty(newPassword) || newPassword.Length < 6)
             {
-                ModelState.AddModelError("InvalidPassword", "Password must be at least 6 characters long.");
-                return View(member);
+                ModelState.AddModelError("InvalidPassword", "密碼至少需 6 個字元。");
+                return View();
             }
 
             if (newPassword != confirmPassword)
             {
-                ModelState.AddModelError("PasswordMismatch", "New Password and Confirm Password do not match.");
-                return View(member);
+                ModelState.AddModelError("PasswordMismatch", "新密碼與確認密碼不符。");
+                return View();
             }
 
-            var existingMember = _context.MemberInformations
-                .FirstOrDefault(m => m.MiEmail == member.MiEmail && m.MiEmailConfirmationToken == member.MiEmailConfirmationToken);
-
-            if (existingMember == null)
+            var user = _context.Users.FirstOrDefault(u => u.UserEmail == email && u.UserPds.Any(pd => pd.UserPdToken == token));
+            if (user == null)
             {
-                TempData["ErrorMessage"] = "Invalid or expired password reset link.";
+                TempData["ErrorMessage"] = "無效或過期的重設密碼連結。";
                 return RedirectToAction("ResetPasswordRequest");
             }
 
             // 更新密碼並清除 Token
-            existingMember.MiPasswordHash = HashPassword(newPassword);
-            existingMember.MiEmailConfirmationToken = null;
+            var userPd = user.UserPds.First(pd => pd.UserPdToken == token);
+            userPd.UserPdPasswordHash = HashPassword(newPassword);
+            userPd.UserPdToken = null;
             _context.SaveChanges();
 
-            // 設置成功消息並重導向
-            TempData["SuccessMessage"] = "Your password has been reset successfully.";
+            TempData["SuccessMessage"] = "密碼已重設成功。";
             return RedirectToAction("Login");
+        }
+
+        // 密碼加密方法 (採用 SHA256)
+        private string HashPassword(string password)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                var bytes = Encoding.UTF8.GetBytes(password);
+                var hash = sha256.ComputeHash(bytes);
+                return BitConverter.ToString(hash).Replace("-", "").ToLower();
+            }
         }
     }
 }

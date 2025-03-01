@@ -1,4 +1,4 @@
-﻿@model TravelLog.Models.MemberInformation
+﻿@model TravelLog.ViewModels.UserRegisterViewModel
 @{
     ViewData["Title"] = "Register";
     Layout = null;
@@ -6,7 +6,6 @@
 
 <!DOCTYPE html>
 <html lang="en" class="h-100">
-
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -17,7 +16,6 @@
     <link href="./css/style.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
-
     <style>
         .btn-primary {
             color: #fff;
@@ -56,14 +54,10 @@
                 .show > .btn-primary.dropdown-toggle:focus {
                     box-shadow: 0 0 0 0.2rem rgba(114, 88, 224, 0.5);
                 }
-
-
         /* 輸入框樣式 */
         .input-group .form-control {
             border: 1px solid #eaeaea;
-            /* 與按鈕邊框一致 */
             border-radius: 0.25rem;
-            /* 左右圓角統一 */
             padding: 0.5rem;
             font-size: 1rem;
         }
@@ -73,11 +67,9 @@
             align-items: center;
             justify-content: center;
             height: calc(1.5em + 0.75rem + 2px);
-            /* 與輸入框高度一致 */
             padding: 0 0.75rem;
             font-size: 1rem;
             color: #495057;
-            /* 與輸入框文字顏色一致 */
             background-color: #fff;
             border: 1px solid #eaeaea;
             border-left-color: #eaeaea;
@@ -88,40 +80,30 @@
 
         .input-group .form-control {
             border-radius: 0.25rem 0 0 0.25rem;
-            /* 輸入框左側圓角 */
         }
 
             .input-group .form-control:focus {
                 z-index: 2;
-                /* 確保輸入框焦點效果位於按鈕之上 */
             }
 
         .btn-merge-input:hover {
             background-color: #f8f9fa;
-            /* 按鈕懸停背景色 */
             border-color: #b4a7ef;
-            /* 按鈕懸停邊框色 */
         }
 
         .btn-merge-input:focus {
             outline: none;
-            /* 移除按鈕的焦點邊框 */
             box-shadow: 0 0 0 0.2rem rgba(89, 59, 219, 0.25);
-            /* 焦點效果 */
         }
 
         .btn-merge-input:disabled {
             background-color: #e9ecef;
-            /* 禁用狀態背景色 */
             color: #6c757d;
-            /* 禁用狀態文字色 */
             cursor: not-allowed;
-            /* 禁用狀態鼠標效果 */
         }
 
         .spacer {
             height: 30px;
-            /* 設置空白高度 */
         }
 
         .authincation-content {
@@ -138,7 +120,6 @@
         }
     </style>
 </head>
-
 <body class="h-100">
     <div class="authincation h-100">
         <div class="container-fluid h-100">
@@ -146,7 +127,7 @@
                 <div class="col-md-6">
                     <div class="authincation-content">
                         <div class="row no-gutters">
-                            <div class="col-xl-12 font-color:black">
+                            <div class="col-xl-12" style="color:black;">
                                 <div class="auth-form">
                                     <h4 class="text-center mb-4 fw-bold fs-2"><strong>帳號註冊</strong></h4>
                                     @using (Html.BeginForm("Register", "Member", FormMethod.Post))
@@ -154,25 +135,23 @@
                                         @Html.AntiForgeryToken()
                                         <div class="mb-3">
                                             <label for="registerName" class="media-body"><strong>帳號名稱</strong></label>
-                                            <input type="text" class="form-control" id="registerName" name="MiAccountName"
-                                                   required />
+                                            <!-- 將 MiAccountName 改為 ViewModel 的 Name -->
+                                            <input type="text" class="form-control" id="registerName" name="Name" required />
                                         </div>
                                         <div class="mb-3">
                                             <label for="registerEmail" class="form-label"><strong>Email</strong></label>
-                                            <input type="email" class="form-control" id="registerEmail" name="MiEmail"
-                                                   required />
+                                            <!-- 將 MiEmail 改為 Email -->
+                                            <input type="email" class="form-control" id="registerEmail" name="Email" required />
                                         </div>
-
                                         <div class="mb-3">
                                             <label for="registerPassword" class="form-label">
                                                 <strong>
-                                                    密碼 (6-20
-                                                    字元，需包含大寫英文字母)
+                                                    密碼 (6-20 字元，需包含大寫英文字母)
                                                 </strong>
                                             </label>
                                             <div class="input-group">
-                                                <input type="password" class="form-control" id="registerPassword"
-                                                       name="MiPasswordHash" required />
+                                                <!-- 將 MiPasswordHash 改為 Password -->
+                                                <input type="password" class="form-control" id="registerPassword" name="Password" required />
                                                 <button type="button" class="btn-merge-input" id="togglePassword">
                                                     <i class="bi bi-eye-slash" id="passwordIcon"></i>
                                                 </button>
@@ -181,15 +160,12 @@
                                                 密碼必須為 6-20 字元，並包含至少一個大寫英文字母。
                                             </div>
                                         </div>
-
                                         <div class="mb-3">
-                                            <label for="registerPasswordConfirm"
-                                                   class="form-label"><strong>確認密碼</strong></label>
+                                            <label for="registerPasswordConfirm" class="form-label"><strong>確認密碼</strong></label>
                                             <div class="input-group">
-                                                <input type="password" class="form-control" id="registerPasswordConfirm"
-                                                       name="confirmPassword" required />
-                                                <button type="button" class="btn-merge-input"
-                                                        id="togglePasswordConfirm">
+                                                <!-- 將 confirmPassword 改為 ConfirmPassword -->
+                                                <input type="password" class="form-control" id="registerPasswordConfirm" name="ConfirmPassword" required />
+                                                <button type="button" class="btn-merge-input" id="togglePasswordConfirm">
                                                     <i class="bi bi-eye" id="passwordConfirmIcon"></i>
                                                 </button>
                                             </div>
@@ -198,28 +174,26 @@
                                             </div>
                                         </div>
                                         <div class="spacer"></div>
-
                                         <div class="mb-3">
-                                            <button type="submit" class="btn btn-primary w-100"
-                                                    onclick="return validateForm()">
+                                            <button type="submit" class="btn btn-primary w-100" onclick="return validateForm()">
                                                 註冊
                                             </button>
                                         </div>
-                                    }
-                                </div>
-                            </div>
+                                    } <!-- 結束 BeginForm 區塊 -->
+                                </div> <!-- end auth-form -->
+                            </div> <!-- end col-xl-12 -->
                             <div class="new-account mt-3">
                                 <p>
                                     已經有帳號了?
                                     <a asp-controller="Member" asp-action="Login" class="text-primary">登入</a>
                                 </p>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                        </div> <!-- end row no-gutters -->
+                    </div> <!-- end authincation-content -->
+                </div> <!-- end col-md-6 -->
+            </div> <!-- end row -->
+        </div> <!-- end container-fluid -->
+    </div> <!-- end authincation -->
 
     <script>
         const passwordInput = document.getElementById('registerPassword');
@@ -228,10 +202,8 @@
         const passwordError = document.getElementById('passwordError');
         const togglePasswordButton = document.getElementById('togglePassword');
         const passwordIcon = document.getElementById('passwordIcon');
-        // 確認密碼切換按鈕
         const togglePasswordConfirmButton = document.getElementById('togglePasswordConfirm');
         const passwordConfirmIcon = document.getElementById('passwordConfirmIcon');
-
 
         // 密碼格式規則：6-20 字元，包含至少一個大寫字母
         const passwordRegex = /^(?=.*[A-Z])[A-Za-z\d]{6,20}$/;
@@ -267,6 +239,7 @@
             passwordConfirmIcon.classList.toggle('bi-eye', !isPasswordConfirmHidden);
             passwordConfirmIcon.classList.toggle('bi-eye-slash', isPasswordConfirmHidden);
         });
+
         // 表單提交時的最終驗證
         function validateForm() {
             const isPasswordValid = passwordRegex.test(passwordInput.value);
@@ -278,16 +251,12 @@
             if (!isPasswordMatch) {
                 passwordError.classList.remove('d-none');
             }
-            return isPasswordValid && isPasswordMatch; // 返回 true 或 false，決定是否提交表單
-
+            return isPasswordValid && isPasswordMatch;
         }
     </script>
     <!-- Required vendors -->
     <script src="./vendor/global/global.min.js"></script>
     <script src="./js/quixnav-init.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <!--endRemoveIf(production)-->
 </body>
-
 </html>
-
