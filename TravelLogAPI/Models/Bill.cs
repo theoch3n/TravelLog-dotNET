@@ -7,37 +7,17 @@ namespace TravelLogAPI.Models;
 
 public partial class Bill
 {
-    /// <summary>
-    /// 帳單 ID
-    /// </summary>
     public int Id { get; set; }
 
-    /// <summary>
-    /// 行程 ID
-    /// </summary>
     public int ItineraryId { get; set; }
 
-    /// <summary>
-    /// 帳單標題
-    /// </summary>
     public string Title { get; set; }
 
-    /// <summary>
-    /// 總金額
-    /// </summary>
     public decimal TotalAmount { get; set; }
 
-    /// <summary>
-    /// 付款人
-    /// </summary>
     public string PaidBy { get; set; }
 
-    /// <summary>
-    /// 帳單建立時間
-    /// </summary>
-    public DateTime CreatedAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
     public virtual ICollection<BillDetail> BillDetails { get; set; } = new List<BillDetail>();
-
-    public virtual Itinerary Itinerary { get; set; }
 }

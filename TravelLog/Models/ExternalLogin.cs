@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace TravelLogAPI.Models;
+namespace TravelLog.Models;
 
 public partial class ExternalLogin
 {

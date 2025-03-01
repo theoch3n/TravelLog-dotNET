@@ -28,7 +28,7 @@ public partial class Ticket
     public int Price { get; set; }
 
     /// <summary>
-    /// 票務狀態 (0 = 不可用, 1 = 可用)
+    /// 票務狀態
     /// </summary>
     public bool IsAvailable { get; set; }
 
@@ -45,5 +45,5 @@ public partial class Ticket
     /// <summary>
     /// 票務創建日期
     /// </summary>
-    public DateTime CreatedAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
 }

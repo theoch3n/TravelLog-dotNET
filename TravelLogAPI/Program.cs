@@ -24,11 +24,6 @@ builder.Services.AddCors(options =>
     );
 });
 
-
-
-
-
-
 var jwtSection = builder.Configuration.GetSection("Jwt");
 var issuer = jwtSection["Issuer"] ?? "MyAppIssuer";
 var audience = jwtSection["Audience"] ?? "MyAppAudience";
@@ -64,7 +59,7 @@ builder.Services.AddSignalR();
 
 
 
-
+builder.Services.AddMemoryCache();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

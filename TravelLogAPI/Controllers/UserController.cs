@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,56 +6,45 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using TravelLogAPI.Models;  // 反向工程生成的模型所在的命名空間
-using Microsoft.Extensions.Configuration;
 
-namespace TravelLogAPI.Controllers
-{
+namespace TravelLogAPI.Controllers {
     [EnableCors("VueSinglePage")]
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
-    {
+    public class UserController : ControllerBase {
         private readonly TravelLogContext _context;
         private readonly IConfiguration _configuration;
 
-        public UserController(TravelLogContext context, IConfiguration configuration)
-        {
+        public UserController(TravelLogContext context, IConfiguration configuration) {
             _context = context;
             _configuration = configuration;
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
-        {
-            try
-            {
+        public async Task<IActionResult> Login([FromBody] LoginRequest request) {
+            try {
                 // 檢查傳入資料是否完整
-                if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
-                {
+                if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password)) {
                     return BadRequest(new { message = "請提供完整的登入資訊。" });
                 }
 
                 // 根據 Email 從 Users 表中查詢使用者
                 var user = await _context.Users.FirstOrDefaultAsync(u => u.UserEmail == request.Email);
-                if (user == null)
-                {
+                if (user == null) {
                     return NotFound(new { message = "找不到該使用者。" });
                 }
 
                 // 根據使用者的 ID 從 UserPds 表中查詢密碼資訊
                 var userPd = await _context.UserPds.FirstOrDefaultAsync(pd => pd.UserId == user.UserId);
-                if (userPd == null)
-                {
+                if (userPd == null) {
                     return Unauthorized(new { message = "使用者密碼資訊錯誤。" });
                 }
 
                 // 使用 PasswordHasher 驗證密碼
                 var passwordHasher = new PasswordHasher<User>();
                 var verifyResult = passwordHasher.VerifyHashedPassword(user, userPd.UserPdPasswordHash, request.Password);
-                if (verifyResult != PasswordVerificationResult.Success)
-                {
+                if (verifyResult != PasswordVerificationResult.Success) {
                     return Unauthorized(new { message = "密碼不正確。" });
                 }
 
@@ -90,15 +78,13 @@ namespace TravelLogAPI.Controllers
                 var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
                 // 回傳 JWT Token 給前端
-                return Ok(new
-                {
+                return Ok(new {
                     message = "登入成功！",
                     token = tokenString
                 });
 
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 // 如果有注入 ILogger，請使用 _logger.LogError(ex, "登入時發生錯誤");
                 return StatusCode(500, new { message = "伺服器錯誤", detail = ex.ToString() });
             }
@@ -108,26 +94,22 @@ namespace TravelLogAPI.Controllers
 
         // POST: api/User/register
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
-        {
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request) {
             // 驗證輸入是否完整
             if (string.IsNullOrWhiteSpace(request.Email) ||
                 string.IsNullOrWhiteSpace(request.Password) ||
-                string.IsNullOrWhiteSpace(request.UserName))
-            {
+                string.IsNullOrWhiteSpace(request.UserName)) {
                 return BadRequest(new { message = "請提供完整的註冊資訊。" });
             }
 
             // 檢查電子郵件是否已存在
             var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.UserEmail == request.Email);
-            if (existingUser != null)
-            {
+            if (existingUser != null) {
                 return BadRequest(new { message = "此電子郵件已被使用。" });
             }
 
             // 建立新的 User 資料
-            var user = new User
-            {
+            var user = new User {
                 UserName = request.UserName,
                 UserEmail = request.Email,
                 UserPhone = request.Phone,  // 若沒有提供可以為 null 或空字串
@@ -143,8 +125,7 @@ namespace TravelLogAPI.Controllers
             string hashedPassword = passwordHasher.HashPassword(user, request.Password);
 
             // 建立對應的 UserPd 資料
-            var userPd = new UserPd
-            {
+            var userPd = new UserPd {
                 UserId = user.UserId,
                 UserPdPasswordHash = hashedPassword,
                 UserPdToken = "",
@@ -154,8 +135,7 @@ namespace TravelLogAPI.Controllers
             _context.UserPds.Add(userPd);
             await _context.SaveChangesAsync();
 
-            return Ok(new
-            {
+            return Ok(new {
                 message = "註冊成功！",
                 userId = user.UserId,
                 userName = user.UserName
@@ -164,16 +144,14 @@ namespace TravelLogAPI.Controllers
     }
 
     // 用於登入請求的資料傳輸物件
-    public class LoginRequest
-    {
+    public class LoginRequest {
         public string Email { get; set; }
         public string Password { get; set; }
         public bool RememberMe { get; set; }
     }
 
     // 用於註冊請求的資料傳輸物件
-    public class RegisterRequest
-    {
+    public class RegisterRequest {
         public string UserName { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
