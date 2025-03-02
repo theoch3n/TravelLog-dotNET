@@ -1,608 +1,808 @@
-﻿@model TravelLog.Models.SerialBase
+﻿@model TravelLog.Models.TravelLogContext
 
 @{
     ViewData["Title"] = "Home Page";
 }
-@* <label>@Model.SbSerialNumber</label> *@
-    <!-- row -->
-    <div class="row">
-        <div class="col-lg-3 col-sm-6">
-            <div class="card">
-                <div class="stat-widget-two card-body">
-                    <div class="stat-content">
-                        <div class="stat-text">Today Expenses </div>
-                        <div class="stat-digit"> <i class="fa fa-usd"></i>8500</div>
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-success w-85" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-            <div class="card">
-                <div class="stat-widget-two card-body">
-                    <div class="stat-content">
-                        <div class="stat-text">Income Detail</div>
-                        <div class="stat-digit"> <i class="fa fa-usd"></i>7800</div>
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-primary w-75" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-            <div class="card">
-                <div class="stat-widget-two card-body">
-                    <div class="stat-content">
-                        <div class="stat-text">Task Completed</div>
-                        <div class="stat-digit"> <i class="fa fa-usd"></i> 500</div>
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-warning w-50" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-            <div class="card">
-                <div class="stat-widget-two card-body">
-                    <div class="stat-content">
-                        <div class="stat-text">Task Completed</div>
-                        <div class="stat-digit"> <i class="fa fa-usd"></i>650</div>
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-danger w-65" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                </div>
-            </div>
-            <!-- /# card -->
-        </div>
-        <!-- /# column -->
-    </div>
-    <div class="row">
-        <div class="col-xl-8 col-lg-8 col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Sales Overview</h4>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-xl-12 col-lg-8">
-                            <div id="morris-bar-chart"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-4 col-lg-4 col-md-4">
-            <div class="card">
-                <div class="card-body text-center">
-                    <div class="m-t-10">
-                        <h4 class="card-title">Customer Feedback</h4>
-                        <h2 class="mt-3">385749</h2>
-                    </div>
-                    <div class="widget-card-circle mt-5 mb-5" id="info-circle-card">
-                        <i class="ti-control-shuffle pa"></i>
-                    </div>
-                    <ul class="widget-line-list m-b-15">
-                        <li class="border-right">
-                            92% <br><span class="text-success">
-                                <i class="ti-hand-point-up"></i> Positive
-                            </span>
-                        </li>
-                        <li>
-                            8% <br><span class="text-danger">
-                                <i class="ti-hand-point-down"></i>Negative
-                            </span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Project</h4>
-                </div>
-                <div class="card-body">
-                    <div class="current-progress">
-                        <div class="progress-content py-2">
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <div class="progress-text">Website</div>
-                                </div>
-                                <div class="col-lg-8">
-                                    <div class="current-progressbar">
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-primary w-40" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
-                                                40%
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="progress-content py-2">
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <div class="progress-text">Android</div>
-                                </div>
-                                <div class="col-lg-8">
-                                    <div class="current-progressbar">
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-primary w-60" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
-                                                60%
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="progress-content py-2">
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <div class="progress-text">Ios</div>
-                                </div>
-                                <div class="col-lg-8">
-                                    <div class="current-progressbar">
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-primary w-70" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">
-                                                70%
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="progress-content py-2">
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <div class="progress-text">Mobile</div>
-                                </div>
-                                <div class="col-lg-8">
-                                    <div class="current-progressbar">
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-primary w-90" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">
-                                                90%
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card">
-                <div class="card-body">
-                    <div class="testimonial-widget-one p-17">
-                        <div class="testimonial-widget-one owl-carousel owl-theme">
-                            <div class="item">
-                                <div class="testimonial-content">
-                                    <div class="testimonial-text">
-                                        <i class="fa fa-quote-left"></i> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
-                                        consectetur adipisicing elit.
-                                        <i class="fa fa-quote-right"></i>
-                                    </div>
-                                    <div class="media">
-                                        <div class="media-body">
-                                            <div class="testimonial-author">TYRION LANNISTER</div>
-                                            <div class="testimonial-author-position">
-                                                Founder-Ceo. Dell Corp
-                                            </div>
-                                        </div>
-                                        <img class="testimonial-author-img ml-3" src="./images/avatar/1.png" alt="" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="testimonial-content">
-                                    <div class="testimonial-text">
-                                        <i class="fa fa-quote-left"></i> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
-                                        consectetur adipisicing elit.
-                                        <i class="fa fa-quote-right"></i>
-                                    </div>
-                                    <div class="media">
-                                        <div class="media-body">
-                                            <div class="testimonial-author">TYRION LANNISTER</div>
-                                            <div class="testimonial-author-position">
-                                                Founder-Ceo. Dell Corp
-                                            </div>
-                                        </div>
-                                        <img class="testimonial-author-img ml-3" src="./images/avatar/1.png" alt="" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="testimonial-content">
-                                    <div class="testimonial-text">
-                                        <i class="fa fa-quote-left"></i> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
-                                        consectetur adipisicing elit.
-                                        <i class="fa fa-quote-right"></i>
-                                    </div>
-                                    <div class="media">
-                                        <div class="media-body">
-                                            <div class="testimonial-author">TYRION LANNISTER</div>
-                                            <div class="testimonial-author-position">
-                                                Founder-Ceo. Dell Corp
-                                            </div>
-                                        </div>
-                                        <img class="testimonial-author-img ml-3" src="./images/avatar/1.png" alt="" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Web Server</h4>
-                </div>
-                <div class="card-body">
-                    <div class="cpu-load-chart">
-                        <div id="cpu-load" class="cpu-load"></div>
-                    </div>
-                </div>
-            </div>
-            <!-- /# card -->
-        </div>
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Country</h4>
-                </div>
-                <div class="card-body">
-                    <div id="vmap13" class="vmap"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">New Orders</h4>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table mb-0">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Name</th>
-                                    <th>Product</th>
-                                    <th>quantity</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="round-img">
-                                            <a href=""><img width="35" src="./images/avatar/1.png" alt=""></a>
-                                        </div>
-                                    </td>
-                                    <td>Lew Shawon</td>
-                                    <td><span>Dell-985</span></td>
-                                    <td><span>456 pcs</span></td>
-                                    <td><span class="badge badge-success">Done</span></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="round-img">
-                                            <a href=""><img width="35" src="./images/avatar/1.png" alt=""></a>
-                                        </div>
-                                    </td>
-                                    <td>Lew Shawon</td>
-                                    <td><span>Asus-565</span></td>
-                                    <td><span>456 pcs</span></td>
-                                    <td><span class="badge badge-warning">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="round-img">
-                                            <a href=""><img width="35" src="./images/avatar/1.png" alt=""></a>
-                                        </div>
-                                    </td>
-                                    <td>lew Shawon</td>
-                                    <td><span>Dell-985</span></td>
-                                    <td><span>456 pcs</span></td>
-                                    <td><span class="badge badge-success">Done</span></td>
-                                </tr>
 
-                                <tr>
-                                    <td>
-                                        <div class="round-img">
-                                            <a href=""><img width="35" src="./images/avatar/1.png" alt=""></a>
-                                        </div>
-                                    </td>
-                                    <td>Lew Shawon</td>
-                                    <td><span>Asus-565</span></td>
-                                    <td><span>456 pcs</span></td>
-                                    <td><span class="badge badge-warning">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="round-img">
-                                            <a href=""><img width="35" src="./images/avatar/1.png" alt=""></a>
-                                        </div>
-                                    </td>
-                                    <td>lew Shawon</td>
-                                    <td><span>Dell-985</span></td>
-                                    <td><span>456 pcs</span></td>
-                                    <td><span class="badge badge-success">Done</span></td>
-                                </tr>
+@section Styles {
+    <link rel="stylesheet" href="~/css/dashboard.css" />
+}
 
-                                <tr>
-                                    <td>
-                                        <div class="round-img">
-                                            <a href=""><img width="35" src="./images/avatar/1.png" alt=""></a>
-                                        </div>
-                                    </td>
-                                    <td>Lew Shawon</td>
-                                    <td><span>Asus-565</span></td>
-                                    <td><span>456 pcs</span></td>
-                                    <td><span class="badge badge-warning">Pending</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
+<!-- row -->
+<div class="row">
+    <!-- 今日營業額卡片 -->
+    <div class="col-lg-3 col-sm-6">
+        <div class="card">
+            <div class="stat-widget-two card-body">
+                <div class="stat-content">
+                    <div class="stat-text">今日營業額</div>
+                    <div class="stat-digit">
+                        <i class="fa fa-usd"></i><span id="todayExpenses">0</span>
+                    </div>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-success" style="width: 85%;"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-6 col-xl-4 col-xxl-6 col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Timeline</h4>
-                </div>
-                <div class="card-body">
-                    <div class="widget-timeline">
-                        <ul class="timeline">
-                            <li>
-                                <div class="timeline-badge primary"></div>
-                                <a class="timeline-panel text-muted" href="#">
-                                    <span>10 minutes ago</span>
-                                    <h6 class="m-t-5">Youtube, a video-sharing website, goes live.</h6>
-                                </a>
-                            </li>
-
-                            <li>
-                                <div class="timeline-badge warning">
-                                </div>
-                                <a class="timeline-panel text-muted" href="#">
-                                    <span>20 minutes ago</span>
-                                    <h6 class="m-t-5">Mashable, a news website and blog, goes live.</h6>
-                                </a>
-                            </li>
-
-                            <li>
-                                <div class="timeline-badge danger">
-                                </div>
-                                <a class="timeline-panel text-muted" href="#">
-                                    <span>30 minutes ago</span>
-                                    <h6 class="m-t-5">Google acquires Youtube.</h6>
-                                </a>
-                            </li>
-
-                            <li>
-                                <div class="timeline-badge success">
-                                </div>
-                                <a class="timeline-panel text-muted" href="#">
-                                    <span>15 minutes ago</span>
-                                    <h6 class="m-t-5">StumbleUpon is acquired by eBay. </h6>
-                                </a>
-                            </li>
-
-                            <li>
-                                <div class="timeline-badge warning">
-                                </div>
-                                <a class="timeline-panel text-muted" href="#">
-                                    <span>20 minutes ago</span>
-                                    <h6 class="m-t-5">Mashable, a news website and blog, goes live.</h6>
-                                </a>
-                            </li>
-
-                            <li>
-                                <div class="timeline-badge dark">
-                                </div>
-                                <a class="timeline-panel text-muted" href="#">
-                                    <span>20 minutes ago</span>
-                                    <h6 class="m-t-5">Mashable, a news website and blog, goes live.</h6>
-                                </a>
-                            </li>
-
-                            <li>
-                                <div class="timeline-badge info">
-                                </div>
-                                <a class="timeline-panel text-muted" href="#">
-                                    <span>30 minutes ago</span>
-                                    <h6 class="m-t-5">Google acquires Youtube.</h6>
-                                </a>
-                            </li>
-                        </ul>
+    <!-- 用戶增長率卡片 -->
+    <div class="col-lg-3 col-sm-6">
+        <div class="card">
+            <div class="stat-widget-two card-body">
+                <div class="stat-content">
+                    <div class="stat-text">用戶增長率</div>
+                    <div class="stat-digit">
+                        <span id="userGrowthRate">0</span>%
+                        <small id="userGrowthTrend" class="text-success">
+                            <i class="fa fa-caret-up"></i> <span id="userGrowthChange">0</span>%
+                        </small>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-xl-4 col-xxl-6 col-lg-6 col-md-6 col-sm-12">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Todo</h4>
-                </div>
-                <div class="card-body px-0">
-                    <div class="todo-list">
-                        <div class="tdl-holder">
-                            <div class="tdl-content widget-todo mr-4">
-                                <ul id="todo_list">
-                                    <li>
-                                        <label>
-                                            <input type="checkbox"><i></i><span>Get up</span><a href='#'
-                                                                                                class="ti-trash"></a>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label>
-                                            <input type="checkbox" checked><i></i><span>Stand up</span><a href='#' class="ti-trash"></a>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label>
-                                            <input type="checkbox"><i></i><span>
-                                                Don't give up the
-                                                fight.
-                                            </span><a href='#' class="ti-trash"></a>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label>
-                                            <input type="checkbox" checked><i></i><span>
-                                                Do something
-                                                else
-                                            </span><a href='#' class="ti-trash"></a>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label>
-                                            <input type="checkbox" checked><i></i><span>Stand up</span><a href='#' class="ti-trash"></a>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label>
-                                            <input type="checkbox"><i></i><span>
-                                                Don't give up the
-                                                fight.
-                                            </span><a href='#' class="ti-trash"></a>
-                                        </label>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="px-4">
-                                <input type="text" class="tdl-new form-control" placeholder="Write new item and hit 'Enter'...">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-12 col-md-12 col-xxl-6 col-xl-4 col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Product Sold</h4>
-                    <div class="card-action">
-                        <div class="dropdown custom-dropdown">
-                            <div data-toggle="dropdown">
-                                <i class="ti-more-alt"></i>
-                            </div>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="#">Option 1</a>
-                                <a class="dropdown-item" href="#">Option 2</a>
-                                <a class="dropdown-item" href="#">Option 3</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="chart py-4">
-                        <canvas id="sold-product"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-12 col-xxl-6 col-lg-6 col-md-12">
-            <div class="row">
-                <div class="col-xl-3 col-lg-6 col-sm-6 col-xxl-6 col-md-6">
-                    <div class="card">
-                        <div class="social-graph-wrapper widget-facebook">
-                            <span class="s-icon"><i class="fa fa-facebook"></i></span>
-                        </div>
-                        <div class="row">
-                            <div class="col-6 border-right">
-                                <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                    <h4 class="m-1"><span class="counter">89</span> k</h4>
-                                    <p class="m-0">Friends</p>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                    <h4 class="m-1"><span class="counter">119</span> k</h4>
-                                    <p class="m-0">Followers</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 col-sm-6 col-xxl-6 col-md-6">
-                    <div class="card">
-                        <div class="social-graph-wrapper widget-linkedin">
-                            <span class="s-icon"><i class="fa fa-linkedin"></i></span>
-                        </div>
-                        <div class="row">
-                            <div class="col-6 border-right">
-                                <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                    <h4 class="m-1"><span class="counter">89</span> k</h4>
-                                    <p class="m-0">Friends</p>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                    <h4 class="m-1"><span class="counter">119</span> k</h4>
-                                    <p class="m-0">Followers</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 col-sm-6 col-xxl-6 col-md-6">
-                    <div class="card">
-                        <div class="social-graph-wrapper widget-googleplus">
-                            <span class="s-icon"><i class="fa fa-google-plus"></i></span>
-                        </div>
-                        <div class="row">
-                            <div class="col-6 border-right">
-                                <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                    <h4 class="m-1"><span class="counter">89</span> k</h4>
-                                    <p class="m-0">Friends</p>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                    <h4 class="m-1"><span class="counter">119</span> k</h4>
-                                    <p class="m-0">Followers</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 col-sm-6 col-xxl-6 col-md-6">
-                    <div class="card">
-                        <div class="social-graph-wrapper widget-twitter">
-                            <span class="s-icon"><i class="fa fa-twitter"></i></span>
-                        </div>
-                        <div class="row">
-                            <div class="col-6 border-right">
-                                <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                    <h4 class="m-1"><span class="counter">89</span> k</h4>
-                                    <p class="m-0">Friends</p>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                    <h4 class="m-1"><span class="counter">119</span> k</h4>
-                                    <p class="m-0">Followers</p>
-                                </div>
-                            </div>
-                        </div>
+                <div class="progress">
+                    <div id="userGrowthProgressBar"
+                         class="progress-bar progress-bar-primary w-75"
+                         role="progressbar"
+                         aria-valuenow="75"
+                         aria-valuemin="0"
+                         aria-valuemax="100">
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<!-- 圖表區域 -->
+<div class="row">
+    <div class="col-xl-6 col-lg-6 col-md-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="card-title">營業額統計</h4>
+                <div class="date-range-selector">
+                    <select id="revenueTimeRange" class="form-control">
+                        <option value="7">最近7天</option>
+                        <option value="30">最近30天</option>
+                        <option value="90">最近3個月</option>
+                        <option value="180">最近6個月</option>
+                        <option value="365">最近1年</option>
+                    </select>
+                    <div id="revenueCustomDateRange" style="display:none; margin-top: 10px;">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <input type="date" id="revenueStartDate" class="form-control" />
+                            </div>
+                            <div class="col-md-2 text-center">至</div>
+                            <div class="col-md-5">
+                                <input type="date" id="revenueEndDate" class="form-control" />
+                            </div>
+                        </div>
+                        <button id="revenueApplyCustomRange" class="btn btn-primary btn-sm mt-2">應用</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <canvas id="revenueChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="card-title">用戶增長率</h4>
+                <div class="date-range-selector">
+                    <select id="userGrowthTimeRange" class="form-control">
+                        <option value="7">最近7天</option>
+                        <option value="30">最近30天</option>
+                        <option value="90">最近3個月</option>
+                        <option value="180">最近6個月</option>
+                        <option value="365">最近1年</option>
+                    </select>
+                    <div id="userGrowthCustomDateRange" style="display:none; margin-top: 10px;">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <input type="date" id="userGrowthStartDate" class="form-control" />
+                            </div>
+                            <div class="col-md-2 text-center">至</div>
+                            <div class="col-md-5">
+                                <input type="date" id="userGrowthEndDate" class="form-control" />
+                            </div>
+                        </div>
+                        <button id="userGrowthApplyCustomRange" class="btn btn-primary btn-sm mt-2">應用</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <canvas id="userGrowthChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-6 col-lg-6 col-md-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="card-title">銷售概況</h4>
+                <div class="date-range-selector">
+                    <select id="salesOverviewTimeRange" class="form-control">
+                        <option value="7">最近7天</option>
+                        <option value="30">最近30天</option>
+                        <option value="90">最近3個月</option>
+                        <option value="180">最近6個月</option>
+                        <option value="365">最近1年</option>
+                    </select>
+                    <div id="salesOverviewCustomDateRange" style="display:none; margin-top: 10px;">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <input type="date" id="salesOverviewStartDate" class="form-control" />
+                            </div>
+                            <div class="col-md-2 text-center">至</div>
+                            <div class="col-md-5">
+                                <input type="date" id="salesOverviewEndDate" class="form-control" />
+                            </div>
+                        </div>
+                        <button id="salesOverviewApplyCustomRange" class="btn btn-primary btn-sm mt-2">應用</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12">
+                        <canvas id="salesOverviewChart" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6 col-lg-6 col-md-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="card-title">熱門地點</h4>
+                <div class="date-range-selector">
+                    <select id="popularPlacesTimeRange" class="form-control">
+                        <option value="7">最近7天</option>
+                        <option value="30">最近30天</option>
+                        <option value="90">最近3個月</option>
+                        <option value="180">最近6個月</option>
+                        <option value="365">最近1年</option>
+                    </select>
+                    <div id="popularPlacesCustomDateRange" style="display:none; margin-top: 10px;">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <input type="date" id="popularPlacesStartDate" class="form-control" />
+                            </div>
+                            <div class="col-md-2 text-center">至</div>
+                            <div class="col-md-5">
+                                <input type="date" id="popularPlacesEndDate" class="form-control" />
+                            </div>
+                        </div>
+                        <button id="popularPlacesApplyCustomRange" class="btn btn-primary btn-sm mt-2">應用</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12">
+                        <canvas id="popularPlacesChart" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        let revenueChart, userGrowthChart, salesOverviewChart, popularPlacesChart;
+
+        function handleEmptyData(data, dateRange, chartType) {
+            console.log(`處理${chartType}類型的數據，原始數據:`, data);
+
+            if (!data || data.length === 0) {
+                console.log(`${chartType} 類型無數據，創建僅含 0 值的預設資料`);
+                const result = [];
+                const startDate = new Date(dateRange.startDate);
+                const endDate = new Date(dateRange.endDate);
+
+                // 時間序列圖表（營業額、用戶增長）
+                if (chartType === 'time') {
+                    let currentDate = new Date(startDate);
+                    while (currentDate <= endDate) {
+                        const dateStr = currentDate.toISOString().split('T')[0];
+                        result.push({
+                            date: dateStr,
+                            amount: 0,
+                            newUsers: 0
+                        });
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                }
+                // 類別圖表（銷售概況）
+                else if (chartType === 'category') {
+                    result.push({
+                        category: '無數據',
+                        sales: 0
+                    });
+                }
+                // 熱門地點圖表
+                else if (chartType === 'place') {
+                    result.push({
+                        place: '無數據',
+                        count: 0
+                    });
+                }
+                return result;
+            }
+            return data;
+        }
+
+        // 今日營業額
+        function updateTodayRevenue() {
+            fetch('/api/Chart/TodayRevenue')
+                .then(response => response.json())
+                .then(data => {
+                    const todayExpensesElement = document.getElementById('todayExpenses');
+                    if (todayExpensesElement) {
+                        // 從資料庫取得的 amount
+                        todayExpensesElement.textContent = data.amount || '0';
+                    }
+                })
+                .catch(error => {
+                    console.error('獲取今日營業額失敗:', error);
+                    // 不再使用隨機數據，失敗則顯示 0
+                    const todayExpensesElement = document.getElementById('todayExpenses');
+                    if (todayExpensesElement) {
+                        todayExpensesElement.textContent = '0';
+                    }
+                });
+        }
+
+        function updateUserGrowthRate() {
+            // 取得本月/上月資料，並計算成長率
+            const today = new Date();
+            const currentMonthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
+            const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+
+            const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0).toISOString().split('T')[0];
+            const lastMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1).toISOString().split('T')[0];
+
+            // 當前月資料
+            fetch(`/api/Chart/UserGrowth?startDate=${currentMonthStart}&endDate=${currentMonthEnd}`)
+                .then(response => response.json())
+                .then(currentMonthData => {
+                    if (!Array.isArray(currentMonthData)) {
+                        throw new Error("API 回傳格式錯誤，預期為陣列");
+                    }
+                    const currentMonthUsers = currentMonthData.reduce((sum, item) => sum + (item.newUsers || 0), 0);
+
+                    // 上一個月資料
+                    return fetch(`/api/Chart/UserGrowth?startDate=${lastMonthStart}&endDate=${lastMonthEnd}`)
+                        .then(response => response.json())
+                        .then(lastMonthData => {
+                            if (!Array.isArray(lastMonthData)) {
+                                throw new Error("API 回傳格式錯誤，預期為陣列");
+                            }
+                            const lastMonthUsers = lastMonthData.reduce((sum, item) => sum + (item.newUsers || 0), 0);
+
+                            // 計算成長率
+                            const growthRateElement = document.getElementById('userGrowthRate');
+                            const growthChangeElement = document.getElementById('userGrowthChange');
+                            const growthTrendElement = document.getElementById('userGrowthTrend');
+                            const userGrowthProgressBar = document.getElementById('userGrowthProgressBar');
+
+                            // 避免除以 0
+                            const growthRate = lastMonthUsers === 0
+                                ? (currentMonthUsers > 0 ? 100 : 0)
+                                : ((currentMonthUsers - lastMonthUsers) / lastMonthUsers * 100);
+
+                            const changeValue = Math.round(growthRate);
+
+                            if (growthRateElement) growthRateElement.textContent = Math.round((currentMonthUsers / (lastMonthUsers || 1) - 1) * 100) || '0';
+                            if (growthChangeElement) growthChangeElement.textContent = Math.abs(changeValue);
+
+                            // 顯示上升或下降
+                            if (growthTrendElement) {
+                                if (changeValue >= 0) {
+                                    growthTrendElement.className = 'text-success';
+                                    growthTrendElement.innerHTML = `<i class="fa fa-caret-up"></i> ${Math.abs(changeValue)}%`;
+                                } else {
+                                    growthTrendElement.className = 'text-danger';
+                                    growthTrendElement.innerHTML = `<i class="fa fa-caret-down"></i> ${Math.abs(changeValue)}%`;
+                                }
+                            }
+
+                            // 進度條
+                            if (userGrowthProgressBar) {
+                                if (changeValue >= 0) {
+                                    userGrowthProgressBar.className = 'progress-bar progress-bar-success';
+                                } else {
+                                    userGrowthProgressBar.className = 'progress-bar progress-bar-danger';
+                                }
+                                const progressWidth = Math.min(Math.abs(changeValue), 100);
+                                userGrowthProgressBar.style.width = `${progressWidth}%`;
+                            }
+                        });
+                })
+                .catch(error => {
+                    console.error("獲取用戶增長數據或計算失敗:", error);
+                    // 若失敗，僅顯示 0
+                    const userGrowthRateElement = document.getElementById('userGrowthRate');
+                    const userGrowthChangeElement = document.getElementById('userGrowthChange');
+                    const userGrowthTrendElement = document.getElementById('userGrowthTrend');
+                    const userGrowthProgressBar = document.getElementById('userGrowthProgressBar');
+
+                    if (userGrowthRateElement) userGrowthRateElement.textContent = '0';
+                    if (userGrowthChangeElement) userGrowthChangeElement.textContent = '0';
+                    if (userGrowthTrendElement) {
+                        userGrowthTrendElement.className = 'text-danger';
+                        userGrowthTrendElement.innerHTML = `<i class="fa fa-caret-down"></i> 0%`;
+                    }
+                    if (userGrowthProgressBar) {
+                        userGrowthProgressBar.className = 'progress-bar progress-bar-danger';
+                        userGrowthProgressBar.style.width = '0%';
+                    }
+                });
+        }
+
+        function initCharts() {
+            console.log("初始化圖表...");
+
+            // 營業額圖表
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            revenueChart = new Chart(revenueCtx, {
+                type: 'line',
+                data: {
+                    labels: ['無數據'],
+                    datasets: [{
+                        label: '營業額',
+                        data: [0],
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        tension: 0.1,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            type: 'category',
+                            title: {
+                                display: true,
+                                text: '日期'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '金額 (元)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 用戶增長率圖表
+            const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
+            userGrowthChart = new Chart(userGrowthCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['無數據'],
+                    datasets: [{
+                        label: '新增用戶',
+                        data: [0],
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            type: 'category',
+                            title: {
+                                display: true,
+                                text: '日期'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '用戶數'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 銷售概況圖表
+            const salesOverviewCtx = document.getElementById('salesOverviewChart').getContext('2d');
+            salesOverviewChart = new Chart(salesOverviewCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['無數據'],
+                    datasets: [{
+                        label: '銷售額',
+                        data: [0],
+                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: '產品類別'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '銷售額 (元)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 熱門地點圖表
+            const popularPlacesCtx = document.getElementById('popularPlacesChart').getContext('2d');
+            popularPlacesChart = new Chart(popularPlacesCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['無數據'],
+                    datasets: [{
+                        label: '訪問次數',
+                        data: [0],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.7)',
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(153, 102, 255, 0.7)',
+                            'rgba(255, 159, 64, 0.7)',
+                            'rgba(199, 199, 199, 0.7)',
+                            'rgba(83, 102, 255, 0.7)',
+                            'rgba(40, 159, 64, 0.7)',
+                            'rgba(210, 199, 199, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(199, 199, 199, 1)',
+                            'rgba(83, 102, 255, 1)',
+                            'rgba(40, 159, 64, 1)',
+                            'rgba(210, 199, 199, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        },
+                        title: {
+                            display: true,
+                            text: '熱門旅遊地點'
+                        }
+                    }
+                }
+            });
+        }
+
+        // 營業額
+        function updateRevenueChart(data) {
+            if (!revenueChart) {
+                console.error("營業額圖表未初始化");
+                return;
+            }
+            revenueChart.data.labels = data.map(item => item.date);
+            revenueChart.data.datasets[0].data = data.map(item => item.amount);
+            revenueChart.update();
+        }
+
+        // 用戶增長
+        function updateUserGrowthChart(data) {
+            if (!userGrowthChart) {
+                console.error("用戶增長圖表未初始化");
+                return;
+            }
+            userGrowthChart.data.labels = data.map(item => item.date);
+            userGrowthChart.data.datasets[0].data = data.map(item => item.newUsers);
+            userGrowthChart.update();
+        }
+
+        // 銷售概況
+        function updateSalesOverviewChart(data) {
+            if (!salesOverviewChart) {
+                console.error("銷售概況圖表未初始化");
+                return;
+            }
+            salesOverviewChart.data.labels = data.map(item => item.category);
+            salesOverviewChart.data.datasets[0].data = data.map(item => item.sales);
+            salesOverviewChart.update();
+        }
+
+        // 熱門地點
+        function updatePopularPlacesChart(data) {
+            if (!popularPlacesChart) {
+                console.error("熱門地點圖表未初始化");
+                return;
+            }
+            popularPlacesChart.data.labels = data.map(item => item.place);
+            popularPlacesChart.data.datasets[0].data = data.map(item => item.count);
+            popularPlacesChart.update();
+        }
+
+        // 營業額
+        function loadRevenueData(days = 7) {
+            let startDate, endDate;
+
+            if (days === 'custom') {
+                startDate = document.getElementById('revenueStartDate').value;
+                endDate = document.getElementById('revenueEndDate').value;
+                if (!startDate || !endDate) {
+                    alert('請選擇開始和結束日期');
+                    return;
+                }
+            } else {
+                endDate = new Date();
+                startDate = new Date();
+                startDate.setDate(startDate.getDate() - days);
+                startDate = startDate.toISOString().split('T')[0];
+                endDate = endDate.toISOString().split('T')[0];
+            }
+
+            fetch(`/api/Chart/Revenue?startDate=${startDate}&endDate=${endDate}`)
+                .then(response => response.json())
+                .then(data => {
+                    data = handleEmptyData(data, { startDate, endDate }, 'time');
+                    updateRevenueChart(data);
+                })
+                .catch(error => {
+                    console.error('獲取營業額數據失敗:', error);
+                    const emptyData = handleEmptyData([], { startDate, endDate }, 'time');
+                    updateRevenueChart(emptyData);
+                });
+        }
+
+        // 用戶增長 (圖表)
+        function loadUserGrowthData(days = 7) {
+            let startDate, endDate;
+
+            if (days === 'custom') {
+                startDate = document.getElementById('userGrowthStartDate').value;
+                endDate = document.getElementById('userGrowthEndDate').value;
+                if (!startDate || !endDate) {
+                    alert('請選擇開始和結束日期');
+                    return;
+                }
+            } else {
+                endDate = new Date();
+                startDate = new Date();
+                startDate.setDate(startDate.getDate() - days);
+                startDate = startDate.toISOString().split('T')[0];
+                endDate = endDate.toISOString().split('T')[0];
+            }
+
+            fetch(`/api/Chart/UserGrowth?startDate=${startDate}&endDate=${endDate}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`伺服器錯誤 ${response.status}: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.error) {
+                        throw new Error(data.message);
+                    }
+                    data = handleEmptyData(data, { startDate, endDate }, 'time');
+                    updateUserGrowthChart(data);
+                })
+                .catch(error => {
+                    console.error("獲取用戶增長數據失敗:", error);
+                    // 顯示空資料 (0)
+                    const emptyData = handleEmptyData([], { startDate, endDate }, 'time');
+                    updateUserGrowthChart(emptyData);
+                });
+        }
+
+        // 銷售概況
+        function loadSalesOverviewData(days = 7) {
+            let startDate, endDate;
+
+            if (days === 'custom') {
+                startDate = document.getElementById('salesOverviewStartDate').value;
+                endDate = document.getElementById('salesOverviewEndDate').value;
+                if (!startDate || !endDate) {
+                    alert('請選擇開始和結束日期');
+                    return;
+                }
+            } else {
+                endDate = new Date();
+                startDate = new Date();
+                startDate.setDate(startDate.getDate() - days);
+                startDate = startDate.toISOString().split('T')[0];
+                endDate = endDate.toISOString().split('T')[0];
+            }
+
+            fetch(`/api/Chart/SalesOverview?startDate=${startDate}&endDate=${endDate}`)
+                .then(response => response.json())
+                .then(data => {
+                    data = handleEmptyData(data, { startDate, endDate }, 'category');
+                    updateSalesOverviewChart(data);
+                })
+                .catch(error => {
+                    console.error('獲取銷售概況數據失敗:', error);
+                    const emptyData = handleEmptyData([], { startDate, endDate }, 'category');
+                    updateSalesOverviewChart(emptyData);
+                });
+        }
+
+        // 熱門地點
+        function loadPopularPlacesData(days = 7) {
+            let startDate, endDate;
+
+            if (days === 'custom') {
+                startDate = document.getElementById('popularPlacesStartDate').value;
+                endDate = document.getElementById('popularPlacesEndDate').value;
+                if (!startDate || !endDate) {
+                    alert('請選擇開始和結束日期');
+                    return;
+                }
+            } else {
+                endDate = new Date();
+                startDate = new Date();
+                startDate.setDate(startDate.getDate() - days);
+                startDate = startDate.toISOString().split('T')[0];
+                endDate = endDate.toISOString().split('T')[0];
+            }
+
+            fetch(`/api/Chart/PopularPlaces?startDate=${startDate}&endDate=${endDate}`)
+                .then(response => response.json())
+                .then(data => {
+                    data = handleEmptyData(data, { startDate, endDate }, 'place');
+                    updatePopularPlacesChart(data);
+                })
+                .catch(error => {
+                    console.error('獲取熱門地點數據失敗:', error);
+                    const emptyData = handleEmptyData([], { startDate, endDate }, 'place');
+                    updatePopularPlacesChart(emptyData);
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("頁面加載完成，開始初始化...");
+
+            if (typeof Chart === 'undefined') {
+                console.error("Chart.js 未加載！請確保已引入 Chart.js 庫");
+                alert("圖表庫未加載，請檢查網路連線或重新加載頁面");
+                return;
+            }
+
+            try {
+                // 初始化圖表物件
+                initCharts();
+
+                // 預設載入 7 天資料
+                loadRevenueData(7);
+                loadUserGrowthData(7);
+                loadSalesOverviewData(7);
+                loadPopularPlacesData(7);
+
+                // 更新今日營業額與用戶增長率（卡片）
+                updateTodayRevenue();
+                updateUserGrowthRate();
+
+                // 每隔 30 分鐘自動刷新今日營業額 & 用戶增長率
+                setInterval(updateTodayRevenue, 30 * 60 * 1000);
+                setInterval(updateUserGrowthRate, 30 * 60 * 1000);
+
+                // 綁定 下拉/自訂日期範圍 事件
+                document.getElementById('revenueTimeRange').addEventListener('change', function () {
+                    const selectedValue = this.value;
+                    if (selectedValue === 'custom') {
+                        document.getElementById('revenueCustomDateRange').style.display = 'block';
+                    } else {
+                        document.getElementById('revenueCustomDateRange').style.display = 'none';
+                        loadRevenueData(parseInt(selectedValue));
+                    }
+                });
+                document.getElementById('revenueApplyCustomRange').addEventListener('click', function () {
+                    loadRevenueData('custom');
+                });
+
+                document.getElementById('userGrowthTimeRange').addEventListener('change', function () {
+                    const selectedValue = this.value;
+                    if (selectedValue === 'custom') {
+                        document.getElementById('userGrowthCustomDateRange').style.display = 'block';
+                    } else {
+                        document.getElementById('userGrowthCustomDateRange').style.display = 'none';
+                        loadUserGrowthData(parseInt(selectedValue));
+                    }
+                });
+                document.getElementById('userGrowthApplyCustomRange').addEventListener('click', function () {
+                    loadUserGrowthData('custom');
+                });
+
+                document.getElementById('salesOverviewTimeRange').addEventListener('change', function () {
+                    const selectedValue = this.value;
+                    if (selectedValue === 'custom') {
+                        document.getElementById('salesOverviewCustomDateRange').style.display = 'block';
+                    } else {
+                        document.getElementById('salesOverviewCustomDateRange').style.display = 'none';
+                        loadSalesOverviewData(parseInt(selectedValue));
+                    }
+                });
+                document.getElementById('salesOverviewApplyCustomRange').addEventListener('click', function () {
+                    loadSalesOverviewData('custom');
+                });
+
+                document.getElementById('popularPlacesTimeRange').addEventListener('change', function () {
+                    const selectedValue = this.value;
+                    if (selectedValue === 'custom') {
+                        document.getElementById('popularPlacesCustomDateRange').style.display = 'block';
+                    } else {
+                        document.getElementById('popularPlacesCustomDateRange').style.display = 'none';
+                        loadPopularPlacesData(parseInt(selectedValue));
+                    }
+                });
+                document.getElementById('popularPlacesApplyCustomRange').addEventListener('click', function () {
+                    loadPopularPlacesData('custom');
+                });
+
+                // 動態新增「自定義範圍」選項
+                const timeRangeSelects = document.querySelectorAll('.date-range-selector select');
+                timeRangeSelects.forEach(select => {
+                    if (!select.querySelector('option[value="custom"]')) {
+                        const customOption = document.createElement('option');
+                        customOption.value = 'custom';
+                        customOption.textContent = '自定義範圍';
+                        select.appendChild(customOption);
+                    }
+                });
+
+                // 預設結束日期為今日
+                const today = new Date().toISOString().split('T')[0];
+                const dateInputs = document.querySelectorAll('input[type="date"]');
+                dateInputs.forEach(input => {
+                    if (input.id.includes('EndDate')) {
+                        input.value = today;
+                    }
+                });
+
+                // 預設開始日期為 7 天前
+                const sevenDaysAgo = new Date();
+                sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+                const sevenDaysAgoStr = sevenDaysAgo.toISOString().split('T')[0];
+                dateInputs.forEach(input => {
+                    if (input.id.includes('StartDate')) {
+                        input.value = sevenDaysAgoStr;
+                    }
+                });
+
+            } catch (error) {
+                console.error("初始化過程中出錯:", error);
+                alert("圖表初始化失敗，請刷新頁面重試");
+            }
+        });
+    </script>
+}

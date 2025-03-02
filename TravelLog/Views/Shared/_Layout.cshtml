@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    @RenderSection("Styles", required: false)
     @*  <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - TravelLog</title>
@@ -182,7 +183,7 @@
                         <a asp-controller="Itinerary" asp-action="Index">
                             <i class="icon icon-app-store"></i><span class="nav-text">行程</span>
                         </a>
-                    </li> 
+                    </li>
                     <li>
                         <a asp-controller="Chat" asp-action="Index">
                             <i class="icon icon-app-store"></i><span class="nav-text">客戶服務</span>
@@ -249,13 +250,14 @@
     <!-- Owl Carousel -->
     <script src="../vendor/owl-carousel/js/owl.carousel.min.js"></script>
 
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <!-- Counter Up -->
     <script src="../vendor/jqvmap/js/jquery.vmap.min.js"></script>
     <script src="../vendor/jqvmap/js/jquery.vmap.usa.js"></script>
     <script src="../vendor/jquery.counterup/jquery.counterup.min.js"></script>
 
     <script src="../js/dashboard/dashboard-1.js"></script>
-
-
 </body>
 </html>
