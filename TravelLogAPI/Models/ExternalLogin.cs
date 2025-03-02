@@ -7,14 +7,29 @@ namespace TravelLogAPI.Models;
 
 public partial class ExternalLogin
 {
+    /// <summary>
+    /// 外部登入 ID
+    /// </summary>
     public int ExternalLoginId { get; set; }
 
+    /// <summary>
+    /// 外部登入提供者 (如 Google)
+    /// </summary>
     public string Provider { get; set; }
 
+    /// <summary>
+    /// 外部使用者唯一識別碼
+    /// </summary>
     public string ProviderUserId { get; set; }
 
+    /// <summary>
+    /// 關聯的會員 ID
+    /// </summary>
     public int MiMemberId { get; set; }
 
+    /// <summary>
+    /// 創建時間
+    /// </summary>
     public DateTime DateCreated { get; set; }
 
     public virtual MemberInformation MiMember { get; set; }

@@ -39,10 +39,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Location]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[Map]",
          "ObjectType": 0
       },
@@ -72,10 +68,6 @@
       },
       {
          "Name": "[dbo].[Place]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Schedule]",
          "ObjectType": 0
       },
       {
