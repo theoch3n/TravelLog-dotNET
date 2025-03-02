@@ -4,9 +4,9 @@
     ViewData["Title"] = "會員列表";
 }
 
-<h2>會員管理</h2>
+<h2>會員列表</h2>
 
-<table border="1" cellpadding="5" cellspacing="0">
+<table class="table table-striped">
     <thead>
         <tr>
             <th>帳號名稱</th>
@@ -21,27 +21,22 @@
         @foreach (var item in Model)
         {
             <tr data-userid="@item.UserId">
-                <td>
-                    <input type="text" name="UserName" value="@item.UserName" />
+                <td>@item.UserName</td>
+                <td>@item.UserEmail</td>
+                <td>@item.UserPhone</td>
+                <td class="text-center align-middle">
+                    <input type="checkbox" name="UserEnabled" class="form-check-input" @(item.UserEnabled ? "checked" : "") />
                 </td>
-                <td>
-                    <input type="text" name="UserEmail" value="@item.UserEmail" />
-                </td>
-                <td>
-                    <input type="text" name="UserPhone" value="@item.UserPhone" />
-                </td>
-                <td>
-                    <input type="checkbox" name="UserEnabled" @(item.UserEnabled ? "checked" : "") />
-                </td>
+
                 <td>@item.UserCreateDate.ToString("yyyy/MM/dd")</td>
                 <td>
-                    <!-- 隱藏相關 ID 資料 -->
+                    <!-- 隱藏相關資料 -->
                     <input type="hidden" name="UserId" value="@item.UserId" />
                     <input type="hidden" name="UserPdId" value="@item.UserPdId" />
                     <input type="hidden" name="UserPdPasswordHash" value="@item.UserPdPasswordHash" />
                     <input type="hidden" name="UserPdToken" value="@item.UserPdToken" />
 
-                    <button class="btn-save">儲存</button>
+                    <button class="btn btn-outline-primary btn-save">儲存</button>
                 </td>
             </tr>
         }
@@ -51,17 +46,16 @@
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        // 當按下儲存按鈕時，利用 AJAX 送出修改資料
+        // 當按下儲存按鈕時，僅更新 checkbox 的狀態（其他欄位僅作顯示用途）
         $(document).ready(function () {
             $('.btn-save').click(function (e) {
                 e.preventDefault();
                 var $row = $(this).closest('tr');
-                // 從同一列讀取值
                 var data = {
                     UserId: $row.find('input[name="UserId"]').val(),
-                    UserName: $row.find('input[name="UserName"]').val(),
-                    UserEmail: $row.find('input[name="UserEmail"]').val(),
-                    UserPhone: $row.find('input[name="UserPhone"]').val(),
+                    UserName: $row.find('td').eq(0).text().trim(),
+                    UserEmail: $row.find('td').eq(1).text().trim(),
+                    UserPhone: $row.find('td').eq(2).text().trim(),
                     UserEnabled: $row.find('input[name="UserEnabled"]').is(':checked'),
                     UserPdId: $row.find('input[name="UserPdId"]').val(),
                     UserPdPasswordHash: $row.find('input[name="UserPdPasswordHash"]').val(),
