@@ -86,5 +86,19 @@ namespace TravelLogAPI.Controllers
 
             return billWithDetailsDtos;
         }
+
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> updatePaidStatus(int id)
+        {
+            var billDetail = await _context.BillDetails.FindAsync(id);
+            if (billDetail == null)
+            {
+                return NotFound();
+            }
+
+            billDetail.Paid = true;
+            await _context.SaveChangesAsync();
+            return Ok(new { message = "修改成功!" });
+        }
     }
 }

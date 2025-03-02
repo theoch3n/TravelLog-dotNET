@@ -41,5 +41,21 @@ namespace TravelLogAPI.Controllers
             ).ToListAsync();
             return result;
         }
+
+        // Get: api/TravelPackage/GetTravelPackageInfo
+        [HttpGet("[action]")]
+        public async Task<List<ItineraryPrice>> GetTravelPackageInfo()
+        {
+            var result = await _context.ItineraryPrices.ToListAsync();
+            return result;
+        }
+
+        // Get: api/TravelPackage/GetTravelPackageInfo/id
+        [HttpGet("[action]/{id}")]
+        public async Task<ItineraryPrice> GetTravelPackageInfo(int id)
+        {
+            var result = await _context.ItineraryPrices.FindAsync(id);
+            return result;
+        }
     }
 }

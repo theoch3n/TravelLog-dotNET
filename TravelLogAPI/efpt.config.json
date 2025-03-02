@@ -39,6 +39,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Itinerary_Price]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Location]",
          "ObjectType": 0
       },
@@ -75,6 +79,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Place_Detail]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Place_Image]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Schedule]",
          "ObjectType": 0
       },
@@ -101,10 +113,6 @@
       {
          "Name": "[dbo].[get_Location]",
          "ObjectType": 1
-      },
-      {
-         "Name": "[dbo].[get_SerialNumber]",
-         "ObjectType": 1
       }
    ],
    "UiHint": null,
@@ -120,6 +128,7 @@
    "UseHandleBars": false,
    "UseHierarchyId": false,
    "UseInflector": true,
+   "UseInternalAccessModifiersForSprocsAndFunctions": false,
    "UseLegacyPluralizer": false,
    "UseManyToManyEntity": false,
    "UseNoDefaultConstructor": false,

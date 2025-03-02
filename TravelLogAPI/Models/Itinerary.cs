@@ -51,4 +51,8 @@ public partial class Itinerary
     /// 創建時間
     /// </summary>
     public DateTime? ItineraryCreateDate { get; set; }
+
+    public virtual ICollection<ItineraryPrice> ItineraryPrices { get; set; } = new List<ItineraryPrice>();
+
+    public virtual ICollection<PlaceDetail> PlaceDetails { get; set; } = new List<PlaceDetail>();
 }
