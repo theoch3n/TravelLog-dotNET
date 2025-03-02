@@ -22,8 +22,19 @@
     <div class="form-group">
         <label>是否啟用</label>
         <div class="text-start align-middle">
-            <!-- 調整位置: 向右 5px，往上 1px -->
             <input type="checkbox" name="UserEnabled" class="form-check-input" style="transform: translate(5px, -1px);" @(Model.UserEnabled ? "checked" : "") />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>是否驗證 Email</label>
+        <div class="text-start align-middle">
+            <input type="checkbox" name="IsEmailVerified" class="form-check-input" style="transform: translate(5px, -1px);" @(Model.IsEmailVerified ? "checked" : "") />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>使用者角色 (勾選表示管理員)</label>
+        <div class="text-start align-middle">
+            <input type="checkbox" name="UserRole" class="form-check-input" style="transform: translate(5px, -1px);" @(Model.UserRole == 1 ? "checked" : "") />
         </div>
     </div>
     <div class="form-group">
@@ -37,5 +48,9 @@
     <input type="hidden" name="UserPdPasswordHash" value="@Model.UserPdPasswordHash" />
     <input type="hidden" name="UserPdToken" value="@Model.UserPdToken" />
 
-    <button type="submit" class="btn btn-outline-primary">儲存</button>
+    <!-- 按鈕區塊：重製與儲存統一為一個區塊 -->
+    <div class="form-group mt-3">
+        <button type="reset" class="btn btn-outline-secondary" style="display:inline-block;">重製</button>[]
+        <button type="submit" class="btn btn-outline-primary">儲存</button>
+    </div>
 </form>

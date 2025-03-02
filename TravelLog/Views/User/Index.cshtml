@@ -13,6 +13,8 @@
             <th>信箱</th>
             <th>手機</th>
             <th>是否啟用</th>
+            <th>是否驗證</th>
+            <th>角色</th>
             <th>創建日期</th>
             <th>操作</th>
         </tr>
@@ -25,9 +27,14 @@
                 <td>@item.UserEmail</td>
                 <td>@item.UserPhone</td>
                 <td class="text-center align-middle">
-                    <input type="checkbox" name="UserEnabled" class="form-check-input" @(item.UserEnabled ? "checked" : "") />
+                    <input type="checkbox" name="UserEnabled" class="form-check-input" @(item.UserEnabled ? "checked" : "") disabled />
                 </td>
-
+                <td class="text-center align-middle">
+                    <input type="checkbox" name="IsEmailVerified" class="form-check-input" @(item.IsEmailVerified ? "checked" : "") disabled />
+                </td>
+                <td class="text-center align-middle">
+                    <input type="checkbox" name="UserRole" class="form-check-input" @(item.UserRole == 1 ? "checked" : "") disabled />
+                </td>
                 <td>@item.UserCreateDate.ToString("yyyy/MM/dd")</td>
                 <td>
                     <!-- 隱藏相關資料 -->
@@ -35,8 +42,11 @@
                     <input type="hidden" name="UserPdId" value="@item.UserPdId" />
                     <input type="hidden" name="UserPdPasswordHash" value="@item.UserPdPasswordHash" />
                     <input type="hidden" name="UserPdToken" value="@item.UserPdToken" />
-
+                    
+                    <!-- 更新按鈕 -->
                     <button class="btn btn-outline-primary btn-save">儲存</button>
+                    <!-- 新增刪除按鈕 -->
+                    <button class="btn btn-outline-danger btn-delete">刪除</button>
                 </td>
             </tr>
         }
@@ -46,8 +56,8 @@
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        // 當按下儲存按鈕時，僅更新 checkbox 的狀態（其他欄位僅作顯示用途）
         $(document).ready(function () {
+            // 儲存更新的 AJAX 處理（你原本的邏輯）
             $('.btn-save').click(function (e) {
                 e.preventDefault();
                 var $row = $(this).closest('tr');
@@ -57,6 +67,8 @@
                     UserEmail: $row.find('td').eq(1).text().trim(),
                     UserPhone: $row.find('td').eq(2).text().trim(),
                     UserEnabled: $row.find('input[name="UserEnabled"]').is(':checked'),
+                    IsEmailVerified: $row.find('input[name="IsEmailVerified"]').is(':checked'),
+                    UserRole: $row.find('input[name="UserRole"]').is(':checked') ? 1 : 0,
                     UserPdId: $row.find('input[name="UserPdId"]').val(),
                     UserPdPasswordHash: $row.find('input[name="UserPdPasswordHash"]').val(),
                     UserPdToken: $row.find('input[name="UserPdToken"]').val()
@@ -76,6 +88,31 @@
                     },
                     error: function () {
                         alert("更新時發生錯誤");
+                    }
+                });
+            });
+
+            // 刪除按鈕的 AJAX 處理
+            $('.btn-delete').click(function (e) {
+                e.preventDefault();
+                if (!confirm("確定要刪除這筆資料嗎？")) return;
+                var $row = $(this).closest('tr');
+                var userId = $row.find('input[name="UserId"]').val();
+                $.ajax({
+                    url: '@Url.Action("Delete", "User")',
+                    type: 'POST',
+                    data: { id: userId },
+                    success: function (response) {
+                        if (response.success) {
+                            alert("刪除成功");
+                            // 移除該列
+                            $row.remove();
+                        } else {
+                            alert("刪除失敗");
+                        }
+                    },
+                    error: function () {
+                        alert("刪除時發生錯誤");
                     }
                 });
             });

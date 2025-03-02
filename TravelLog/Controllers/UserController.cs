@@ -32,6 +32,8 @@ public class UserController : Controller
                 UserPhone = user.UserPhone,
                 UserEnabled = user.UserEnabled,
                 UserCreateDate = user.UserCreateDate,
+                IsEmailVerified = user.IsEmailVerified,
+                UserRole = user.UserRole,
                 UserPdId = userPd?.UserPdId,
                 UserPdPasswordHash = userPd?.UserPdPasswordHash,
                 UserPdToken = userPd?.UserPdToken,
@@ -58,6 +60,9 @@ public class UserController : Controller
             user.UserEmail = model.UserEmail;
             user.UserPhone = model.UserPhone;
             user.UserEnabled = model.UserEnabled;
+            // 新增更新兩個欄位
+            user.IsEmailVerified = model.IsEmailVerified;
+            user.UserRole = model.UserRole;
             // UserCreateDate 通常不更新
 
             var userPd = _context.UserPds.FirstOrDefault(p => p.UserPdId == model.UserPdId);
@@ -83,4 +88,28 @@ public class UserController : Controller
         }
         return Json(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors) });
     }
+    [HttpPost]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var user = await _context.Users
+                                 .Include(u => u.UserPds)
+                                 .FirstOrDefaultAsync(u => u.UserId == id);
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        // 如果沒有設定 Cascade Delete，就必須先刪除關聯的 UserPd 資料
+        if (user.UserPds != null && user.UserPds.Any())
+        {
+            _context.UserPds.RemoveRange(user.UserPds);
+        }
+
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
+
+        return Json(new { success = true });
+    }
+
+
 }
