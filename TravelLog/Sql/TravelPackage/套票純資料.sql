@@ -9,8 +9,8 @@
 --DELETE FROM place;
 --DBCC CHECKIDENT ('place', RESEED, 0);
 --
---DELETE FROM Itinerary_Image;
---DBCC CHECKIDENT ('Itinerary_Image', RESEED, 0);
+--DELETE FROM place_Image;
+--DBCC CHECKIDENT ('place_Image', RESEED, 0);
 --
 ----行程表要在最後
 --DELETE FROM itinerary;

@@ -36,8 +36,9 @@ namespace TravelLogAPI.Controllers
         public async Task<IEnumerable<Itinerary>> GetTravelPackageByKeyword([FromBody] Itinerary itineraryData)
         {
             var result = await _context.Itineraries.Where(
-                t => /*t.Id == bundleData.Id ||*/
-                t.ItineraryTitle.Contains(itineraryData.ItineraryTitle) 
+                t => 
+                    t.ItineraryTitle.Contains(itineraryData.ItineraryTitle) &&
+                    t.ItineraryCreateUser == null
             ).ToListAsync();
             return result;
         }

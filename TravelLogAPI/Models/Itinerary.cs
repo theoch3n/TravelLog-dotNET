@@ -45,7 +45,7 @@ public partial class Itinerary
     /// <summary>
     /// 創建使用者
     /// </summary>
-    public int ItineraryCreateUser { get; set; }
+    public int? ItineraryCreateUser { get; set; }
 
     /// <summary>
     /// 創建時間
