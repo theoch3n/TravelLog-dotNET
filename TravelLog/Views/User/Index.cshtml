@@ -13,10 +13,10 @@
             <th>信箱</th>
             <th>手機</th>
             <th>是否啟用</th>
-            <th>是否驗證</th>
-            <th>角色</th>
+            <th>Email驗證</th>
+            <th>管理員</th>
             <th>創建日期</th>
-            <th>操作</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -26,15 +26,37 @@
                 <td>@item.UserName</td>
                 <td>@item.UserEmail</td>
                 <td>@item.UserPhone</td>
+
+                <!-- 是否啟用 -->
                 <td class="text-center align-middle">
-                    <input type="checkbox" name="UserEnabled" class="form-check-input" @(item.UserEnabled ? "checked" : "") disabled />
+                    <div class="form-check d-flex justify-content-center align-items-center" style="margin-left: -10px;">
+                        <input type="checkbox"
+                               class="form-check-input"
+                               name="UserEnabled"
+                        @(item.UserEnabled ? "checked" : "") />
+                    </div>
                 </td>
+
+                <!-- 是否驗證 -->
                 <td class="text-center align-middle">
-                    <input type="checkbox" name="IsEmailVerified" class="form-check-input" @(item.IsEmailVerified ? "checked" : "") disabled />
+                    <div class="form-check d-flex justify-content-center align-items-center" style="margin-left: -10px;">
+                        <input type="checkbox"
+                               class="form-check-input"
+                               name="IsEmailVerified"
+                        @(item.IsEmailVerified ? "checked" : "") />
+                    </div>
                 </td>
+
+                <!-- 角色 -->
                 <td class="text-center align-middle">
-                    <input type="checkbox" name="UserRole" class="form-check-input" @(item.UserRole == 1 ? "checked" : "") disabled />
+                    <div class="form-check d-flex justify-content-center align-items-center" style="margin-left: -10px;">
+                        <input type="checkbox"
+                               class="form-check-input"
+                               name="UserRole"
+                        @(item.UserRole == 1 ? "checked" : "") />
+                    </div>
                 </td>
+
                 <td>@item.UserCreateDate.ToString("yyyy/MM/dd")</td>
                 <td>
                     <!-- 隱藏相關資料 -->
@@ -42,10 +64,10 @@
                     <input type="hidden" name="UserPdId" value="@item.UserPdId" />
                     <input type="hidden" name="UserPdPasswordHash" value="@item.UserPdPasswordHash" />
                     <input type="hidden" name="UserPdToken" value="@item.UserPdToken" />
-                    
+
                     <!-- 更新按鈕 -->
                     <button class="btn btn-outline-primary btn-save">儲存</button>
-                    <!-- 新增刪除按鈕 -->
+                    <!-- 刪除按鈕 -->
                     <button class="btn btn-outline-danger btn-delete">刪除</button>
                 </td>
             </tr>
@@ -57,7 +79,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
-            // 儲存更新的 AJAX 處理（你原本的邏輯）
+            // 儲存更新 AJAX
             $('.btn-save').click(function (e) {
                 e.preventDefault();
                 var $row = $(this).closest('tr');
@@ -92,7 +114,7 @@
                 });
             });
 
-            // 刪除按鈕的 AJAX 處理
+            // 刪除 AJAX
             $('.btn-delete').click(function (e) {
                 e.preventDefault();
                 if (!confirm("確定要刪除這筆資料嗎？")) return;
@@ -105,7 +127,6 @@
                     success: function (response) {
                         if (response.success) {
                             alert("刪除成功");
-                            // 移除該列
                             $row.remove();
                         } else {
                             alert("刪除失敗");
