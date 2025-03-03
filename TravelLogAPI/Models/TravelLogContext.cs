@@ -81,7 +81,7 @@ public partial class TravelLogContext : DbContext
                 .IsRequired()
                 .HasMaxLength(50);
             entity.Property(e => e.TotalAmount)
-                .HasColumnType("decimal(18, 2)")
+                .HasColumnType("decimal(18, 0)")
                 .HasColumnName("Total_Amount");
         });
 
@@ -91,7 +91,7 @@ public partial class TravelLogContext : DbContext
 
             entity.ToTable("Bill_details");
 
-            entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.Amount).HasColumnType("decimal(18, 0)");
             entity.Property(e => e.BillId).HasColumnName("Bill_Id");
             entity.Property(e => e.MemberName)
                 .IsRequired()
@@ -108,18 +108,26 @@ public partial class TravelLogContext : DbContext
         {
             entity.HasKey(e => e.ExternalLoginId).HasName("PK__External__A8FDB3AE0C963111");
 
+            entity.HasIndex(e => e.MiMemberId, "IDX_ExternalLogins_Member");
+
             entity.HasIndex(e => new { e.Provider, e.ProviderUserId }, "IX_ExternalLogins_Provider_ProviderUserId").IsUnique();
 
+            entity.Property(e => e.ExternalLoginId).HasComment("外部登入 ID");
             entity.Property(e => e.DateCreated)
                 .HasDefaultValueSql("(getdate())")
+                .HasComment("創建時間")
                 .HasColumnType("datetime");
-            entity.Property(e => e.MiMemberId).HasColumnName("MI_MemberID");
+            entity.Property(e => e.MiMemberId)
+                .HasComment("關聯的會員 ID")
+                .HasColumnName("MI_MemberID");
             entity.Property(e => e.Provider)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .HasComment("外部登入提供者 (如 Google)");
             entity.Property(e => e.ProviderUserId)
                 .IsRequired()
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .HasComment("外部使用者唯一識別碼");
 
             entity.HasOne(d => d.MiMember).WithMany(p => p.ExternalLogins)
                 .HasForeignKey(d => d.MiMemberId)
@@ -332,25 +340,34 @@ public partial class TravelLogContext : DbContext
 
             entity.HasIndex(e => e.MiEmail, "UQ__MemberIn__67B108C001C25796").IsUnique();
 
-            entity.Property(e => e.MiMemberId).HasColumnName("MI_MemberID");
+            entity.Property(e => e.MiMemberId)
+                .HasComment("會員 ID")
+                .HasColumnName("MI_MemberID");
             entity.Property(e => e.MiAccountName)
                 .IsRequired()
                 .HasMaxLength(50)
+                .HasComment("帳戶名稱")
                 .HasColumnName("MI_AccountName");
             entity.Property(e => e.MiEmail)
                 .IsRequired()
                 .HasMaxLength(100)
+                .HasComment("電子郵件")
                 .HasColumnName("MI_Email");
-            entity.Property(e => e.MiEmailConfirmationToken).HasMaxLength(255);
+            entity.Property(e => e.MiEmailConfirmationToken)
+                .HasMaxLength(255)
+                .HasComment("電子郵件確認令牌");
             entity.Property(e => e.MiIsActive)
                 .HasDefaultValue(true)
+                .HasComment("是否啟用 (0 = 未啟用, 1 = 啟用)")
                 .HasColumnName("MI_IsActive");
             entity.Property(e => e.MiPasswordHash)
                 .IsRequired()
                 .HasMaxLength(255)
+                .HasComment("密碼雜湊")
                 .HasColumnName("MI_PasswordHash");
             entity.Property(e => e.MiRegistrationDate)
                 .HasDefaultValueSql("(getdate())")
+                .HasComment("註冊時間")
                 .HasColumnType("datetime")
                 .HasColumnName("MI_RegistrationDate");
         });
