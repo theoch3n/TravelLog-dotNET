@@ -38,6 +38,20 @@ namespace TravelLogAPI.Controllers
             return PlaceDetails;
         }
 
+        // GET: api/PlaceDetails/GetPlaceDetailsByItineraryId/id
+        [HttpGet("[action]/{ItineraryId}")]
+        public async Task<ActionResult<List<PlaceDetail>>> GetPlaceDetailsByItineraryId(int ItineraryId)
+        {
+            var PlaceDetails = await _context.PlaceDetails.Where(pd => pd.ItineraryId == ItineraryId).ToListAsync();
+
+            if (PlaceDetails == null)
+            {
+                return NotFound();
+            }
+
+            return PlaceDetails;
+        }
+
         // GET: api/PlaceDetails/GetPlaceImgs/id
         [HttpGet("[action]/{id}")]
         public async Task<ActionResult<List<PlaceImage>>> GetPlaceImgs(int id)

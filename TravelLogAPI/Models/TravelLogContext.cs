@@ -147,6 +147,7 @@ public partial class TravelLogContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("Itinerary_CreateDate");
             entity.Property(e => e.ItineraryCreateUser)
+                .HasDefaultValue(0)
                 .HasComment("創建使用者")
                 .HasColumnName("Itinerary_CreateUser");
             entity.Property(e => e.ItineraryEndDate)
@@ -248,7 +249,7 @@ public partial class TravelLogContext : DbContext
 
         modelBuilder.Entity<ItineraryPrice>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Itinerar__3213E83FC598516F");
+            entity.HasKey(e => e.Id).HasName("PK__Itinerar__3213E83F50A50619");
 
             entity.ToTable("Itinerary_Price");
 
@@ -264,7 +265,7 @@ public partial class TravelLogContext : DbContext
 
             entity.HasOne(d => d.Itinerary).WithMany(p => p.ItineraryPrices)
                 .HasForeignKey(d => d.ItineraryId)
-                .HasConstraintName("FK__Itinerary__itine__64CCF2AE");
+                .HasConstraintName("FK__Itinerary__itine__75F77EB0");
         });
 
         modelBuilder.Entity<Location>(entity =>
@@ -493,7 +494,7 @@ public partial class TravelLogContext : DbContext
 
         modelBuilder.Entity<Place>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Place__3214EC07FC29CBC2");
+            entity.HasKey(e => e.Id).HasName("PK__Place__3214EC0779FE2C2D");
 
             entity.ToTable("Place");
 
@@ -512,11 +513,16 @@ public partial class TravelLogContext : DbContext
                 .HasMaxLength(10)
                 .HasColumnName("rating");
             entity.Property(e => e.ScheduleId).HasColumnName("scheduleId");
+
+            entity.HasOne(d => d.Schedule).WithMany(p => p.Places)
+                .HasForeignKey(d => d.ScheduleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Place__scheduleI__7F80E8EA");
         });
 
         modelBuilder.Entity<PlaceDetail>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Place_De__3213E83F513C8FCE");
+            entity.HasKey(e => e.Id).HasName("PK__Place_De__3213E83F1C8D58D3");
 
             entity.ToTable("Place_Detail");
 
@@ -530,16 +536,16 @@ public partial class TravelLogContext : DbContext
 
             entity.HasOne(d => d.Itinerary).WithMany(p => p.PlaceDetails)
                 .HasForeignKey(d => d.ItineraryId)
-                .HasConstraintName("FK__Place_Det__itine__4DE98D56");
+                .HasConstraintName("FK__Place_Det__itine__025D5595");
 
             entity.HasOne(d => d.Place).WithMany(p => p.PlaceDetails)
                 .HasForeignKey(d => d.PlaceId)
-                .HasConstraintName("FK__Place_Det__place__4EDDB18F");
+                .HasConstraintName("FK__Place_Det__place__035179CE");
         });
 
         modelBuilder.Entity<PlaceImage>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Place_Im__3213E83FC584938C");
+            entity.HasKey(e => e.Id).HasName("PK__Place_Im__3213E83F154A72FA");
 
             entity.ToTable("Place_Image");
 
@@ -549,7 +555,7 @@ public partial class TravelLogContext : DbContext
 
             entity.HasOne(d => d.Place).WithMany(p => p.PlaceImages)
                 .HasForeignKey(d => d.PlaceId)
-                .HasConstraintName("FK__Place_Ima__place__6991A7CB");
+                .HasConstraintName("FK__Place_Ima__place__062DE679");
         });
 
         modelBuilder.Entity<Schedule>(entity =>
