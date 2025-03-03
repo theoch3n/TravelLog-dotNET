@@ -36,9 +36,26 @@ namespace TravelLogAPI.Controllers
         public async Task<IEnumerable<Itinerary>> GetTravelPackageByKeyword([FromBody] Itinerary itineraryData)
         {
             var result = await _context.Itineraries.Where(
-                t => /*t.Id == bundleData.Id ||*/
-                t.ItineraryTitle.Contains(itineraryData.ItineraryTitle) 
+                t => 
+                    t.ItineraryTitle.Contains(itineraryData.ItineraryTitle) &&
+                    t.ItineraryCreateUser == null
             ).ToListAsync();
+            return result;
+        }
+
+        // Get: api/TravelPackage/GetTravelPackageInfo
+        [HttpGet("[action]")]
+        public async Task<List<ItineraryPrice>> GetTravelPackageInfo()
+        {
+            var result = await _context.ItineraryPrices.ToListAsync();
+            return result;
+        }
+
+        // Get: api/TravelPackage/GetTravelPackageInfo/id
+        [HttpGet("[action]/{id}")]
+        public async Task<ItineraryPrice> GetTravelPackageInfo(int id)
+        {
+            var result = await _context.ItineraryPrices.FindAsync(id);
             return result;
         }
     }

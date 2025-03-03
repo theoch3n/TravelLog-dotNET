@@ -45,10 +45,14 @@ public partial class Itinerary
     /// <summary>
     /// 創建使用者
     /// </summary>
-    public int ItineraryCreateUser { get; set; }
+    public int? ItineraryCreateUser { get; set; }
 
     /// <summary>
     /// 創建時間
     /// </summary>
     public DateTime? ItineraryCreateDate { get; set; }
+
+    public virtual ICollection<ItineraryPrice> ItineraryPrices { get; set; } = new List<ItineraryPrice>();
+
+    public virtual ICollection<PlaceDetail> PlaceDetails { get; set; } = new List<PlaceDetail>();
 }

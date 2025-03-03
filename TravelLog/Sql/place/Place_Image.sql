@@ -1,0 +1,26 @@
+USE [TravelLog]
+GO
+
+/****** Object:  Table [dbo].[Place_Image]    Script Date: 2025/3/3 ¤W¤È 12:59:02 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Place_Image](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[place_id] [int] NULL,
+	[image_url] [nvarchar](max) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Place_Image]  WITH CHECK ADD FOREIGN KEY([place_id])
+REFERENCES [dbo].[Place] ([Id])
+GO
+
+

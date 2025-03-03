@@ -24,4 +24,8 @@ public partial class Place
     public string Img { get; set; }
 
     public string Rating { get; set; }
+
+    public virtual ICollection<PlaceDetail> PlaceDetails { get; set; } = new List<PlaceDetail>();
+
+    public virtual ICollection<PlaceImage> PlaceImages { get; set; } = new List<PlaceImage>();
 }
