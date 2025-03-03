@@ -212,7 +212,7 @@ namespace TravelLogAPI.Controllers
             user.EmailVerificationToken = null;
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Email 驗證成功，您現在可以登入。" });
+            return Ok(new { message = "Email 驗證成功，您現在可以關閉此頁面。" });
         }
 
 

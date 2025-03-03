@@ -1,90 +1,56 @@
-﻿@model IEnumerable<TravelLog.ViewModels.UserAccountViewModel>
+﻿@model TravelLog.ViewModels.UserAccountViewModel
 
 @{
-    ViewData["Title"] = "會員列表";
+    ViewData["Title"] = "編輯會員";
 }
 
-<h2>會員列表 (顯示+編輯)</h2>
+<h2>編輯會員</h2>
 
-<table border="1" cellpadding="5" cellspacing="0">
-    <thead>
-        <tr>
-            <th>帳號名稱</th>
-            <th>信箱</th>
-            <th>手機</th>
-            <th>是否啟用</th>
-            <th>創建日期</th>
-            <th>操作</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr data-userid="@item.UserId">
-                <td>
-                    <input type="text" name="UserName" value="@item.UserName" />
-                </td>
-                <td>
-                    <input type="text" name="UserEmail" value="@item.UserEmail" />
-                </td>
-                <td>
-                    <input type="text" name="UserPhone" value="@item.UserPhone" />
-                </td>
-                <td>
-                    <input type="checkbox" name="UserEnabled" @(item.UserEnabled ? "checked" : "") />
-                </td>
-                <td>@item.UserCreateDate.ToString("yyyy/MM/dd")</td>
-                <td>
-                    <!-- 隱藏相關 ID 資料 -->
-                    <input type="hidden" name="UserId" value="@item.UserId" />
-                    <input type="hidden" name="UserPdId" value="@item.UserPdId" />
-                    <input type="hidden" name="UserPdPasswordHash" value="@item.UserPdPasswordHash" />
-                    <input type="hidden" name="UserPdToken" value="@item.UserPdToken" />
+<form asp-action="Edit" method="post">
+    <div class="form-group">
+        <label>帳號名稱</label>
+        <input type="text" name="UserName" class="form-control" value="@Model.UserName" readonly />
+    </div>
+    <div class="form-group">
+        <label>信箱</label>
+        <input type="text" name="UserEmail" class="form-control" value="@Model.UserEmail" readonly />
+    </div>
+    <div class="form-group">
+        <label>手機</label>
+        <input type="text" name="UserPhone" class="form-control" value="@Model.UserPhone" readonly />
+    </div>
+    <div class="form-group">
+        <label>是否啟用</label>
+        <div class="text-start align-middle">
+            <input type="checkbox" name="UserEnabled" class="form-check-input" style="transform: translate(5px, -1px);" @(Model.UserEnabled ? "checked" : "") />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>是否驗證 Email</label>
+        <div class="text-start align-middle">
+            <input type="checkbox" name="IsEmailVerified" class="form-check-input" style="transform: translate(5px, -1px);" @(Model.IsEmailVerified ? "checked" : "") />
+        </div>
+    </div>
+    <div class="form-group">
+        <label> 管理員</label>
+        <div class="text-start align-middle">
+            <input type="checkbox" name="UserRole" class="form-check-input" style="transform: translate(5px, -1px);" @(Model.UserRole == 1 ? "checked" : "") />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>創建日期</label>
+        <input type="text" class="form-control" value="@Model.UserCreateDate.ToString("yyyy/MM/dd")" readonly />
+    </div>
 
-                    <button class="btn-save">儲存</button>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <!-- 隱藏相關資料 -->
+    <input type="hidden" name="UserId" value="@Model.UserId" />
+    <input type="hidden" name="UserPdId" value="@Model.UserPdId" />
+    <input type="hidden" name="UserPdPasswordHash" value="@Model.UserPdPasswordHash" />
+    <input type="hidden" name="UserPdToken" value="@Model.UserPdToken" />
 
-@section Scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        // 當按下儲存按鈕時，利用 AJAX 送出修改資料
-        $(document).ready(function () {
-            $('.btn-save').click(function (e) {
-                e.preventDefault();
-                var $row = $(this).closest('tr');
-                // 從同一列讀取值
-                var data = {
-                    UserId: $row.find('input[name="UserId"]').val(),
-                    UserName: $row.find('input[name="UserName"]').val(),
-                    UserEmail: $row.find('input[name="UserEmail"]').val(),
-                    UserPhone: $row.find('input[name="UserPhone"]').val(),
-                    UserEnabled: $row.find('input[name="UserEnabled"]').is(':checked'),
-                    UserPdId: $row.find('input[name="UserPdId"]').val(),
-                    UserPdPasswordHash: $row.find('input[name="UserPdPasswordHash"]').val(),
-                    UserPdToken: $row.find('input[name="UserPdToken"]').val()
-                };
-
-                $.ajax({
-                    url: '@Url.Action("Edit", "User")',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(data),
-                    success: function (response) {
-                        if (response.success) {
-                            alert("更新成功");
-                        } else {
-                            alert("更新失敗");
-                        }
-                    },
-                    error: function () {
-                        alert("更新時發生錯誤");
-                    }
-                });
-            });
-        });
-    </script>
-}
+    <!-- 按鈕區塊：重製與儲存統一為一個區塊 -->
+    <div class="form-group mt-3">
+        <button type="reset" class="btn btn-outline-secondary" style="display:inline-block;">重製</button>[]
+        <button type="submit" class="btn btn-outline-primary">儲存</button>
+    </div>
+</form>
