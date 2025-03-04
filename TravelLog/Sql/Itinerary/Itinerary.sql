@@ -16,7 +16,7 @@ CREATE TABLE [dbo].[Itinerary](
 	[Itinerary_Image] [varchar](max) NOT NULL,
 	[Itinerary_StartDate] [datetime] NOT NULL,
 	[Itinerary_EndDate] [datetime] NOT NULL,
-	[Itinerary_CreateUser] [int] NOT NULL,
+	[Itinerary_CreateUser] [int] NULL,
 	[Itinerary_CreateDate] [datetime] NULL,
  CONSTRAINT [PK_Itinerary] PRIMARY KEY CLUSTERED 
 (

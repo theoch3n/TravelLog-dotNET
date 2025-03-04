@@ -13,7 +13,7 @@ namespace TravelLogAPI.Controllers
     {
         private readonly TravelLogContext _context;
 
-        public TravelPackageController(TravelLogContext context) 
+        public TravelPackageController(TravelLogContext context)
         {
             _context = context;
         }
@@ -36,7 +36,7 @@ namespace TravelLogAPI.Controllers
         public async Task<IEnumerable<Itinerary>> GetTravelPackageByKeyword([FromBody] Itinerary itineraryData)
         {
             var result = await _context.Itineraries.Where(
-                t => 
+                t =>
                     t.ItineraryTitle.Contains(itineraryData.ItineraryTitle) &&
                     t.ItineraryCreateUser == null
             ).ToListAsync();
@@ -57,6 +57,50 @@ namespace TravelLogAPI.Controllers
         {
             var result = await _context.ItineraryPrices.FindAsync(id);
             return result;
+        }
+
+        //Post: api/TravelPackage/addItinerary
+        [HttpPost("[action]")]
+        public async Task<IActionResult> addItinerary([FromBody] Itinerary itinerary)
+        {
+            if (itinerary == null)
+            {
+                return BadRequest("Invalid context or itinerary");
+            }
+
+            var newItinerary = new Itinerary
+            {
+                ItineraryTitle = itinerary.ItineraryTitle,
+                ItineraryLocation = itinerary.ItineraryLocation,
+                ItineraryCoordinate = itinerary.ItineraryCoordinate,
+                ItineraryImage = itinerary.ItineraryImage,
+                ItineraryStartDate = itinerary.ItineraryStartDate,
+                ItineraryEndDate = itinerary.ItineraryEndDate,
+                ItineraryCreateUser = itinerary.ItineraryCreateUser,
+                ItineraryCreateDate = DateTime.Now,
+            };
+            await _context.Itineraries.AddAsync(newItinerary);
+            await _context.SaveChangesAsync();
+
+            if (itinerary.Places != null)
+            {
+                foreach (var place in itinerary.Places)
+                {
+                    // 手动为 Place 设置外键
+                    place.ScheduleId = newItinerary.ItineraryId;  // 直接赋值外键
+                    Console.WriteLine($"Place Name: {place.Name}, Address: {place.Address}");
+
+                }
+
+                // 保存 Places
+                await _context.Places.AddRangeAsync(itinerary.Places);
+                await _context.SaveChangesAsync();
+            }
+            else {
+                Console.WriteLine("根本沒跑進去");
+            }
+
+            return Ok("操作成功!");
         }
     }
 }

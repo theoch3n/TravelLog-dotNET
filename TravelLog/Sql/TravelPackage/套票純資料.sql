@@ -6,11 +6,11 @@
 --DELETE FROM place_detail;
 --DBCC CHECKIDENT ('place_detail', RESEED, 0);
 --
---DELETE FROM place;
---DBCC CHECKIDENT ('place', RESEED, 0);
---
 --DELETE FROM place_Image;
 --DBCC CHECKIDENT ('place_Image', RESEED, 0);
+--
+--DELETE FROM place;
+--DBCC CHECKIDENT ('place', RESEED, 0);
 --
 ----行程表要在最後
 --DELETE FROM itinerary;
@@ -20,11 +20,11 @@
 INSERT INTO [dbo].[Itinerary] (Itinerary_Title, Itinerary_Location, Itinerary_Coordinate, Itinerary_Image, Itinerary_StartDate, Itinerary_EndDate, Itinerary_CreateUser, Itinerary_CreateDate)
 VALUES
 -- 三天兩夜行程
-('台北文化之旅', '台北', '25.0330,121.5654', 'https://example.com/image1.jpg', '2025-03-05', '2025-03-07', 1, GETDATE()),
-('宜蘭溫泉之旅', '宜蘭', '24.7021,121.7378', 'https://example.com/image2.jpg', '2025-03-10', '2025-03-12', 2, GETDATE()),
-('台中美食探險', '台中', '24.1477,120.6736', 'https://example.com/image3.jpg', '2025-03-15', '2025-03-17', 3, GETDATE()),
-('南投山林漫遊', '南投', '23.9090,120.6847', 'https://example.com/image4.jpg', '2025-03-20', '2025-03-22', 4, GETDATE()),
-('花蓮海岸之旅', '花蓮', '23.9739,121.6113', 'https://example.com/image5.jpg', '2025-03-25', '2025-03-27', 5, GETDATE())
+('台北文化之旅', '台北', '25.0330,121.5654', 'https://example.com/image1.jpg', '2025-03-05', '2025-03-07', NULL, GETDATE()),
+('宜蘭溫泉之旅', '宜蘭', '24.7021,121.7378', 'https://example.com/image2.jpg', '2025-03-10', '2025-03-12', NULL, GETDATE()),
+('台中美食探險', '台中', '24.1477,120.6736', 'https://example.com/image3.jpg', '2025-03-15', '2025-03-17', NULL, GETDATE()),
+('南投山林漫遊', '南投', '23.9090,120.6847', 'https://example.com/image4.jpg', '2025-03-20', '2025-03-22', NULL, GETDATE()),
+('花蓮海岸之旅', '花蓮', '23.9739,121.6113', 'https://example.com/image5.jpg', '2025-03-25', '2025-03-27', NULL, GETDATE())
 
 
 
@@ -188,14 +188,14 @@ VALUES
 -- 國外行程 (日本、韓國、美國)
 INSERT INTO [dbo].[Itinerary] (Itinerary_Title, Itinerary_Location, Itinerary_Coordinate, Itinerary_Image, Itinerary_StartDate, Itinerary_EndDate, Itinerary_CreateUser, Itinerary_CreateDate)
 VALUES
-('東京文化探索', '東京', '35.682839,139.759455', 'https://example.com/image21.jpg', '2025-07-01', '2025-07-05', 21, GETDATE()),
-('大阪美食之旅', '大阪', '34.6937,135.5023', 'https://example.com/image22.jpg', '2025-07-10', '2025-07-14', 22, GETDATE()),
-('京都傳統文化遊', '京都', '35.0116,135.7681', 'https://example.com/image23.jpg', '2025-07-15', '2025-07-19', 23, GETDATE()),
-('首爾購物與美食', '首爾', '37.5665,126.9780', 'https://example.com/image24.jpg', '2025-08-01', '2025-08-05', 24, GETDATE()),
-('釜山海岸假期', '釜山', '35.1796,129.0756', 'https://example.com/image25.jpg', '2025-08-10', '2025-08-14', 25, GETDATE()),
-('洛杉磯陽光之旅', '洛杉磯', '34.0522,-118.2437', 'https://example.com/image26.jpg', '2025-09-01', '2025-09-06', 26, GETDATE()),
-('紐約城市探索', '紐約', '40.7128,-74.0060', 'https://example.com/image27.jpg', '2025-09-10', '2025-09-15', 27, GETDATE()),
-('舊金山灣區巡禮', '舊金山', '37.7749,-122.4194', 'https://example.com/image28.jpg', '2025-09-20', '2025-09-25', 28, GETDATE());
+('東京文化探索', '東京', '35.682839,139.759455', 'https://example.com/image21.jpg', '2025-07-01', '2025-07-05', NULL, GETDATE()),
+('大阪美食之旅', '大阪', '34.6937,135.5023', 'https://example.com/image22.jpg', '2025-07-10', '2025-07-14', NULL, GETDATE()),
+('京都傳統文化遊', '京都', '35.0116,135.7681', 'https://example.com/image23.jpg', '2025-07-15', '2025-07-19', NULL, GETDATE()),
+('首爾購物與美食', '首爾', '37.5665,126.9780', 'https://example.com/image24.jpg', '2025-08-01', '2025-08-05', NULL, GETDATE()),
+('釜山海岸假期', '釜山', '35.1796,129.0756', 'https://example.com/image25.jpg', '2025-08-10', '2025-08-14', NULL, GETDATE()),
+('洛杉磯陽光之旅', '洛杉磯', '34.0522,-118.2437', 'https://example.com/image26.jpg', '2025-09-01', '2025-09-06', NULL, GETDATE()),
+('紐約城市探索', '紐約', '40.7128,-74.0060', 'https://example.com/image27.jpg', '2025-09-10', '2025-09-15', NULL, GETDATE()),
+('舊金山灣區巡禮', '舊金山', '37.7749,-122.4194', 'https://example.com/image28.jpg', '2025-09-20', '2025-09-25', NULL, GETDATE());
 
 
 --——————————————————————————————————————————————————————

@@ -76,6 +76,19 @@ namespace TravelLogAPI.Controllers
             return place;
         }
 
+        [HttpGet("[action]/{scheduleId}")]
+        public async Task<ActionResult<List<Place>>> GetPlaceByScheduleId(int scheduleId)
+        {
+            var place = await _context.Places.Where(p => p.ScheduleId == scheduleId).ToListAsync();
+
+            if (place == null)
+            {
+                return NotFound();
+            }
+
+            return place;
+        }
+
         // PUT: api/Places/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
