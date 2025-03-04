@@ -86,19 +86,15 @@ namespace TravelLogAPI.Controllers
             {
                 foreach (var place in itinerary.Places)
                 {
-                    // 手动为 Place 设置外键
                     place.ScheduleId = newItinerary.ItineraryId;  // 直接赋值外键
                     Console.WriteLine($"Place Name: {place.Name}, Address: {place.Address}");
 
                 }
-
                 // 保存 Places
                 await _context.Places.AddRangeAsync(itinerary.Places);
                 await _context.SaveChangesAsync();
             }
-            else {
-                Console.WriteLine("根本沒跑進去");
-            }
+            
 
             return Ok("操作成功!");
         }

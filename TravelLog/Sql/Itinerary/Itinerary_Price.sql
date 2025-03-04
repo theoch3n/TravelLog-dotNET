@@ -1,7 +1,7 @@
 USE [TravelLog]
 GO
 
-/****** Object:  Table [dbo].[Itinerary_Price]    Script Date: 2025/3/3 ¤W¤È 12:57:16 ******/
+/****** Object:  Table [dbo].[Itinerary_Price]    Script Date: 2025/3/4 ¤U¤È 04:49:02 ******/
 SET ANSI_NULLS ON
 GO
 
