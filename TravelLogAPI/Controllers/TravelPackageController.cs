@@ -60,47 +60,48 @@ namespace TravelLogAPI.Controllers
         }
 
         //Post: api/TravelPackage/addItinerary
-        [HttpPost("[action]")]
-        public async Task<IActionResult> addItinerary([FromBody] Itinerary itinerary)
-        {
-            if (itinerary == null)
-            {
-                return BadRequest("Invalid context or itinerary");
-            }
+        //[HttpPost("[action]")]
+        //public async Task<IActionResult> addItinerary([FromBody] Itinerary itinerary)
+        //{
+        //    if (itinerary == null)
+        //    {
+        //        return BadRequest("Invalid context or itinerary");
+        //    }
 
-            var newItinerary = new Itinerary
-            {
-                ItineraryTitle = itinerary.ItineraryTitle,
-                ItineraryLocation = itinerary.ItineraryLocation,
-                ItineraryCoordinate = itinerary.ItineraryCoordinate,
-                ItineraryImage = itinerary.ItineraryImage,
-                ItineraryStartDate = itinerary.ItineraryStartDate,
-                ItineraryEndDate = itinerary.ItineraryEndDate,
-                ItineraryCreateUser = itinerary.ItineraryCreateUser,
-                ItineraryCreateDate = DateTime.Now,
-            };
-            await _context.Itineraries.AddAsync(newItinerary);
-            await _context.SaveChangesAsync();
+        //    var newItinerary = new Itinerary
+        //    {
+        //        ItineraryTitle = itinerary.ItineraryTitle,
+        //        ItineraryLocation = itinerary.ItineraryLocation,
+        //        ItineraryCoordinate = itinerary.ItineraryCoordinate,
+        //        ItineraryImage = itinerary.ItineraryImage,
+        //        ItineraryStartDate = itinerary.ItineraryStartDate,
+        //        ItineraryEndDate = itinerary.ItineraryEndDate,
+        //        ItineraryCreateUser = itinerary.ItineraryCreateUser,
+        //        ItineraryCreateDate = DateTime.Now,
+        //    };
+        //    await _context.Itineraries.AddAsync(newItinerary);
+        //    await _context.SaveChangesAsync();
 
-            if (itinerary.Places != null)
-            {
-                foreach (var place in itinerary.Places)
-                {
-                    // 手动为 Place 设置外键
-                    place.ScheduleId = newItinerary.ItineraryId;  // 直接赋值外键
-                    Console.WriteLine($"Place Name: {place.Name}, Address: {place.Address}");
+        //    if (itinerary.Places != null)
+        //    {
+        //        foreach (var place in itinerary.Places)
+        //        {
+        //            // 手动为 Place 设置外键
+        //            place.ScheduleId = newItinerary.ItineraryId;  // 直接赋值外键
+        //            Console.WriteLine($"Place Name: {place.Name}, Address: {place.Address}");
 
-                }
+        //        }
 
-                // 保存 Places
-                await _context.Places.AddRangeAsync(itinerary.Places);
-                await _context.SaveChangesAsync();
-            }
-            else {
-                Console.WriteLine("根本沒跑進去");
-            }
+        //        // 保存 Places
+        //        await _context.Places.AddRangeAsync(itinerary.Places);
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    else
+        //    {
+        //        Console.WriteLine("根本沒跑進去");
+        //    }
 
-            return Ok("操作成功!");
-        }
+        //    return Ok("操作成功!");
+        //}
     }
 }

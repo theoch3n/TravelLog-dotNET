@@ -56,5 +56,5 @@ public partial class Itinerary
 
     public virtual ICollection<PlaceDetail> PlaceDetails { get; set; } = new List<PlaceDetail>();
 
-    public virtual ICollection<Place> Places { get; set; } = new List<Place>();
+    //public virtual ICollection<Place> Places { get; set; } = new List<Place>();
 }
