@@ -43,7 +43,7 @@ namespace TravelLogAPI.Models
             _context = context;
         }
 
-        public virtual async Task<List<get_LocationResult>> get_LocationAsync(int? itinerary_ID, DateOnly? startDate, DateOnly? endDate, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default)
+        public virtual async Task<List<get_LocationResult>> get_LocationAsync(int? Itinerary_ID, DateOnly? StartDate, DateOnly? EndDate, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default)
         {
             var parameterreturnValue = new SqlParameter
             {
@@ -57,24 +57,57 @@ namespace TravelLogAPI.Models
                 new SqlParameter
                 {
                     ParameterName = "Itinerary_ID",
-                    Value = itinerary_ID ?? Convert.DBNull,
+                    Value = Itinerary_ID ?? Convert.DBNull,
                     SqlDbType = System.Data.SqlDbType.Int,
                 },
                 new SqlParameter
                 {
                     ParameterName = "StartDate",
-                    Value = startDate ?? Convert.DBNull,
+                    Value = StartDate ?? Convert.DBNull,
                     SqlDbType = System.Data.SqlDbType.Date,
                 },
                 new SqlParameter
                 {
                     ParameterName = "EndDate",
-                    Value = endDate ?? Convert.DBNull,
+                    Value = EndDate ?? Convert.DBNull,
                     SqlDbType = System.Data.SqlDbType.Date,
                 },
                 parameterreturnValue,
             };
             var _ = await _context.SqlQueryAsync<get_LocationResult>("EXEC @returnValue = [dbo].[get_Location] @Itinerary_ID = @Itinerary_ID, @StartDate = @StartDate, @EndDate = @EndDate", sqlParameters, cancellationToken);
+
+            returnValue?.SetValue(parameterreturnValue.Value);
+
+            return _;
+        }
+
+        public virtual async Task<List<get_SerialNumberResult>> get_SerialNumberAsync(string SystemCode, int? AddDay, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default)
+        {
+            var parameterreturnValue = new SqlParameter
+            {
+                ParameterName = "returnValue",
+                Direction = System.Data.ParameterDirection.Output,
+                SqlDbType = System.Data.SqlDbType.Int,
+            };
+
+            var sqlParameters = new []
+            {
+                new SqlParameter
+                {
+                    ParameterName = "SystemCode",
+                    Size = 10,
+                    Value = SystemCode ?? Convert.DBNull,
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                },
+                new SqlParameter
+                {
+                    ParameterName = "AddDay",
+                    Value = AddDay ?? Convert.DBNull,
+                    SqlDbType = System.Data.SqlDbType.Int,
+                },
+                parameterreturnValue,
+            };
+            var _ = await _context.SqlQueryAsync<get_SerialNumberResult>("EXEC @returnValue = [dbo].[get_SerialNumber] @SystemCode = @SystemCode, @AddDay = @AddDay", sqlParameters, cancellationToken);
 
             returnValue?.SetValue(parameterreturnValue.Value);
 

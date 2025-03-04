@@ -20,7 +20,7 @@ public partial class PaymentMethod
     /// <summary>
     /// 綠界付款方式代碼（例：Credit、ATM、CVS）
     /// </summary>
-    public string PaymentMethodName { get; set; }
+    public string PaymentMethodCode { get; set; }
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 }

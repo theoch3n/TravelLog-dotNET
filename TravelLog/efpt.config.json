@@ -39,6 +39,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Itinerary_Price]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Location]",
          "ObjectType": 0
       },
@@ -72,6 +76,14 @@
       },
       {
          "Name": "[dbo].[Place]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Place_Detail]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Place_Image]",
          "ObjectType": 0
       },
       {

@@ -28,6 +28,4 @@ public partial class Place
     public virtual ICollection<PlaceDetail> PlaceDetails { get; set; } = new List<PlaceDetail>();
 
     public virtual ICollection<PlaceImage> PlaceImages { get; set; } = new List<PlaceImage>();
-
-    public virtual Itinerary Schedule { get; set; }
 }
