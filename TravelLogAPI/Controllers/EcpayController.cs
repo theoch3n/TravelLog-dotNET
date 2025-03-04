@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Newtonsoft.Json.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
@@ -28,7 +27,7 @@ namespace TravelLogAPI.Controllers {
         private readonly string HashIV = "v77hoKGq4kWxNNIS";
         private readonly string MerchantID = "2000132";
         // private readonly string ApiAddress = "https://localhost:7092"; // API server url
-        private readonly string ApiAddress = "https://213f-2407-4b00-6c00-143c-99b3-23bf-5b0f-4984.ngrok-free.app"; // API server url
+        private readonly string ApiAddress = "https://aec4-59-125-142-166.ngrok-free.app"; // API server url
         private readonly string VueAddress = "https://localhost:5173"; // Vue url
 
         // 產生訂單
@@ -87,93 +86,93 @@ namespace TravelLogAPI.Controllers {
         // 綠界付款通知
         // POST: /api/Ecpay/PaymentResult
         [HttpPost("PaymentResult")]
-public async Task<IActionResult> PaymentResult([FromForm] IFormCollection formData) {
-    Console.WriteLine("=== PaymentResult: 收到綠界的付款通知 ===");
-    Console.WriteLine($"收到時間: {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}");
-    Console.WriteLine($"請求來源 IP: {HttpContext.Connection.RemoteIpAddress}");
-    Console.WriteLine($"請求內容大小: {formData?.Count ?? 0} 個參數");
+        public async Task<IActionResult> PaymentResult([FromForm] IFormCollection formData) {
+            Console.WriteLine("=== PaymentResult: 收到綠界的付款通知 ===");
+            Console.WriteLine($"收到時間: {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}");
+            Console.WriteLine($"請求來源 IP: {HttpContext.Connection.RemoteIpAddress}");
+            Console.WriteLine($"請求內容大小: {formData?.Count ?? 0} 個參數");
 
-    if (formData == null || formData.Count == 0) {
-        Console.WriteLine("錯誤：未收到請求內容！");
-        return BadRequest(new { message = "未收到請求內容" });
-    }
+            if (formData == null || formData.Count == 0) {
+                Console.WriteLine("錯誤：未收到請求內容！");
+                return BadRequest(new { message = "未收到請求內容" });
+            }
 
-    var data = formData.Keys.ToDictionary(key => key, key => formData[key].ToString());
+            var data = formData.Keys.ToDictionary(key => key, key => formData[key].ToString());
 
-    foreach (var kvp in data) {
-        Console.WriteLine($"  Key = {kvp.Key}, Value = {kvp.Value}");
-    }
+            foreach (var kvp in data) {
+                Console.WriteLine($"  Key = {kvp.Key}, Value = {kvp.Value}");
+            }
 
-    try {
-        // 直接等待處理完成
-        await ProcessPaymentAsync(data);
-        return Content("1|OK", "text/plain");
-    }
-    catch (Exception ex) {
-        Console.WriteLine($"處理付款時發生錯誤：{ex.Message}");
-        Console.WriteLine($"錯誤堆疊：{ex.StackTrace}");
-        // 即使發生錯誤，仍然回傳 1|OK 給綠界
-        return Content("1|OK", "text/plain");
-    }
-}
+            try {
+                // 直接等待處理完成
+                await ProcessPaymentAsync(data);
+                return Content("1|OK", "text/plain");
+            }
+            catch (Exception ex) {
+                Console.WriteLine($"處理付款時發生錯誤：{ex.Message}");
+                Console.WriteLine($"錯誤堆疊：{ex.StackTrace}");
+                // 即使發生錯誤，仍然回傳 1|OK 給綠界
+                return Content("1|OK", "text/plain");
+            }
+        }
 
         // 背景處理付款 & 存儲到資料庫
         private async Task ProcessPaymentAsync(Dictionary<string, string> formData) {
-    try {
-        // 驗證 CheckMacValue
-        if (!ValidateCheckMacValue(formData)) {
-            Console.WriteLine("付款驗證失敗：CheckMacValue 不符");
-            return;
-        }
+            try {
+                // 驗證 CheckMacValue
+                if (!ValidateCheckMacValue(formData)) {
+                    Console.WriteLine("付款驗證失敗：CheckMacValue 不符");
+                    return;
+                }
 
-        // 檢查必要欄位
-        if (!formData.TryGetValue("MerchantTradeNo", out var merchantTradeNo) ||
-            !formData.TryGetValue("TradeNo", out var ecpayTradeNo) ||
-            !formData.TryGetValue("RtnCode", out var paymentStatus) ||
-            !formData.TryGetValue("PaymentType", out var paymentType)) {
-            Console.WriteLine("缺少必要的參數");
-            return;
-        }
+                // 檢查必要欄位
+                if (!formData.TryGetValue("MerchantTradeNo", out var merchantTradeNo) ||
+                    !formData.TryGetValue("TradeNo", out var ecpayTradeNo) ||
+                    !formData.TryGetValue("RtnCode", out var paymentStatus) ||
+                    !formData.TryGetValue("PaymentType", out var paymentType)) {
+                    Console.WriteLine("缺少必要的參數");
+                    return;
+                }
 
-        bool isSuccess = paymentStatus == "1";
-        Console.WriteLine($"付款狀態：{(isSuccess ? "成功" : "失敗")}");
+                bool isSuccess = paymentStatus == "1";
+                Console.WriteLine($"付款狀態：{(isSuccess ? "成功" : "失敗")}");
 
-            // 查詢訂單
-            var order = await _dbContext.Orders
-                .FirstOrDefaultAsync(o => o.MerchantTradeNo == merchantTradeNo);
+                // 查詢訂單
+                var order = await _dbContext.Orders
+                    .FirstOrDefaultAsync(o => o.MerchantTradeNo == merchantTradeNo);
 
-            if (order == null) {
-                Console.WriteLine($"找不到訂單：{merchantTradeNo}");
-                return;
+                if (order == null) {
+                    Console.WriteLine($"找不到訂單：{merchantTradeNo}");
+                    return;
+                }
+
+                Console.WriteLine($"找到訂單：{order.OrderId}");
+
+                // 建立付款記錄
+                var payment = new Payment {
+                    OrderId = order.OrderId,
+                    PaymentTime = isSuccess ? DateTime.Now : null,
+                    PaymentMethod = GetPaymentMethodId(paymentType),
+                    PaymentStatusId = isSuccess ? 2 : 3,
+                    EcpayTransactionId = ecpayTradeNo
+                };
+
+                // 更新訂單付款狀態
+                order.OrderPaymentStatus = isSuccess ? 2 : 1;
+                order.OrderStatus = isSuccess ? 2 : 1;
+
+                // 儲存到資料庫
+                _dbContext.Payments.Add(payment);
+                await _dbContext.SaveChangesAsync();
+
+                Console.WriteLine($"付款記錄已保存，訂單號：{merchantTradeNo}, 狀態：{order.OrderPaymentStatus}");
             }
-
-            Console.WriteLine($"找到訂單：{order.OrderId}");
-
-            // 建立付款記錄
-            var payment = new Payment {
-                OrderId = order.OrderId,
-                PaymentTime = isSuccess ? DateTime.Now : null,
-                PaymentMethod = GetPaymentMethodId(paymentType),
-                PaymentStatusId = isSuccess ? 2 : 3,
-                EcpayTransactionId = ecpayTradeNo
-            };
-
-            // 更新訂單付款狀態
-            order.OrderPaymentStatus = isSuccess ? 2 : 1;
-            order.OrderStatus = isSuccess ? 2 : 1;
-
-            // 儲存到資料庫
-            _dbContext.Payments.Add(payment);
-            await _dbContext.SaveChangesAsync();
-
-            Console.WriteLine($"付款記錄已保存，訂單號：{merchantTradeNo}, 狀態：{order.OrderPaymentStatus}");
-    }
-    catch (Exception ex) {
-        Console.WriteLine($"處理付款結果時發生錯誤：{ex.Message}");
-        Console.WriteLine($"錯誤堆疊：{ex.StackTrace}");
-        throw; // 重新拋出異常以便上層捕獲
-    }
-}
+            catch (Exception ex) {
+                Console.WriteLine($"處理付款結果時發生錯誤：{ex.Message}");
+                Console.WriteLine($"錯誤堆疊：{ex.StackTrace}");
+                throw; // 重新拋出異常以便上層捕獲
+            }
+        }
 
         // 取得訂單資料
         // GET: /api/Ecpay/GetOrderInfo?merchantTradeNo=xxxx

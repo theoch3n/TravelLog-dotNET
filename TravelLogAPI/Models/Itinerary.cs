@@ -5,8 +5,7 @@ using System.Collections.Generic;
 
 namespace TravelLogAPI.Models;
 
-public partial class Itinerary
-{
+public partial class Itinerary {
     /// <summary>
     /// ID
     /// </summary>
