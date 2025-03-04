@@ -65,7 +65,7 @@ public partial class TravelLogContext : DbContext
     {
         modelBuilder.Entity<Bill>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Bill__3214EC0703E39CE5");
+            entity.HasKey(e => e.Id).HasName("PK__Bill__3214EC074D227AB9");
 
             entity.ToTable("Bill");
 
@@ -73,7 +73,11 @@ public partial class TravelLogContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("Created_At");
-            entity.Property(e => e.ItineraryId).HasColumnName("Itinerary_ID");
+            entity.Property(e => e.Currency)
+                .IsRequired()
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.ItineraryId).HasColumnName("Itinerary_Id");
             entity.Property(e => e.PaidBy)
                 .IsRequired()
                 .HasMaxLength(50);
@@ -87,7 +91,7 @@ public partial class TravelLogContext : DbContext
 
         modelBuilder.Entity<BillDetail>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Bill_det__3214EC07E6031989");
+            entity.HasKey(e => e.Id).HasName("PK__Bill_det__3214EC0753EAD7F4");
 
             entity.ToTable("Bill_details");
 
@@ -101,7 +105,7 @@ public partial class TravelLogContext : DbContext
             entity.HasOne(d => d.Bill).WithMany(p => p.BillDetails)
                 .HasForeignKey(d => d.BillId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Bill_deta__Bill___2334397B");
+                .HasConstraintName("FK__Bill_deta__Bill___297722B6");
         });
 
         modelBuilder.Entity<ExternalLogin>(entity =>
