@@ -27,7 +27,7 @@ namespace TravelLogAPI.Controllers {
         private readonly string HashIV = "v77hoKGq4kWxNNIS";
         private readonly string MerchantID = "2000132";
         // private readonly string ApiAddress = "https://localhost:7092"; // API server url
-        private readonly string ApiAddress = "https://aec4-59-125-142-166.ngrok-free.app"; // API server url
+        private readonly string ApiAddress = "https://385e-2407-4b00-6c00-143c-e51c-cca8-557b-4e2b.ngrok-free.app"; // API server url
         private readonly string VueAddress = "https://localhost:5173"; // Vue url
 
         // 產生訂單
@@ -224,11 +224,11 @@ namespace TravelLogAPI.Controllers {
                             p.EcpayTransactionId
                         })
                         .FirstOrDefault(),
-                    Product = _dbContext.TourBundles
-                        .Where(p => p.Id == o.ProductId)
+                    Product = _dbContext.Itineraries
+                        .Where(p => p.ItineraryId == o.ProductId)
                         .Select(p => new {
-                            p.Id,
-                            p.EventName
+                            p.ItineraryId,
+                            p.ItineraryTitle
                         })
                         .FirstOrDefault()
                 })

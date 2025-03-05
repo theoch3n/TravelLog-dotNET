@@ -15,6 +15,8 @@ public partial class Bill
 
     public decimal TotalAmount { get; set; }
 
+    public string Currency { get; set; }
+
     public string PaidBy { get; set; }
 
     public DateTime? CreatedAt { get; set; }

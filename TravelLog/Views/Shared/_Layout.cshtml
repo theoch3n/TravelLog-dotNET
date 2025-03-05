@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+<title>@ViewData["Title"] TravelLog 管理系統</title>
 <head>
     @RenderSection("Styles", required: false)
     @*  <meta charset="utf-8" />
@@ -165,39 +166,19 @@
                     </a>
                     </li>
                     <li>
-                        <a asp-controller="Tickets" asp-action="List">
-                            <i class="icon icon-app-store"></i><span class="nav-text">票務管理</span>
-                        </a>
-                    </li>
-                    <li>
                         <a asp-controller="TourBundles" asp-action="Index">
                             <i class="icon icon-app-store"></i><span class="nav-text">套票管理</span>
                         </a>
                     </li>
                     <li>
                         <a asp-controller="Order" asp-action="OrderManage">
-                            <i class="icon icon-world-2"></i><span class="nav-text">訂單管理</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-controller="Itinerary" asp-action="Index">
-                            <i class="icon icon-app-store"></i><span class="nav-text">行程</span>
+                            <i class="icon icon-app-store"></i><span class="nav-text">訂單管理</span>
                         </a>
                     </li>
                     <li>
                         <a asp-controller="Chat" asp-action="Index">
                             <i class="icon icon-app-store"></i><span class="nav-text">客戶服務</span>
                         </a>
-                    </li>
-
-                    <li class="nav-label">報表分析</li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon icon-chart-bar-33"></i><span class="nav-text">Charts</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a asp-controller="Chart" asp-action="Index">遊客數分析</a></li>
-                        </ul>
                     </li>
             </div>
         </div>
