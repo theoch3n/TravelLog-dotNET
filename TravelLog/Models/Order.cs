@@ -55,5 +55,5 @@ public partial class Order
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
-    public virtual TourBundle Product { get; set; }
+    public virtual Itinerary Product { get; set; }
 }

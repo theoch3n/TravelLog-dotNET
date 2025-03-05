@@ -1,53 +1,217 @@
-﻿<!DOCTYPE html>
-<html lang="zh-TW">
+﻿@{
+    ViewData["Title"] = "客戶服務";
+}
 
-<head>
-    <meta charset="utf-8">
-    <title>SignalR 聊天室</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
-</head>
-
-<body>
-    <h2>SignalR 聊天室</h2>
-    <div>
-        <input type="text" id="userId" placeholder="輸入使用者 ID">
-        <input type="text" id="message" placeholder="輸入訊息">
-        <button onclick="sendMessage()">發送訊息</button>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">客戶服務聊天室</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">用戶列表</h5>
+                                </div>
+                                <div class="card-body">
+                                    @* <div class="alert alert-info"> *@
+                                    @*     您目前以 <strong>客服人員</strong> 身份登入 *@
+                                    @* </div> *@
+                                    <div class="list-group" id="userList">
+                                        <!-- 用戶列表將在這裡動態生成 -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">聊天內容</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chat-box" style="height: 400px; overflow-y: auto; border: 1px solid #eaeaea; padding: 15px; margin-bottom: 15px;">
+                                        <ul id="messagesList" class="list-unstyled">
+                                            <!-- 訊息將在這裡動態生成 -->
+                                        </ul>
+                                    </div>
+                                    <div class="input-group">
+                                        <input type="text" id="message" class="form-control" placeholder="輸入訊息">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button" onclick="sendMessage()">發送</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <ul id="messagesList"></ul>
+</div>
 
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
     <script>
+        let selectedUser = null;
+        const currentUserId = "客服人員"; // 固定使用者 ID 為「客服人員」
+        
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("https://localhost:7092/chatHub")
             .configureLogging(signalR.LogLevel.Information)
             .build();
 
+        // 添加用戶到列表
+        function addUserToList(userId) {
+            const userList = document.getElementById("userList");
+
+            // 檢查用戶是否已存在且不是自己
+            if (!document.getElementById(`user-${userId}`) && userId !== currentUserId) {
+                const userItem = document.createElement("div");
+                userItem.id = `user-${userId}`;
+                userItem.className = "list-group-item list-group-item-action d-flex justify-content-between align-items-center";
+                
+                // 創建用戶名稱元素
+                const userName = document.createElement("a");
+                userName.textContent = userId;
+                userName.href = "javascript:void(0)";
+                userName.style.flex = "1";
+                userName.onclick = function() {
+                    // 選擇用戶
+                    document.querySelectorAll("#userList div").forEach(item => {
+                        item.classList.remove("active");
+                    });
+                    userItem.classList.add("active");
+                    selectedUser = userId;
+                };
+                
+                // 創建移除按鈕
+                const removeBtn = document.createElement("button");
+                removeBtn.className = "btn btn-sm btn-danger ml-2";
+                removeBtn.innerHTML = '<i class="fa fa-times"></i>';
+                removeBtn.onclick = function(e) {
+                    e.stopPropagation(); // 防止觸發父元素的點擊事件
+                    userList.removeChild(userItem);
+                    
+                    // 如果移除的是當前選中的用戶，清除選中狀態
+                    if (selectedUser === userId) {
+                        selectedUser = null;
+                    }
+                };
+                
+                // 將元素添加到用戶項目中
+                userItem.appendChild(userName);
+                userItem.appendChild(removeBtn);
+                userList.appendChild(userItem);
+            }
+        }
+
         connection.start().then(() => {
             console.log("SignalR 連線成功");
+            
+            // 連接成功後顯示系統消息
+            const messagesList = document.getElementById("messagesList");
+            const li = document.createElement("li");
+            li.className = "mb-2";
+            li.innerHTML = `
+                <div class="d-flex justify-content-center">
+                    <div class="bg-secondary text-white p-2 rounded" style="max-width: 75%;">
+                        <div>系統: 您已連接到聊天室，可以開始發送訊息</div>
+                    </div>
+                </div>
+            `;
+            messagesList.appendChild(li);
+            
         }).catch(err => console.error("SignalR 連線失敗", err));
 
         // 當接收到訊息時，將訊息顯示在畫面上
         connection.on("ReceiveMessage", (user, message) => {
-            let li = document.createElement("li");
-            li.textContent = `${user}: ${message}`;
-            document.getElementById("messagesList").appendChild(li);
+            const messagesList = document.getElementById("messagesList");
+            const li = document.createElement("li");
+            li.className = "mb-2";
+
+            // 判斷是發送者還是接收者
+            if (user === currentUserId) {
+                li.innerHTML = `
+                    <div class="d-flex justify-content-end">
+                        <div class="bg-primary text-white p-2 rounded" style="max-width: 75%;">
+                            <div class="font-weight-bold">${user}</div>
+                            <div>${message}</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                li.innerHTML = `
+                    <div class="d-flex justify-content-start">
+                        <div class="bg-light p-2 rounded" style="max-width: 75%;">
+                            <div class="font-weight-bold">${user}</div>
+                            <div>${message}</div>
+                        </div>
+                    </div>
+                `;
+
+                // 添加發送者到用戶列表
+                addUserToList(user);
+            }
+
+            messagesList.appendChild(li);
+
+            // 滾動到最新消息
+            const chatBox = document.querySelector(".chat-box");
+            chatBox.scrollTop = chatBox.scrollHeight;
         });
-        connection.on();
 
         // 發送訊息到 SignalR
         async function sendMessage() {
-            let userId = document.getElementById("userId").value;
-            let message = document.getElementById("message").value;
-            if (!userId || !message) return;
+            const message = document.getElementById("message").value;
+
+            if (!message) {
+                return;
+            }
 
             try {
-                await connection.invoke("SendMessage", userId, message);
+                // 如果選擇了特定用戶，則發送私人訊息
+                // if (selectedUser) {
+                //     await connection.invoke("SendPrivateMessage", currentUserId, selectedUser, message);
+                    
+                //     在自己的聊天窗口顯示發送的私人訊息
+                //     const messagesList = document.getElementById("messagesList");
+                //     const li = document.createElement("li");
+                //     li.className = "mb-2";
+                //     li.innerHTML = `
+                //         <div class="d-flex justify-content-end">
+                //             <div class="bg-primary text-white p-2 rounded" style="max-width: 75%;">
+                //                 <div class="font-weight-bold">${currentUserId}</div>
+                //                 <div><small>[私訊給 ${selectedUser}]</small> ${message}</div>
+                //             </div>
+                //         </div>
+                //     `;
+                //     messagesList.appendChild(li);
+                    
+                //     滾動到最新消息
+                //     const chatBox = document.querySelector(".chat-box");
+                //     chatBox.scrollTop = chatBox.scrollHeight;
+                // } else {
+                    // 否則發送公開訊息
+                    await connection.invoke("SendMessage", currentUserId, message);
+                // }
+
                 document.getElementById("message").value = ""; // 清空訊息輸入框
             } catch (error) {
                 console.error("發送訊息錯誤", error);
+                alert("發送訊息失敗: " + error.message);
             }
         }
-    </script>
-</body>
 
-</html>
+        // 按 Enter 鍵發送訊息
+        document.getElementById("message").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+    </script>
+}

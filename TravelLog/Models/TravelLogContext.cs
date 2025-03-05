@@ -73,6 +73,10 @@ public partial class TravelLogContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("Created_At");
+            entity.Property(e => e.Currency)
+                .IsRequired()
+                .HasMaxLength(10)
+                .IsUnicode(false);
             entity.Property(e => e.ItineraryId).HasColumnName("Itinerary_Id");
             entity.Property(e => e.PaidBy)
                 .IsRequired()

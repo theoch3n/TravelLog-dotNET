@@ -54,5 +54,7 @@ public partial class Itinerary
 
     public virtual ICollection<ItineraryPrice> ItineraryPrices { get; set; } = new List<ItineraryPrice>();
 
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+
     public virtual ICollection<PlaceDetail> PlaceDetails { get; set; } = new List<PlaceDetail>();
 }
