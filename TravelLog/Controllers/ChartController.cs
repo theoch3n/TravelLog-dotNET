@@ -118,7 +118,7 @@ namespace TravelLog.Controllers {
                 var orderList = _context.Orders
                     .Where(oi => oi.OrderTime >= startDate && oi.OrderTime <= endDate)
                     .Select(oi => new {
-                        category = oi.Product.EventName,
+                        category = oi.Product.ItineraryTitle,
                         amount = oi.OrderTotalAmount
                     })
                     .ToList();

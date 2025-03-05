@@ -11,7 +11,7 @@
 <!-- row -->
 <div class="row">
     <!-- 今日營業額卡片 -->
-    <div class="col-lg-3 col-sm-6">
+    <div class="col-12">
         <div class="card">
             <div class="stat-widget-two card-body">
                 <div class="stat-content">
@@ -28,7 +28,7 @@
         </div>
     </div>
     <!-- 用戶增長率卡片 -->
-    <div class="col-lg-3 col-sm-6">
+    <div class="col-12">
         <div class="card">
             <div class="stat-widget-two card-body">
                 <div class="stat-content">
@@ -541,17 +541,6 @@
             salesOverviewChart.update();
         }
 
-        // 熱門地點
-        function updatePopularPlacesChart(data) {
-            if (!popularPlacesChart) {
-                console.error("熱門地點圖表未初始化");
-                return;
-            }
-            popularPlacesChart.data.labels = data.map(item => item.place);
-            popularPlacesChart.data.datasets[0].data = data.map(item => item.count);
-            popularPlacesChart.update();
-        }
-
         // 營業額
         function loadRevenueData(days = 7) {
             let startDate, endDate;
@@ -657,38 +646,6 @@
                 });
         }
 
-        // 熱門地點
-        function loadPopularPlacesData(days = 7) {
-            let startDate, endDate;
-
-            if (days === 'custom') {
-                startDate = document.getElementById('popularPlacesStartDate').value;
-                endDate = document.getElementById('popularPlacesEndDate').value;
-                if (!startDate || !endDate) {
-                    alert('請選擇開始和結束日期');
-                    return;
-                }
-            } else {
-                endDate = new Date();
-                startDate = new Date();
-                startDate.setDate(startDate.getDate() - days);
-                startDate = startDate.toISOString().split('T')[0];
-                endDate = endDate.toISOString().split('T')[0];
-            }
-
-            fetch(`/api/Chart/PopularPlaces?startDate=${startDate}&endDate=${endDate}`)
-                .then(response => response.json())
-                .then(data => {
-                    data = handleEmptyData(data, { startDate, endDate }, 'place');
-                    updatePopularPlacesChart(data);
-                })
-                .catch(error => {
-                    console.error('獲取熱門地點數據失敗:', error);
-                    const emptyData = handleEmptyData([], { startDate, endDate }, 'place');
-                    updatePopularPlacesChart(emptyData);
-                });
-        }
-
         document.addEventListener('DOMContentLoaded', function () {
             console.log("頁面加載完成，開始初始化...");
 
@@ -706,7 +663,6 @@
                 loadRevenueData(7);
                 loadUserGrowthData(7);
                 loadSalesOverviewData(7);
-                loadPopularPlacesData(7);
 
                 // 更新今日營業額與用戶增長率（卡片）
                 updateTodayRevenue();
@@ -754,19 +710,6 @@
                 });
                 document.getElementById('salesOverviewApplyCustomRange').addEventListener('click', function () {
                     loadSalesOverviewData('custom');
-                });
-
-                document.getElementById('popularPlacesTimeRange').addEventListener('change', function () {
-                    const selectedValue = this.value;
-                    if (selectedValue === 'custom') {
-                        document.getElementById('popularPlacesCustomDateRange').style.display = 'block';
-                    } else {
-                        document.getElementById('popularPlacesCustomDateRange').style.display = 'none';
-                        loadPopularPlacesData(parseInt(selectedValue));
-                    }
-                });
-                document.getElementById('popularPlacesApplyCustomRange').addEventListener('click', function () {
-                    loadPopularPlacesData('custom');
                 });
 
                 // 動態新增「自定義範圍」選項
