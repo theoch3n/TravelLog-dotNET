@@ -71,6 +71,7 @@ namespace TravelLogAPI.Controllers
                     ItineraryId = b.ItineraryId,
                     Title = b.Title,
                     TotalAmount = b.TotalAmount,
+                    Currency = b.Currency,
                     PaidBy = b.PaidBy,
                     CreatedAt = b.CreatedAt,
                     BillDetails = b.BillDetails.Select(d => new BillDetail
