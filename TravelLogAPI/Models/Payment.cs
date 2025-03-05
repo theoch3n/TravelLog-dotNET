@@ -25,7 +25,7 @@ public partial class Payment
     /// <summary>
     /// 綠界回傳付款方式
     /// </summary>
-    public int? PaymentMethodName { get; set; }
+    public string PaymentMethodName { get; set; }
 
     /// <summary>
     /// 關聯的訂單
